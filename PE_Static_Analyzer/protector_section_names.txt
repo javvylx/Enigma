@@ -1,0 +1,7 @@
+.ASPack
+DAStub
+PELOCKnt
+.perplex
+WinLicen
+.yP
+.y0da
