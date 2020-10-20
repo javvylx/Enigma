@@ -12,7 +12,7 @@ def virus_total(hashvalue):
     response = vt.get_file_report(hashvalue)
     return response
 
-with open(r'C://Users//damie//Desktop//Y2T1//ICT2202_Digital_Forensics//Assignment//hash.csv') as hash_file:
+with open(r'filepath') as hash_file:
     hash_csv = csv.reader(hash_file)
     file_name = []
     md5_hash = []
