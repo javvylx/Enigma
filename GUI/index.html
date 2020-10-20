@@ -48,11 +48,12 @@ $(function () {
 		return ['p', {class: styleClass}, text];
 	}
 
-	function genDescriptiveCardCtx(title, paragraphs, rowClass) {
+	function genPageIntroCardCtx(title, titleImgClass, paragraphs, rowClass) {
 		return ['div', {class: 'col-xl-12 col-md-12 mb-4'}, 
 			['div', {class: 'border-bottom-secondary carddiscored shadow mb-4'}, 
 				['div', {class: 'card-header py-3'},
-					['h6', {class: 'm-0 font-weight-bold text-primary'},title]                
+					['a', {class: 'm-0 font-weight-bold text-primary'},title],
+					['i', {class: 'ml-2 fa-1x ' + titleImgClass + " "}]
 	            ],
 	            ['div', {class: 'card-body ' + rowClass},
 	                	paragraphs
@@ -100,21 +101,6 @@ $(function () {
 
 	function genHomeCardCtx(cardId, gridClass, colorStyle, title, desc, iconClass) {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, genInfoBodyCtx(title, desc, iconClass, colorStyle));
-	// 	return ['div', {class: 'mb-4 ' + gridClass},
-	// 		['div', {class: 'card shadow h-100 py-2' + " border-bottom-" + colorStyle}, 
-	// 			['div', {class: 'card-body'},
-	// 				['div', {class: 'row no-gutterse align-items-center'},
-	// 					['div', {class: 'col mr-2'},
-	// 						['div', {class: "text-xl font-weight-bold text-uppercase mb-5 text-" + colorStyle}, title],
-	// 						['div', {class: "h5 mb-0 font-weight-bold text-gray-800"}, desc]
-	// 					],
-	// 					['div', {class: 'col-auto'},
-	// 						['i', {class: 'fa-6x text-gray-300 ' + iconClass}]
-	// 					]
-	// 				]
-	// 			]
-	// 		]
-	// 	];
 	}
 
 	// Context for inputs
@@ -273,7 +259,7 @@ $(function () {
  	  "info"
  	);
 
- 	var triageInstructionsCtx = genDescriptiveCardCtx("Instructions", [
+ 	var triageInstructionsCtx = genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
  		genParaCtx("Fill in case name & choose folder location to dump analysis output", "",)
 	]);
 
@@ -282,68 +268,42 @@ $(function () {
 
  	// return genInfoCardCtx(cardId, gridClass, colorStyle, genInfoBodyCtx(title, desc, iconClass, colorStyle));
 
- 	var triageFunctionsDescCtx = genDescriptiveCardCtx("Functionalities", [
- 		genParaCtx("The whole triage process covers the following aspects using the following plugins", "h4 col-12 mb-5" ),
- 		genHomeCardCtx("triage-func-network", "col-xl-3 col-md-3 triage-desc-card", "success", "Network Connectivity", "-netscan", "fas fa-wifi icon-cog"),
- 		genHomeCardCtx("triage-func-command", "col-xl-3 col-md-3 triage-desc-card", "success", "Commands Executed", "-", "fas fa-terminal"),
- 		genHomeCardCtx("triage-func-process", "col-xl-3 col-md-3 triage-desc-card", "success", "Network", "-", "fas fa-microchip"),
- 		genHomeCardCtx("triage-func-files", "col-xl-3 col-md-3 triage-desc-card", "success", "Network", "-", "fas fa-file-alt"),
- 		genHomeCardCtx("triage-func-domains", "col-xl-3 col-md-3 triage-desc-card", "success", "Network", "-", "")],
+ 	var triageFunctionsDescCtx = genPageIntroCardCtx("Functionalities", "fas fa-brackets-curly", [
+ 		genParaCtx("The whole triage process covers the following ", "h4 col-12 mb-5" ),
+ 		genHomeCardCtx("triage-func-network", "col-xl-4 col-md-4 triage-desc-card", "success", "Network Connectivity", "", "fas fa-wifi icon-cog"),
+ 		genHomeCardCtx("triage-func-command", "col-xl-4 col-md-4 triage-desc-card", "success", "Commands Executed", "", "fas fa-terminal"),
+ 		genHomeCardCtx("triage-func-process", "col-xl-4 col-md-4 triage-desc-card", "success", "Processes", "", "fas fa-microchip"),
+ 		genHomeCardCtx("triage-func-files", "col-xl-4 col-md-4 triage-desc-card", "success", "Files", "", "fas fa-file-alt"),
+ 		genHomeCardCtx("triage-func-domains", "col-xl-4 col-md-4 triage-desc-card", "success", "Domains", "", "fas fa-server"),
+ 		genHomeCardCtx("triage-func-virustotal", "col-xl-4 col-md-4 triage-desc-card", "success", "Virustotal", "", "fas fa-viruses")],
  		"row"
  	);
+
+
 	
 
-	// ['div', {class: 'row no-gutterse align-items-center'},
-	// 		['div', {class: 'col mr-2'},
-	// 			['div', {class: "text-xl font-weight-bold text-uppercase mb-5 text-" + colorStyle}, title],
-	// 			['div', {class: "h5 mb-0 font-weight-bold text-gray-800"}, desc]
-	// 		],
-	// 		['div', {class: 'col-auto'},
-	// 			['i', {class: 'fa-6x text-gray-300 ' + iconClass}]
-	// 		]
-	// 	];
-	// }
-
-
-	// var triageFunctionsDescCtx = ['div', {class: 'col-xl-12 col-md-12 mb-4'},
-	//    	['div', {class: 'border-bottom-secondary carddiscored shadow mb-4'},
-	//      	['div', {class: 'card-header py-3'},
-	//         	['h6',  {class: 'm-0 font-weight-bold text-primary'}, 'Instructions']
-	//       	],
-	//       	['div', {class: 'row card-body'},
-	//       // 
-	// 	        ['div', {id:'home-ram-card', class: 'mb-4 col-xl-3 col-md-3 home-card'},
-	// 			   	['div',  {class: 'card shadow h-100 py-2 border-bottom-primary'},
-	// 			      	['div', {class:'card-body'}, 
-	// 				         ['div', {class: 'row no-gutterse align-items-center'},
-	// 				            ['div', {class: 'col mr-2'},
-	// 				            	['div', {class: 'text-xl font-weight-bold text-uppercase mb-5 text-primary'}, 'Memory Dump',
-	// 				               		['div', {class: 'h5 mb-0 font-weight-bold text-gray-800'}, 'Extract of host PC\'s RAM for Triage Analysis']
-	// 				            	]
-	// 				            ],
-	// 				            ['div', {class: 'col-auto'}, 
-	// 				            	['i', {class: 'fa-6x text-gray-300 fas fa-memory'}]
-	// 				            ]
-	// 				         ]
-	// 				    ]
-	// 			   ]
-	// 			]
-	//       	]
-	//    ]
-	// ];
- 	
  	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_image",
- 		"Choose your RAM image file",
- 		"triage-input-image",
- 		"Choose file...",
- 		"FILE",
- 		"triage-btn-run",
- 		"Execute functions",
- 		"fas fa-play",
- 	  	"info"
+		"Choose your RAM image file",
+		"triage-input-image",
+		"Choose file...",
+		"FILE",
+		"triage-btn-run",
+		"Execute analysis",
+		"fas fa-play",
+		"info"
  	);
 
 
+ 	var malwareRequiredInputCtx = genFileSelectCtx("malware-card-select-file",
+ 		"Choose your PE file to analyse",
+		"malware-input-folder",
+		"Choose file...",
+		"FILE",
+		"malware-btn-run",
+		"Execute analysis",
+		"fas fa-play",
+		"info"
+ 	);
  	// Population of elements into specific rows
 
 	$('#row-home').html(HTML(dashboardCtxs));
@@ -351,6 +311,7 @@ $(function () {
 	$('#row-memory').html(HTML([memRamSizeCardCtx, memRequiredInputCtx]));
 	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredInputCtx]));
 
+	$('#row-malware').html(HTML([malwareRequiredInputCtx]));
 	
 	var arrTitles = {
 			"home": "What do you want to do",
@@ -377,8 +338,6 @@ $(function () {
 	});
 
 	/* --- End of Toggle Pages --- */
-
-
 
 
 	$('#memory-folder-input').on('change', function(e) {
@@ -453,10 +412,6 @@ $(function () {
 "row-technologies"
  -->
 						
-
-
-
-
 						<div id='row-home' class='row content-row'>
 
 
@@ -486,8 +441,6 @@ $(function () {
 							<!--  -->
 						</div>
 									
-
-
 
 
 					</div>
