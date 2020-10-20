@@ -42,7 +42,7 @@ $(function () {
 		];
 	}
 
-	function genCardCtx(title, desc, iconClass, colorStyle) {
+	function genHomeCardCtx(title, desc, iconClass, colorStyle) {
 		return ['div', {class: 'col-xl-6 col-md-6 mb-4'},
 			['div', {class: 'card shadow h-100 py-2' + " border-bottom-" + colorStyle}, 
 				['div', {class: 'card-body'},
@@ -61,8 +61,8 @@ $(function () {
 	};
 
 	// Context for inputs
-	function genButtonCtx(iconClass, label, colorStyle) {
-		return ['a', {class: 'btn btn-icon-split mt-4 ' + colorStyle},
+	function genButtonCtx(btnId, label, iconClass, colorStyle) {
+		return ['a', {id: btnId, class: 'btn btn-icon-split mt-4 ' + "btn-" + colorStyle},
 			['span', {class: 'icon text-white-50'},
 				['i', {class : iconClass}]
 			],
@@ -70,16 +70,16 @@ $(function () {
 		];
 	}
 
-	function genInputSelectorCtx(eleId, placeHolder, type) {
+	function genInputSelectorCtx(inputId, placeHolder, type) {
 		var input = null;
-		if (type === "file") {
-			input = ['input',  {id: eleId, type: 'file', class: 'custom-file-input', required: "required"},
-				['label', {id : eleId + "-label", class: 'custom-file-label', for: 'validatedCustomFile'}, placeHolder],
+		if (type === "FILE") {
+			input = ['input',  {id: inputId, type: 'file', class: 'custom-file-input', required: "required"},
+				['label', {id : inputId + "-label", class: 'custom-file-label', for: 'validatedCustomFile'}, placeHolder],
 	    		['div', {class: 'invalid-feedback'}, "Invalid file"]
 	    	];
-		} else if (type === "folder") {
-			input = ['input',  {id: eleId, type: 'file', class: 'custom-file-input', required: "required", webkitdirectory: "webkitdirectory", directory: "directory", multiple: "multiple"},
-				['label', {id : eleId + "-label", class: 'custom-file-label', for: 'validatedCustomFile'}, placeHolder],
+		} else if (type === "FOLDER") {
+			input = ['input',  {id: inputId, type: 'file', class: 'custom-file-input', required: "required", webkitdirectory: "webkitdirectory", directory: "directory", multiple: "multiple"},
+				['label', {id : inputId + "-label", class: 'custom-file-label', for: 'validatedCustomFile'}, placeHolder],
 	    		['div', {class: 'invalid-feedback'}, "Invalid folder"]
 			];
 		}
@@ -88,15 +88,15 @@ $(function () {
 	}
 
 	
-	function genFileSelectCtx(desc, colorStyle, inputLabel, buttonLabel, inputId, type) {
+	function genFileSelectCtx(cardId, cardTitle, inputId, inputPlaceHolder, inputType, btnId, btnLabel, btnIconClass, colorStyle) {
 		return ['div', {class: 'col-xl-12 col-md-12 mb-4'},
-			['div', {class: 'card  shadow h-100 py-3 border-left-'+colorStyle+ " "},
+			['div', {class: 'card  shadow h-100 py-3 border-left-' + colorStyle + ' '},
 				['div', {class: 'card-body'},
 					['div', {class: 'row no-gutters align-items-center'},
 						['div', {class: 'col mr-2'},
-	                    	['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, desc],
-	                    	memRamDumpInputCtx, genInputSelectorCtx(inputId, )
-	                    	memExeDumpBtnCtx
+	                    	['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, cardTitle],
+	                    	genInputSelectorCtx(inputId, inputPlaceHolder, inputType), 
+	                    	genButtonCtx(btnId, btnLabel, btnIconClass, colorStyle)
 	                  	]                  	
 	                    
 	                ]
@@ -116,7 +116,6 @@ $(function () {
 	var sideAboutCtx = genSideItemCtx("side-technologies", "About", "fas fa-user-secret");
 
 	var sideMenuCtx = [
-		// genSideDivider(),s
 		sideHomeCtx,
 		genSideDivider(),
 		genSideSubHeader("Triage"),
@@ -143,10 +142,20 @@ $(function () {
 "row-technologies"
 
 
-	var ramDumpCtx = genCardCtx("Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fas fa-memory", "primary");
-	var triageCtx = genCardCtx("Triage Analyis", "Conducts full analysis of memory dump with analysis modules", "fab fa-searchengin", "success");
-	var malwareCtx = genCardCtx("Malware Heuristics", "Classify & identify IOCs of PE file using heuristics", "fas fa-biohazard", "danger");
-	var evtLogCtx = genCardCtx("Event Logs Correlator", "Identify potential footprints of malwares with event logs", "fas fa-chart-area", "danger");
+
+// Network		netscan
+// Commands	cmdscan
+// Process		ProcessDump
+// Files		dlldump (doing now)
+// Processes	Process Tree
+// Domains		IPWHOIS
+
+
+
+	var ramDumpCtx = genHomeCardCtx("Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fas fa-memory", "primary");
+	var triageCtx = genHomeCardCtx("Triage Analyis", "Conducts full analysis of memory dump with analysis modules", "fab fa-searchengin", "success");
+	var malwareCtx = genHomeCardCtx("Malware Heuristics", "Classify & identify IOCs of PE file using heuristics", "fas fa-biohazard", "danger");
+	var evtLogCtx = genHomeCardCtx("Event Logs Correlator", "Identify potential footprints of malwares with event logs", "fas fa-chart-area", "danger");
 	var dashboardCtxs = [ramDumpCtx,triageCtx,malwareCtx,evtLogCtx];
 
 
@@ -167,110 +176,53 @@ $(function () {
         ]
     ];
 
-    var memRamDumpInputCtx = ['div', {class: 'custom-file'},
-    	['input',  {id: 'memory-folder-input', type: 'file', class: 'custom-file-input', required: "required", webkitdirectory: "webkitdirectory", directory: "directory", multiple: "multiple"},
-    		['label', {id : 'memory-folder-input-label', class: 'custom-file-label', for: 'validatedCustomFile'}, "Choose folder..."],
-    		['div', {class: 'invalid-feedback'}, "Invalid folder"]
-		]
-	];
 
-	var memExeDumpBtnCtx = ['a', {class: 'btn btn-info btn-icon-split mt-4'},
-		['span', {class: 'icon text-white-50'},
-			['i', {class : 'fas fa-play'}]
-		],
-		['span', {class: 'text btn-white'}, 'Execute Dump']
-	];
-      
-
-	var memRequiredInputCtx = ['div', {class: 'col-xl-12 col-md-12 mb-4'},
-		['div', {class: 'card border-left-info shadow h-100 py-3'},
-			['div', {class: 'card-body'},
-				['div', {class: 'row no-gutters align-items-center'},
-					['div', {class: 'col mr-2'},
-                    	['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, "Choose your folder to dump RAM"],
-                    	memRamDumpInputCtx,
-                    	memExeDumpBtnCtx
-                  	]                  	
-                    
-                ]
-            ]        
-        ]
-    ];
-
-
-
+ 	var memRequiredInputCtx = genFileSelectCtx("mem-card-select-folder",
+ 	 "Choose your folder to dump RAM",
+ 	  "mem-input-folder",
+ 	  "Choose folder...",
+ 	  "FOLDER",
+ 	  "mem-btn-dump",
+ 	  "Execute Dump",
+ 	  "fas fa-play",
+ 	  "info"
+ 	);
+ 	
 
 	$('#row-home').html(HTML(dashboardCtxs));
-
 	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
 
 
 	$('#row-memory').html(HTML([memRamSizeCardCtx, memRequiredInputCtx]));
 
+
+	$('#row-triage').html();
+
 	
+	var arrTitles = {
+			"home": "What do you want to do",
+			"memory": "RAM Dump",
+			"triage": "Volatility Dump",
+			"malware": "Malware Heuristics",
+			"event": "Windows EVT Correlator",
+			"about": "About",
+			"technologies": "Technologies"
+	};
+
 	$('.nav-item').click(function() {
+
+		// Set Sidebar to active then toggle page
 		$('.nav-item').removeClass('active');
-		$('#'+this.id).addClass('active');
-	});
-
-
-	/* --- Toggle Pages --- */
-	$("#side-home").click(function() {
-	// Change title to #side-home
-	//Hide all page then show #side-home row
-		$("#content-header").text("side-home");
+		$(this).addClass('active');
+		
+		// Hide all content row first		
+		$("#content-header").text(arrTitles[$(this).attr('id').replace("side-", "")]);
 		$(".content-row").hide();
-		$("#row-home").fadeIn(1000);
+		$("#"+$(this).attr('id').replace("side", "content-header")).show()
+		$("#" + $(this).attr('id').replace("side", "row")).fadeIn(1000);
+		console.log($(this).attr('id'))
 	});
 
-
-	$("#side-memory").click(function() {
-		// Change title to #side-memory
-		//Hide all page then show #side-memory row
-		$("#content-header").text("side-memory");
-		$(".content-row").hide();	
-		$("#row-memory").fadeIn(1000);
-	});
-
-	$("#side-triage").click(function() {
-		// Change title to #side-triage
-		//Hide all page then show #side-triage row
-		$("#content-header").text("side-triage");
-		$(".content-row").hide();		
-		$("#row-triage").fadeIn(1000);
-	});
-
-	$("#side-malware").click(function() {
-		// Change title to #side-malware
-		//Hide all page then show #side-malware row
-		$("#content-header").text("side-malware");
-		$(".content-row").hide();
-		$("#row-malware").fadeIn(1000);
-	});
-
-	$("#side-event").click(function() {
-		// Change title to #side-event
-		//Hide all page then show #side-event row
-		$("#content-header").text("side-event");
-		$(".content-row").hide();		
-		$("#row-event").fadeIn(1000);
-	});
-
-	$("#side-about").click(function() {
-		// Change title to #side-about
-		//Hide all page then show #side-about row
-		$("#content-header").text("side-about");
-		$(".content-row").hide();
-		$("#row-about").fadeIn(1000);
-	});
-
-	$("#side-technologies").click(function() {
-		// Change title to #side-technologies
-		//Hide all page then show #side-technologies row
-		$("#content-header").text("side-technologies");
-		$(".content-row").hide();		
-		$("#row-technologies").fadeIn(1000);
-	});
 
 	/* --- End of Toggle Pages --- */
 
@@ -297,7 +249,10 @@ $(function () {
 
 	});
 
+
 	
+
+		
 	
 
 
@@ -318,7 +273,7 @@ $(function () {
 		<!-- Page Wrapper -->
 		<div id="wrapper">
 			<!-- Sidebar -->
-			<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion unselectable" id="accordionSidebar">
+			<ul id="accordionSidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion unselectable" >
 				<!-- Sidebar - Brand -->
 				<a id="side-logo" class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
 					<div class="sidebar-brand-text mx-3">Genesis 1.0</div>
@@ -355,12 +310,37 @@ $(function () {
 					<!-- Begin Page Content -->
 					<div id="page-content-area" class="container-fluid">
 						<!-- Page Heading -->
-						<div class="d-sm-flex align-items-center justify-content-center mb-4 unselectable">
+						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
 							<h1 id="content-header" class="h1 text-gray-800">What do you want to do?</h1>
 						</div>
+						<!-- <div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
+							<h1 id="content-header-memory" class="content-header h1 text-gray-800">RAM Dump?</h1>
+						</div>
+						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
+							<h1 id="content-header-triage" class="content-header h1 text-gray-800">Volatility Dump</h1>
+						</div>
+						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
+							<h1 id="content-header-malware" class="content-header h1 text-gray-800">Malware Heuristics?</h1>
+						</div>
+						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
+							<h1 id="content-header-event" class="content-header h1 text-gray-800">Windows EVT Correlator</h1>
+						</div>
+						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
+							<h1 id="content-header-event" class="content-header h1 text-gray-800">About</h1>
+						</div>
+						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
+							<h1 id="content-header-technology" class="content-header h1 text-gray-800">Technologies</h1>
+						</div> -->
 
-
-						<div id='page-dashboard-row' class="row content-row">
+<!-- "row-home"
+"row-memory"
+"row-triage"
+"row-malware"
+"row-event"
+"row-about"
+"row-technologies"
+ -->
+						<!-- <div id='page-dashboard-row' class="row content-row">
 							
 							<div class="col-xl-3 col-md-6 mb-4">
 								<div class="card border-left-success shadow h-100 py-2">
@@ -612,31 +592,41 @@ $(function () {
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
+
+
 
 
 						<div id='row-home' class='row content-row'>
 
+
 						</div>
+
 						<div id='row-memory' class='row content-row'>
 
 						</div>
+
 						<div id='row-triage' class='row content-row'>
 
 						</div>
-						<div id='row-malware' class='row content-row'>
 
+						<div id='row-malware' class='row content-row'>
+							
 						</div>
+
 						<div id='row-event' class='row content-row'>
 
 						</div>
+
 						<div id='row-about' class='row content-row'>
-
+							
 						</div>
-						<div id='row-technologies' class='row content-row'>
 
+						<div id='row-technologies' class='row content-row'>
+							<!--  -->
 						</div>
 									
+
 
 
 
@@ -650,6 +640,8 @@ $(function () {
 					</div>
 				</footer> -->
 				<!-- End of Footer -->
+
+
 			</div>
 			<!-- End of Content Wrapper -->
 		</div>
