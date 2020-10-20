@@ -11,6 +11,8 @@
 
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
+<link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -20,6 +22,10 @@
 <script src="ui_libs/toastr.min.js"></script>
 <script src="ui_libs/loadingoverlay.min.js"></script>
 <script src="ui_libs/aris.js"></script>
+<script src="vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+
 <script language="javascript">
 needsUpdate = {csv: true, benchmarking: false, plot_map: false };
 
@@ -96,6 +102,24 @@ $(function () {
 			]
 		];
 	}
+
+	// ['div', {class: 'mb-4 '},
+	// 	['div', {class: 'card border-left-success shadow h-100 py-3'},
+	// 		['div', {class: 'card-body'},
+	// 			['div', {class: 'row no-gutters align-items-center'},
+	// 				['div', {class: 'col mr-2'},
+ //                    	['div',{class: 'text-xl font-weight-bold text-success text-uppercase mb-1'}, "Available RAM Size"],
+ //                    	['div', {class: 'h2 mb-0 font-weight-bold text-gray-800'}, "32 GB"]
+ //                  	],
+ //                  	['div', {class: 'col-auto'}, 
+ //                  		['i' , {class: 'fas fa-memory fa-6x text-gray-300'}]
+ //                  	]
+                    
+ //                ]
+ //            ]        
+ //        ]
+ //    ];
+
 
 	
 
@@ -222,8 +246,11 @@ $(function () {
 // gridClass, colorStyle, title, desc, iconClass
 
 	var homeRamDumpCtx = genHomeCardCtx("home-ram-card", "col-xl-6 col-md-6 home-card", "primary", "Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fas fa-memory");
+
 	var homeTriageCtx = genHomeCardCtx("home-triage-card", "col-xl-6 col-md-6 home-card", "success", "Triage Analyis", "Conducts full analysis of memory dump with analysis modules", "fab fa-searchengin");
+
 	var homeMalwareCtx = genHomeCardCtx("home-malware-card", "col-xl-6 col-md-6 home-card", "danger", "Malware Heuristics", "Classify & identify IOCs of PE file using heuristics", "fas fa-biohazard");
+
 	var homeWindowLogCtx = genHomeCardCtx("home-window-card", "col-xl-6 col-md-6 home-card", "danger", "Event Logs Correlator", "Identify potential footprints of malwares with event logs", "fas fa-chart-area");
 
 
@@ -249,18 +276,18 @@ $(function () {
 
 
  	var memRequiredInputCtx = genFileSelectCtx("mem-card-select-folder",
- 	 "Choose your folder to dump RAM",
- 	  "mem-input-folder",
- 	  "Choose folder...",
- 	  "FOLDER",
- 	  "mem-btn-dump",
- 	  "Execute Dump",
- 	  "fas fa-play",
- 	  "info"
+		"Choose your folder to dump RAM",
+		"mem-input-folder",
+		"Choose folder...",
+		"FOLDER",
+		"mem-btn-dump",
+		"Execute Dump",
+		"fas fa-play",
+		"info"
  	);
 
  	var triageInstructionsCtx = genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
- 		genParaCtx("Fill in case name & choose folder location to dump analysis output", "",)
+ 		genParaCtx("Fill in case name & choose folder location to dump analysis output", "", "")
 	]);
 
 
@@ -268,7 +295,7 @@ $(function () {
 
  	// return genInfoCardCtx(cardId, gridClass, colorStyle, genInfoBodyCtx(title, desc, iconClass, colorStyle));
 
- 	var triageFunctionsDescCtx = genPageIntroCardCtx("Functionalities", "fas fa-brackets-curly", [
+ 	var triageFunctionsDescCtx = genPageIntroCardCtx("Functionalities", "fas fa-atom", [
  		genParaCtx("The whole triage process covers the following ", "h4 col-12 mb-5" ),
  		genHomeCardCtx("triage-func-network", "col-xl-4 col-md-4 triage-desc-card", "success", "Network Connectivity", "", "fas fa-wifi icon-cog"),
  		genHomeCardCtx("triage-func-command", "col-xl-4 col-md-4 triage-desc-card", "success", "Commands Executed", "", "fas fa-terminal"),
@@ -280,9 +307,7 @@ $(function () {
  	);
 
 
-	
-
- 	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_image",
+	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_image",
 		"Choose your RAM image file",
 		"triage-input-image",
 		"Choose file...",
@@ -294,6 +319,15 @@ $(function () {
  	);
 
 
+ 	var malwareFunctionsCtx = genPageIntroCardCtx("Functions", "fas fa-atom", [
+ 		genParaCtx("This module analyses Portable Executables (PE) files in several aspect", "h4 col-12 mb-5" ),
+ 		genHomeCardCtx("malware-func-heuristics", "col-xl-3 col-md-3 triage-desc-card", "primary", "Heuristics", "", "fas fa-viruses"),
+ 		genHomeCardCtx("malware-func-entropy", "col-xl-3 col-md-3 triage-desc-card", "primary", "Entropy", "", "fas fa-sort-numeric-up-alt"),
+ 		genHomeCardCtx("malware-func-imports", "col-xl-3 col-md-3 triage-desc-card", "primary", "Imported Functions", "", "fas fa-file-import"),
+ 		genHomeCardCtx("malware-func-ml", "col-xl-3 col-md-3 triage-desc-card", "primary", "ML", "", "fas fa-robot")],
+ 		"row"
+	);
+
  	var malwareRequiredInputCtx = genFileSelectCtx("malware-card-select-file",
  		"Choose your PE file to analyse",
 		"malware-input-folder",
@@ -304,21 +338,122 @@ $(function () {
 		"fas fa-play",
 		"info"
  	);
+
+
+
+ 	var evtInstructionsCtx = genPageIntroCardCtx("Information", "fas fa-info-circle", [
+ 		genParaCtx("Select desired windows log to analyse. Some examples of windows logs are Security.evtx, System.evtx, etc.", "", "")
+	]);
+
+ 	var evtRequiredInputCtx = genFileSelectCtx("evt-card-select-file",
+ 		"Choose your Windows Log to analyse",
+		"evt-input-folder",
+		"Choose file...",
+		"FILE",
+		"evt-btn-run",
+		"Execute correlation",
+		"fas fa-play",
+		"info"
+ 	);
+
+ 	function genTableWithDivCtx(mainDivId, subDivId, tblId, divDesc) {
+ 		return ['div', {id: mainDivId, class: 'col-xl-12 col-md-12 mb-4'},
+	 		['div', {class: 'card shadow mb-4'},
+	            ['div', {class: 'card-header py-3'},
+	             	['h6',  {class: 'm-0 font-weight-bold text-primary'}, divDesc]
+	            ],
+	            ['div', {id: subDivId, class: 'card-body'},
+	            	['div', {class: 'table-responsive'},
+		            	['table', {id: tblId, class: 'table table-bordered', id: 'dataTable',  width: '100%', cellspacing: '0'},
+							['thead', 
+								['tr',
+									['th', ,'TimeStamp'],
+									['th', 'EventID'],
+									['th', 'Classification Type'],
+									['th', 'Desc']
+								]
+							],
+			      //           ['tfoot',
+			      //               ['tr',
+									// ['th', ,'TimeStamp'],
+									// ['th', 'EventID'],
+									// ['th', 'Classification Type'],
+									// ['th', 'Desc']
+			      //               ]
+			      //           ],
+			                ['tbody',
+			                    ['tr',
+			                    	['td', 'Passaway time'],
+			                    	['td', 'Your daddy ID'],
+			                    	['td', 'Dropout'],
+			                    	['td', 'Im gona suicide']
+				                ],
+				                ['tr',
+									['td', 'Passaway time'],
+									['td', 'Your daddy ID'],
+									['td', 'Dropout'],
+									['td', 'Im gona suicide']
+			                    ]
+			                ]
+		               ]
+	              	]
+	            ]
+	        ]
+        ];	
+
+// <tbody>
+// 	<tr>
+// 		<td>Jenette Caldwell</td>
+// 		<td>Development Lead</td>
+// 		<td>New York</td>
+// 		<td>30</td>
+// 		<td>2011/09/03</td>
+// 		<td>$345,000</td>
+// 	</tr>
+// 	<tr>
+// 		<td>Yuri Berry</td>
+// 		<td>Chief Marketing Officer (CMO)</td>
+// 		<td>New York</td>
+// 		<td>40</td>
+// 		<td>2009/06/25</td>
+// 		<td>$675,000</td>
+// 	</tr>
+
+
+
+// </tbody>
+
+        
+ 	}
+
+
+ 	// var evtResultsTableCtx = 
  	// Population of elements into specific rows
 
 	$('#row-home').html(HTML(dashboardCtxs));
 	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
+	// 1
 	$('#row-memory').html(HTML([memRamSizeCardCtx, memRequiredInputCtx]));
+
+	// 2
 	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredInputCtx]));
 
-	$('#row-malware').html(HTML([malwareRequiredInputCtx]));
+	// 3
+	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx]));
 	
+	// mainDivId, subDivId, tblId, subDivDesc
+
+	$('#row-event').html(HTML([evtInstructionsCtx, evtRequiredInputCtx, genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results')]));
+
+
+	$('#dataTable').DataTable();
+
 	var arrTitles = {
 			"home": "What do you want to do",
 			"memory": "RAM Dump",
 			"triage": "Volatility Dump",
 			"malware": "Malware Heuristics",
-			"event": "Windows EVT Correlator",
+			"event": "Windows Logs Correlator",
 			"about": "About",
 			"technologies": "Technologies"
 	};
@@ -326,15 +461,18 @@ $(function () {
 	$('.nav-item').click(function() {
 
 		// Set Sidebar to active then toggle page
-		$('.nav-item').removeClass('active');
-		$(this).addClass('active');
+		if (!$(this).hasClass('active')) {
+			$('.nav-item').removeClass('active');
+			$(this).addClass('active');
+			
+			// Hide all content row first		
+			$("#content-header").text(arrTitles[$(this).attr('id').replace("side-", "")]);
+			$(".content-row").hide();
+			$("#"+$(this).attr('id').replace("side", "content-header")).show()
+			$("#" + $(this).attr('id').replace("side", "row")).fadeIn(1000);
+			console.log($(this).attr('id'))
+		}
 		
-		// Hide all content row first		
-		$("#content-header").text(arrTitles[$(this).attr('id').replace("side-", "")]);
-		$(".content-row").hide();
-		$("#"+$(this).attr('id').replace("side", "content-header")).show()
-		$("#" + $(this).attr('id').replace("side", "row")).fadeIn(1000);
-		console.log($(this).attr('id'))
 	});
 
 	/* --- End of Toggle Pages --- */
@@ -347,7 +485,12 @@ $(function () {
 	});
 
 
-
+	var startUp = function() {
+		$('#side-home').addClass("active");
+		$('.content-row').hide();
+		$('#row-home').show();
+	}
+	startUp();
 
 // End of OnloadDoc
 });
@@ -444,15 +587,6 @@ $(function () {
 
 
 					</div>
-				<!-- Footer -->
-				<!-- <footer class="sticky-footer bg-white">
-					<div class="container my-auto">
-						<div class="copyright text-center my-auto">
-							<span>Copyright &copy; Your Website 2020</span>
-						</div>
-					</div>
-				</footer> -->
-				<!-- End of Footer -->
 
 
 			</div>
