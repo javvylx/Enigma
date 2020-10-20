@@ -5,9 +5,14 @@ import csv
 # Request rate = 4 per minute
 # Daily quote = 1000 requests per day
 # Monthly quota = 30000 requests per month
-# api_key = "d265749382155a9250c2b1f2bc926eb6d7cfa0bd5c5ce00068225b516415cb67"
+# normal_api_key = "d265749382155a9250c2b1f2bc926eb6d7cfa0bd5c5ce00068225b516415cb67"
+
+# Request rate = 1000 per minute
+# Daily quote = 20000 requests per day
+# Monthly quota = 600000 requests per month
+# academic_api_key = 'dab678a43cd131a2ed0c91d0d26cc9aa3f2c69cee5198325bf4a1a29bf44c4f7'
 def virus_total(hashvalue):
-    API_KEY = 'd265749382155a9250c2b1f2bc926eb6d7cfa0bd5c5ce00068225b516415cb67'
+    API_KEY = 'dab678a43cd131a2ed0c91d0d26cc9aa3f2c69cee5198325bf4a1a29bf44c4f7'
     vt = VirusTotalPublicApi(API_KEY)
     response = vt.get_file_report(hashvalue)
     return response
