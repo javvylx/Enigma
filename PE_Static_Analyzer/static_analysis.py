@@ -5,6 +5,8 @@ import re
 from collections import defaultdict
 from datetime import datetime
 
+import pprint
+
 try:
 	import pefile
 except ImportError:
@@ -187,6 +189,7 @@ class PEDetails:
 		return 0
 
 
+
 	def get_opp_file_alignment(self):
 		return self.pe.OPTIONAL_HEADER.FileAlignment
 	
@@ -344,8 +347,6 @@ class HeuristicsAnalyser:
 
 	
 	def find_pe_headers(self):
-		# with open (self.pe_object.file_name)
-		# print(self.pe_object.file_path)
 		mz_pos = -1 
 		with open(self.pe_object.file_path, "rb") as f:
 			buf = f.read()
@@ -375,20 +376,26 @@ class HeuristicsAnalyser:
 		return self.get_num_of_pe_headers() > 1
 
 	
-	def get_num_of_packed_sections(self):
-		return len([s['Name'] for s in self.pe_object.get_sections_details() if s['Name'].decode('utf-8').rstrip("\x00") in self.packer_sect_names])
+	def get_knonwn_packed_sections(self):
+		return [s['Name'] for s in self.pe_object.get_sections_details() if s['Name'].decode('utf-8').rstrip("\x00") in self.packer_sect_names]
 
 
 
-	def get_num_of_encrypted_sections(self):
-		return len([s['Name'] for s in self.pe_object.get_sections_details() if s['Name'].decode('utf-8').rstrip("\x00") in self.encrypt_sect_names])
+	def get_known_encrypted_sections(self):
+		return [s['Name'] for s in self.pe_object.get_sections_details() if s['Name'].decode('utf-8').rstrip("\x00") in self.encrypt_sect_names]
 
+
+	def has_known_packed_sections(self):
+		return len(self.get_knonwn_packed_sections()) > 0
+
+	def has_known_encrypted_sections(self):
+		return len(self.get_known_encrypted_sections()) > 0
 
 	def get_num_of_executable_sections(self):
 		return len(self.pe_object.get_sections_details("Executable"))
 
 	def has_multiple_executable_sections(self):
-		return self.has_multiple_executable_sections() > 1
+		return self.get_num_of_executable_sections() > 1
 
 	def has_no_executable_sections(self):
 		return self.get_num_of_executable_sections == 0
@@ -451,16 +458,14 @@ class HeuristicsAnalyser:
 	def has_section_with_no_raw_size(self):
 		return len(self.sections_with_no_raw_size()) > 0
 
-
 	def has_section_executable_no_code(self):
 		return any(self.section_is_executable(sect.Characteristics) and not self.section_has_code(sect.Characteristics) for sect in self.pe_object.pe.sections)
-
 
 	def has_duplicated_section_names(self):
 		section_names = [S['Name'].decode('utf-8').replace('\x00', '') for S in self.pe_object.get_sections_details()]
 		return any(section_names.count(name) > 1 for name in section_names)
 
-	def verify_checksum(self):
+	def has_consistent_checksum(self):
 		""" Evaluates if the recalculation checksum 
 			is consistent with the checksum value 
 			in optional header
@@ -524,7 +529,7 @@ class HeuristicsAnalyser:
 			return None
 
 
-class ImportRules:
+class ImportsAnalyser:
 	
 	RULES_PATH = os.getcwd() + "\\import_rules.csv"
 
@@ -536,65 +541,161 @@ class ImportRules:
 		"""
 		with open(self.RULES_PATH, 'r') as f:
 			self.rules = {line.split(":")[0]:[x for x in line.split(":")[1:]] for line in f}
+
+		# print(self.rules)
 			
 	def __len__(self):
 		# Number of rulesets available
 		return len(self.rules)
-		# return sum(int(y[0]) for x,y in self.rules.items())
 
-	def evalute_apis_from_imports(self, pe_object: PEDetails):
+	def parse_imports(self, pe_object: PEDetails, min_severity=1):
 		if pe_object:
 			try:
 				pe_imports = pe_object.get_imported_details(decode=True)
 				found_apis = defaultdict(list)
-				score = 0
+				severity = 0
+				count = 0
 				for dll_name, func_names in pe_imports.items():
-					
 					for api, details in self.rules.items():
-						for func in func_names:
-							if re.match(details[1], func):
-								found_apis[str(api)].append(func)
-								score += int(details[0])
-				return found_apis, score
+						if int(details[0]) >= min_severity:
+							for func in func_names:
+								if re.match(details[1], func):
+									found_apis[str(api)].append(func)
+									severity += int(details[0])
+									count += 1
+				return found_apis, severity, count
 			except AttributeError:
+				return None, None, None
+		return None, None, None
+
+	def get_flaged_functions(self, pe_object: PEDetails, min_severity=2):
+		if pe_object:
+			try:
+				# a,b = self.parse_imports(pe_object)
+				# print(a,b)
+				pass
+			except Exception as e:
+
 				return None
-		return None
+
+		
+		
+
+
 
 class DataAnalyser:
+
+	THLD_NORMAL 	= 3
+	THLD_SUSPICIOUS = 10
+	THLD_DANGEROUS 	= 13
 
 	def __init__(self, pe_object):
 		self.pe_object = pe_object
 
-
-	def get_row_data(self):
-
-		# row_headers = ["High_File_Entropy", "No_exec_sect", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Total_sect_more_than_file", "No_import_directory", "No_export_directory", "No_debug_directory", "High_sect_entropy_count", "Sect_no_raw_Size_count", "Resources_count", "Writable_sects_count", "OEP_Sect_entropy", "PE_header_entropy", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "SizeOfStackCommit", "The_ratio_of_malicious_API_calls_to_all_API_calls", "IAT_RVA", "OS_Maj_Version", "SizsOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
-		ent = EntropyAnalysis(self.pe_object)
+	def run_analysis(self):
 		heuristics = HeuristicsAnalyser(self.pe_object)
-		import_rules = ImportRules()
-
-		imp_apis, imp_score = import_rules.evalute_apis_from_imports(self.pe_object)
-		
-		oep_entropy = heuristics.oep_section_details()[4]
-
-		print("OEP Entropy: ", oep_entropy)
-		CSV_FILE_INFO = {
-					"High_File_Entropy": ent.file_is_packed() or ent.file_is_encrypted(),
-					"No_exec_sect": heuristics.has_no_executable_sections(),
+		# Reles to run and return to Browser to display
+		heuristics_results  = {
+					"is_digitally_signed" :wintrust.is_signed(self.pe_object.file_path), 
+					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
+					"has_inconsistent_checksum": not heuristics.has_consistent_checksum(),
+					"has_inconsistent_size_of_code": not heuristics.has_consistent_size_of_code(),
+					"has_multiple_pe_header": heuristics.has_multiple_executable_sections(),
+					"has_no_exec_sect": heuristics.has_no_executable_sections(),
+					"has_duplicated_section_names": heuristics.has_duplicated_section_names(),
+					"has_executable_section_without_code": heuristics.has_section_executable_no_code(),
+					"has_no_import_directory": not heuristics.has_import_directory(),
+					"has_no_export_directory": not heuristics.has_export_directory(),
+					"has_no_debug_directory": not heuristics.has_debug_directory(),
 					"OEP_not_code": heuristics.oep_not_code(),
 					"OEP_uncommon_name": heuristics.oep_not_common_name(),
 					"OEP_not_exec": heuristics.oep_not_executable(),
-					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
-					"No_import_directory": not heuristics.has_import_directory(),
-					"No_export_directory": not heuristics.has_export_directory(),
-					"No_debug_directory": not heuristics.has_debug_directory(),
-					"High_sect_entropy_count": len(ent.get_high_entropy_sections()),
-					"Sect_no_raw_Size_count": len(heuristics.sections_with_no_raw_size()),
-					"Writable_sects_count": len(self.pe_object.get_sections_details("Writable")),
-					"Resources_count": heuristics.get_resources_count(), 
-					"OEP_Sect_entropy": heuristics.oep_section_details()[4],
+		}
 
-					"Sus_to_non_sus_function_ratio": 1,
+
+		import_rules = ImportsAnalyser()
+		imp_apis, imp_score, sus_count = import_rules.parse_imports(self.pe_object)
+
+		imports_results = {
+					"has_anti_debug_api": 0,
+					"has_vanilla_injection": 0,
+					"has_keylogger_api": 0,
+					"has_raw_socket_api": 0,
+					"has_http_api": 0,
+					"has_registry_api": 0,
+					"has_process_creation_api": 0,
+					"has_process_manipulation_api": 0,
+					"has_service_manipulation_api": 0,
+					"has_privilege_api": 0,
+					"has_dacl_api": 0,
+					"has_dynamic_import": 0,
+					"has_packer_api": 0,
+					"has_temporary_files": 0,
+					"has_hdd_enumeration": 0,
+					"has_driver_enumeration": 0,
+					"has_eventlog_deletion": 0,
+					"has_screenshot_api": 0,
+					"has_audio_api": 0,
+					"has_shutdown_functions": 0,
+					"has_networking_api": 0,
+					"has_password_dumping_api": 0,
+					"has_object_manipulation_api": 0,
+					"has_obfuscation_api": 0,
+					"has_suspicious_system_api": 0,
+		}
+
+
+
+		# Set the dict values to 1 as long as it has the API
+		if imp_apis is not None:
+			for x,y in imp_apis.items():
+				imports_results["has_"+x] = y
+				
+		pprint.pprint(imports_results)
+
+
+	def get_ml_data(self):
+		""" This function is to use for getting data to be used for ML
+		"""
+		# row_headers = ["High_File_Entropy", "No_exec_sect", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Total_sect_more_than_file", "No_import_directory", "No_export_directory", "No_debug_directory", "High_sect_entropy_count", "Sect_no_raw_Size_count", "Resources_count", "Writable_sects_count", "OEP_Sect_entropy", "PE_header_entropy", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "SizeOfStackCommit", "The_ratio_of_malicious_API_calls_to_all_API_calls", "IAT_RVA", "OS_Maj_Version", "SizsOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
+		ent = EntropyAnalysis(self.pe_object)
+		heuristics = HeuristicsAnalyser(self.pe_object)
+		import_rules = ImportsAnalyser()
+		# import_rules.get_flaged_functions(self.pe_object)
+
+		imp_apis, imp_score, sus_count = import_rules.parse_imports(self.pe_object)
+
+		try:
+			sus_ratio = float(sus_count/len(obj.get_imported_functions()))
+		except Exception:
+			sus_ratio = 0
+
+		
+		CSV_FILE_INFO = {
+					"High_File_Entropy": ent.file_is_packed() or ent.file_is_encrypted(),
+					"Count_High_sect_entropy": len(ent.get_high_entropy_sections()),
+					"Count_Sect_no_raw_Size": len(heuristics.sections_with_no_raw_size()),
+					"Count_Writable_sects": len(self.pe_object.get_sections_details("Writable")),
+					"Count_Resources": heuristics.get_resources_count(),
+					"OEP_Sect_entropy": heuristics.oep_section_details()[4],
+					# Heuristics to be shown in GUI
+					"is_digitally_signed" :wintrust.is_signed(self.pe_object.file_path), 
+					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
+					"has_consistent_checksum": heuristics.has_consistent_checksum(),
+					"has_consistent_size_of_code": heuristics.has_consistent_size_of_code(),
+					"has_multiple_pe_header": heuristics.has_multiple_executable_sections(),
+					"has_no_exec_sect": heuristics.has_no_executable_sections(),
+					"has_duplicated_section_names": heuristics.has_duplicated_section_names(),
+					"has_executable_section_without_code": heuristics.has_section_executable_no_code(),
+					"has_no_import_directory": not heuristics.has_import_directory(),
+					"has_no_export_directory": not heuristics.has_export_directory(),
+					"has_no_debug_directory": not heuristics.has_debug_directory(),
+					"has_known_encrypted_sections": heuristics.has_known_encrypted_sections(),
+					"has_known_packed_sections": heuristics.has_known_packed_sections(),
+					"OEP_not_code": heuristics.oep_not_code(),
+					"OEP_uncommon_name": heuristics.oep_not_common_name(),
+					"OEP_not_exec": heuristics.oep_not_executable(),
+					"Sus_to_non_sus_function_ratio": sus_ratio,
 					# "Ratio_malicious_API_calls_to_all_API_calls": 1,
 					"has_anti_debug_api": 0,
 					"has_vanilla_injection": 0,
@@ -636,10 +737,14 @@ class DataAnalyser:
 					"SizeOfUninitializedData": self.pe_object.get_opp_size_of_uninit_data()
 		}
 
-		import pprint
+		if imp_apis is not None:
+			for a in imp_apis:
+				CSV_FILE_INFO["has_"+a] = 1
+			
+
 
 		# Prints the nicely formatted dictionary
-		# pprint.pprint(CSV_FILE_INFO)
+		pprint.pprint(CSV_FILE_INFO)
 
 		# Sets 'pretty_dict_str' to the formatted string value
 		# pretty_dict_str = pprint.pformat(dictionary)
@@ -653,28 +758,7 @@ if __name__ == '__main__':
 
 	heu = HeuristicsAnalyser(obj)
 	print(heu.has_multiple_pe_headers())
-	# for file in os.listdir(files_path):
-		
-		
-	# 	obj = PEDetails(files_path+file)
-	# 	ent = EntropyAnalysis(obj)
-	# 	print(ent.get_all_entropy_details())
 
-	# print("finish")
-		# print(file)	
-	# # obj = PEDetails("c:\\users\\user\\desktop\\1234.exe")
-	# obj = PEDetails("C:\\Program Files\\Vektor T13\\VirtualBox\\VirtualBox.exe")
-	# obj.run()
-	# heuristics = HeuristicsAnalyser(obj)
-	# print(heuristics.get_resources_count())
-	# print(heuristics.has_section_with_no_raw_size())
+	data_analyzer = DataAnalyser(obj)
 
-	# ent = EntropyAnalysis(obj)
-	# print(ent.file_is_packed())
-	
-	# print(ent.get_high_entropy_sections())
-	# data_analyzer = DataAnalyser(obj)
-
-	# data_analyzer.get_row_data()
-
-	# 
+	data_analyzer.run_analysis()
