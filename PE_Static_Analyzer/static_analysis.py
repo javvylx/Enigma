@@ -593,6 +593,10 @@ class DataAnalyser:
 		self.pe_object = pe_object
 
 	def run_analysis(self):
+
+		ent = EntropyAnalysis(self.pe_object)
+		print(ent.get_all_entropy_details())
+
 		heuristics = HeuristicsAnalyser(self.pe_object)
 		# Reles to run and return to Browser to display
 		heuristics_results  = {
@@ -650,12 +654,13 @@ class DataAnalyser:
 		if imp_apis is not None:
 			for x,y in imp_apis.items():
 				imports_results["has_"+x] = y
-				
+			
+		pprint.pprint(heuristics_results)
 		pprint.pprint(imports_results)
 
 
 	def get_ml_data(self):
-		""" This function is to use for getting data to be used for ML
+		"""This function is to use for getting data to be used for ML
 		"""
 		# row_headers = ["High_File_Entropy", "No_exec_sect", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Total_sect_more_than_file", "No_import_directory", "No_export_directory", "No_debug_directory", "High_sect_entropy_count", "Sect_no_raw_Size_count", "Resources_count", "Writable_sects_count", "OEP_Sect_entropy", "PE_header_entropy", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "SizeOfStackCommit", "The_ratio_of_malicious_API_calls_to_all_API_calls", "IAT_RVA", "OS_Maj_Version", "SizsOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
 		ent = EntropyAnalysis(self.pe_object)
@@ -751,14 +756,37 @@ class DataAnalyser:
 
 if __name__ == '__main__':
 
-	files_path = "c:\\Users\\User\\Downloads\\test\\exesample\\"
+	# files_path = "c:\\Users\\User\\Desktop\\dlls\\"
+	# fail_count = 0
+	# pass_count = 0
+	# for  f in os.listdir(files_path):
+	# 	try: 
+	# 		print(str(files_path+f))
+	# 		obj = PEDetails(str(files_path+f))
+	# 		ent = EntropyAnalysis(obj)
+	# 		data_analyzer = DataAnalyser(obj)
+	# 		data_analyzer.run_analysis()
 
-	obj = PEDetails("C:\\users\\user\\Desktop\\12345.exe")
-	obj.run()
+	# 		# print(ent.get_all_entropy_details())
 
-	heu = HeuristicsAnalyser(obj)
-	print(heu.has_multiple_pe_headers())
+	# 		# print(f)
+	# 		pass_count += 1
+	# 	except TypeError as e:
+	# 		fail_count += 1
+	# 		pass
+
+	
+	# print("Number of passses: ", pass_count, "Number of fails: ", fail_count)
+
+
+
+	obj = PEDetails("C:\\Users\\User\\Downloads\\Artemis\\dsa")
+
+	# # obj.run()
+
+	# heu = HeuristicsAnalyser(obj)
+	# print(heu.has_multiple_pe_headers())
 
 	data_analyzer = DataAnalyser(obj)
 
-	data_analyzer.run_analysis()
+	data_analyzer.get_ml_data()

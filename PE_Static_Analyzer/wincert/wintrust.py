@@ -114,7 +114,7 @@ def get_file_hash(filename):
             # The volume for a file has been externally altered so that the opened file is no longer valid.
             # (returned for empty file)
             return None
-        raise
+        # raise
     return buffer
 
 def get_file_hash2(filename): #POC: name/API will change/disapear
