@@ -779,9 +779,8 @@ if __name__ == '__main__':
 	# print("Number of passses: ", pass_count, "Number of fails: ", fail_count)
 
 
-
-	obj = PEDetails("C:\\Users\\User\\Downloads\\Artemis\\dsa")
-
+	file_path = "C:\\Users\\User\\Downloads\\trojan_artemis-20201021T101355Z-001\\trojan_artemis\\Artemis\\InstallBC201401"
+	obj = PEDetails(file_path)
 	# # obj.run()
 
 	# heu = HeuristicsAnalyser(obj)
