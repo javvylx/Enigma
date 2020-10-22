@@ -5,7 +5,8 @@ sys.path.append(os.getcwd())
 from selenium import webdriver
 import subprocess
 import ast
-import plotgraph_Clean
+import tkinter as tk
+from tkinter import filedialog
 
 
 if 'pythonw' in sys.executable:
@@ -194,12 +195,15 @@ class Browser(object):
 # Read from this point onwards only
 # ####################################
 def launch():
-	#define route object for map plotting
-	routeObj = plotgraph_Clean.FindRoute()
-	algoruntime = []
+	
+	# Hide Tkinter
+	root = tk.Tk()
+	root.withdraw()
+	
+
 	with Browser(headless=False) as browser:
 		make_browser_navless(browser)
-		browser.get("file://"+os.getcwd()+"/index.html")
+		browser.get("file://"+os.getcwd()+"/GUI/index.html")
 		browser.set_script_timeout(2147483647)
 
 		# Constantly loop and check if any of the javascript variables are set to true. 
@@ -226,77 +230,85 @@ def launch():
 				"""))
 				if needs_update is None:
 					break
-				
+
+
+				if needs_update['ram_dump_input']:
+					cout << "Ram Dump Mode\n"
+					ram_folder_location = str(filedialog.askdirectory())
+					# print(ram_folder_location)
+
+
+					browser.execute_script("window.inputFilePaths['ramFolder'] = \"%s\"; window.ram_dump_inputed();" %ram_folder_location)
+
 				# Procedure for analyzing graphs
-				if needs_update['graph']:
+				# if needs_update['graph']:
+				# 	cout << "graph Mode" << "\n"
+				# 	mode = browser.execute_script("return graphs['mode'];")
+				# 	csv_text = browser.execute_script("return updates['graph_csv'];")
+				# 	saveDataStringIntoPath(csv_text, 'tmp/tmp_graph_csv.csv')
+
+				# 	browser.execute_script("resetGraphAnalysisImg();")
+				# 	browser.execute_script("showLoader('Generating graph...');")
+
+				# 	res_d = {}
+				# 	# Call different file depending on mode
+				# 	if mode == 'timeseries':
+				# 		res_d = ast.literal_eval(subprocess.check_output(["python", "timeseries.py", 'tmp/tmp_graph_csv.csv']))
+				# 		if (int(res_d['no']) == 1):
+				# 			browser.execute_script("hideLoader('');")
+				# 			browser.execute_script("showSuccess('Successfully generated graph")
+				# 			browser.execute_script("setGraphAnalysisImg('%s');" %(res_d['file_path']))
+				# 	else: 
+				# 		cout << "not timeseries" << "\n"
+
+
+				# 	browser.execute_script("hideLoader('');")
+
+				# if needs_update['plot_map']:	
+				# 	cout << "Plotting map" << "\n"
+
+				# 	start_location = browser.execute_script("return mapLocation['from'];")
+				# 	end_location = browser.execute_script("return mapLocation['to'];")
+				# 	travel_method = browser.execute_script("return method['type'];")
+				# 	algorithm_plot = browser.execute_script("return algorithm['algo'];")
+
+				# 	cout << start_location << " " << end_location << " " << travel_method <<  " " << algorithm_plot << "\n"
 					
-					cout << "graph Mode" << "\n"
-					mode = browser.execute_script("return graphs['mode'];")
-					csv_text = browser.execute_script("return updates['graph_csv'];")
-					saveDataStringIntoPath(csv_text, 'tmp/tmp_graph_csv.csv')
+				# 	# Start loc and end loc can be in string
+				# 	if start_location != end_location:
+				# 		browser.execute_script("showLoader('Generating path...');")
 
-					browser.execute_script("resetGraphAnalysisImg();")
-					browser.execute_script("showLoader('Generating graph...');")
+				# 		# Find path will return a list of each run time algorithm
+				# 		algoruntime = routeObj.find_path(int(start_location),int(end_location),travel_method)
 
-					res_d = {}
-					# Call different file depending on mode
-					if mode == 'timeseries':
-						res_d = ast.literal_eval(subprocess.check_output(["python", "timeseries.py", 'tmp/tmp_graph_csv.csv']))
-						if (int(res_d['no']) == 1):
-							browser.execute_script("hideLoader('');")
-							browser.execute_script("showSuccess('Successfully generated graph")
-							browser.execute_script("setGraphAnalysisImg('%s');" %(res_d['file_path']))
-					else: 
-						cout << "not timeseries" << "\n"
+				# 		if(algoruntime == -1):
+				# 			print("Graph does not have this node")
+				# 		elif(algoruntime == -2):
+				# 			print("There is no Path from start point to end point.")
+				# 		else:
 
-
-					browser.execute_script("hideLoader('');")
-
-				if needs_update['plot_map']:	
-					cout << "Plotting map" << "\n"
-
-					start_location = browser.execute_script("return mapLocation['from'];")
-					end_location = browser.execute_script("return mapLocation['to'];")
-					travel_method = browser.execute_script("return method['type'];")
-					algorithm_plot = browser.execute_script("return algorithm['algo'];")
-
-					cout << start_location << " " << end_location << " " << travel_method <<  " " << algorithm_plot << "\n"
-					
-					# Start loc and end loc can be in string
-					if start_location != end_location:
-						browser.execute_script("showLoader('Generating path...');")
-
-						# Find path will return a list of each run time algorithm
-						algoruntime = routeObj.find_path(int(start_location),int(end_location),travel_method)
-
-						if(algoruntime == -1):
-							print("Graph does not have this node")
-						elif(algoruntime == -2):
-							print("There is no Path from start point to end point.")
-						else:
-
-							if algorithm_plot == "Dijk": 
-								browser.execute_script("document.getElementById('mainframe').src = 'tmp/Dijkstra.html';")
-							elif algorithm_plot == "A":
-								browser.execute_script("document.getElementById('mainframe').src = 'tmp/A_Star.html';")
-							elif algorithm_plot == "Fast-Belman":
-								browser.execute_script("document.getElementById('mainframe').src = 'tmp/Fast_Bellmon.html';")
+				# 			if algorithm_plot == "Dijk": 
+				# 				browser.execute_script("document.getElementById('mainframe').src = 'tmp/Dijkstra.html';")
+				# 			elif algorithm_plot == "A":
+				# 				browser.execute_script("document.getElementById('mainframe').src = 'tmp/A_Star.html';")
+				# 			elif algorithm_plot == "Fast-Belman":
+				# 				browser.execute_script("document.getElementById('mainframe').src = 'tmp/Fast_Bellmon.html';")
 						
-							browser.execute_script("hideLoader('');")
-							# browser.execute_script("document.getElementById('content-displaygraph').style.display = 'block';")
-							browser.execute_script("toastr.success('Shortest path shown', 'Graph Updated');")
-							# browser.execute_script("")
-							browser.execute_script("document.getElementById('dijk-frame').src = 'tmp/Dijkstra.html';")
-							browser.execute_script("document.getElementById('a-star-frame').src = 'tmp/A_Star.html';")
-							browser.execute_script("document.getElementById('fast-bellmon-frame').src = 'tmp/Fast_Bellmon.html';")
+				# 			browser.execute_script("hideLoader('');")
+				# 			# browser.execute_script("document.getElementById('content-displaygraph').style.display = 'block';")
+				# 			browser.execute_script("toastr.success('Shortest path shown', 'Graph Updated');")
+				# 			# browser.execute_script("")
+				# 			browser.execute_script("document.getElementById('dijk-frame').src = 'tmp/Dijkstra.html';")
+				# 			browser.execute_script("document.getElementById('a-star-frame').src = 'tmp/A_Star.html';")
+				# 			browser.execute_script("document.getElementById('fast-bellmon-frame').src = 'tmp/Fast_Bellmon.html';")
 							
-							browser.execute_script("runtime['dijkstra'] = %s;" %algoruntime[0] )
-							browser.execute_script("runtime['astar'] = %s;" %algoruntime[1])
-							browser.execute_script("runtime['fastBellman'] = %s;" %algoruntime[2])
+				# 			browser.execute_script("runtime['dijkstra'] = %s;" %algoruntime[0] )
+				# 			browser.execute_script("runtime['astar'] = %s;" %algoruntime[1])
+				# 			browser.execute_script("runtime['fastBellman'] = %s;" %algoruntime[2])
 
-							cout << "Completed" << "\n"
-					else:
-						cout << "Same start and end" << "\n"
+				# 			cout << "Completed" << "\n"
+				# 	else:
+				# 		cout << "Same start and end" << "\n"
 
 					# Launch pythons subprocess to generate new folium html element? 
 			except Exception as e:
