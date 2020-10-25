@@ -227,9 +227,23 @@ class PEDetails:
 	def run(self):
 		# print(self.pe.OPTIONAL_HEADER)
 		# [for x in self.pe.OPTIONAL_HEADER.DATA_DIRECTORY if x.name == "IMAGE_DIRECTORY_ENTRY_IMPORT"]
-		for x in self.pe.OPTIONAL_HEADER.DATA_DIRECTORY:
-			if x.name == "IMAGE_DIRECTORY_ENTRY_IMPORT":
-				print(x.VirtualAddress)
+		# print(dir(self.pe))
+		res = self.pe.dump_dict()
+		# print(res.keys())
+
+		print(res['DOS_HEADER'])
+
+		print(self.pe.is_dll())
+		print(self.pe.is_driver())
+
+		print(self.pe.is_exe())
+
+		print(self.pe.OPTIONAL_HEADER.Magic)
+		print(len(self.pe.__data__))
+
+		# for x in self.pe.OPTIONAL_HEADER.DATA_DIRECTORY:
+		# 	if x.name == "IMAGE_DIRECTORY_ENTRY_IMPORT":
+		# 		print(x.VirtualAddress)
 
 			# break
 		
@@ -276,7 +290,7 @@ class EntropyAnalysis:
 			details = []
 			try:
 				details = [(sect['Name'].decode('utf-8').replace('\x00',''), round(EntropyAnalysis._evaluate_entropy(buf[sect['PointerToRawData']:sect['PointerToRawData']+sect['SizeOfRawData']]),4)) for sect in pe_object.get_sections_details()]
-				details.insert(0,("File", round(EntropyAnalysis._evaluate_entropy(buf),4)))
+				details.insert(0,("#File", round(EntropyAnalysis._evaluate_entropy(buf),4)))
 				return details
 			except Exception as e:
 				return None
@@ -292,6 +306,10 @@ class EntropyAnalysis:
 	def file_is_encrypted(self, confidence="Any"):
 		return any(self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](y) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](y) for x,y in self.entropy_details if x == "File")
 		# print(self.entropy_details)
+		
+	def get_file_entropy(self):
+		return [y for x,y in self.entropy_details if x == "#File"][0]
+
 		
 
 	def get_encrypted_sections(self, confidence="Any"):
@@ -358,11 +376,20 @@ class HeuristicsAnalyser:
 		for i in range(buffer_size):
 			
 			if (buf[i:i+2] == self.SIGNATURES["MZ"] and (i + 0x118) <= buffer_size):
+				lfa_off = i+ 0x3c
+				# print("Type: " ,type(buf[lfa_off:lfa_off+4]))
+				p_e_lfanew = int.from_bytes(buf[lfa_off:lfa_off+4], byteorder='little')
+				
+
 
 				pe_off1 = i+self.SIG_OFFSETS["PE"][0]
 				pe_off2 = i+self.SIG_OFFSETS["PE"][1]
 				opp_off1 = i+self.SIG_OFFSETS["OPP"][0]
 				opp_off2 = i+self.SIG_OFFSETS["OPP"][1]
+
+				if p_e_lfanew != pe_off1 and p_e_lfanew != pe_off2:
+					pass
+
 
 				if (buf[pe_off1:pe_off1+4] == self.SIGNATURES["PE"] and buf[opp_off1:opp_off1+2] in self.SIGNATURES["OPP"]):
 					found_coordinates.append({"MZ":i, "PE":pe_off1, "OPP":opp_off1})
@@ -439,6 +466,14 @@ class HeuristicsAnalyser:
 			return not self.oep_section_details()[3] & SECT_CHAR_FLAGS["Has Code"] == SECT_CHAR_FLAGS["Has Code"]
 		except Exception as e:
 			return None
+
+	def oep_not_in_any_sections(self):
+		try:
+			res = self.oep_section_details()
+			return res[1] == "Out" and res[2] == -1
+		except Exception as e:
+			return None
+
 
 
 	def section_is_executable(self, characteristics):
@@ -615,6 +650,7 @@ class DataAnalyser:
 					"OEP_not_code": heuristics.oep_not_code(),
 					"OEP_uncommon_name": heuristics.oep_not_common_name(),
 					"OEP_not_exec": heuristics.oep_not_executable(),
+					"OEP_not_in_sections": heuristics.oep_not_in_any_sections()
 		}
 
 
@@ -676,20 +712,27 @@ class DataAnalyser:
 		except Exception:
 			sus_ratio = 0
 
-		
+		pe_headers_count = heuristics.get_num_of_pe_headers()
+
 		CSV_FILE_INFO = {
+		# "Ratio_malicious_API_calls_to_all_API_calls": 1,
+					"File_Name":self.pe_object.file_path.split("\\")[-1],
 					"High_File_Entropy": ent.file_is_packed() or ent.file_is_encrypted(),
 					"Count_High_sect_entropy": len(ent.get_high_entropy_sections()),
 					"Count_Sect_no_raw_Size": len(heuristics.sections_with_no_raw_size()),
 					"Count_Writable_sects": len(self.pe_object.get_sections_details("Writable")),
 					"Count_Resources": heuristics.get_resources_count(),
 					"OEP_Sect_entropy": heuristics.oep_section_details()[4],
-					# Heuristics to be shown in GUI
+					"File_Entropy":ent.get_file_entropy(),
+					"Opp_Magic":self.pe_object.pe.OPTIONAL_HEADER.Magic,
+					"Count_PE_Headers":pe_headers_count,
+					"OEP_not_in_sections": heuristics.oep_not_in_any_sections(),
+
 					"is_digitally_signed" :wintrust.is_signed(self.pe_object.file_path), 
 					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
 					"has_consistent_checksum": heuristics.has_consistent_checksum(),
 					"has_consistent_size_of_code": heuristics.has_consistent_size_of_code(),
-					"has_multiple_pe_header": heuristics.has_multiple_executable_sections(),
+					"has_multiple_pe_header": pe_headers_count > 1,
 					"has_no_exec_sect": heuristics.has_no_executable_sections(),
 					"has_duplicated_section_names": heuristics.has_duplicated_section_names(),
 					"has_executable_section_without_code": heuristics.has_section_executable_no_code(),
@@ -702,7 +745,6 @@ class DataAnalyser:
 					"OEP_uncommon_name": heuristics.oep_not_common_name(),
 					"OEP_not_exec": heuristics.oep_not_executable(),
 					"Sus_to_non_sus_function_ratio": sus_ratio,
-					# "Ratio_malicious_API_calls_to_all_API_calls": 1,
 					"has_anti_debug_api": 0,
 					"has_vanilla_injection": 0,
 					"has_keylogger_api": 0,
@@ -728,7 +770,6 @@ class DataAnalyser:
 					"has_object_manipulation_api": 0,
 					"has_obfuscation_api": 0,
 					"has_suspicious_system_api": 0,
-
 					"FileAlignment":  self.pe_object.get_opp_file_alignment(),
 					"SizeOfStackReverse": self.pe_object.get_opp_size_of_stack_reserve(),
 					"IsDLL": self.pe_object.pe.is_dll(),
@@ -750,7 +791,7 @@ class DataAnalyser:
 
 
 		# Prints the nicely formatted dictionary
-		pprint.pprint(CSV_FILE_INFO)
+		return CSV_FILE_INFO
 
 		# Sets 'pretty_dict_str' to the formatted string value
 		# pretty_dict_str = pprint.pformat(dictionary)
@@ -758,14 +799,22 @@ class DataAnalyser:
 if __name__ == '__main__':
 
 
+	fp2 = "C:\\Windows\\System32\\AppVStreamMap.dll"
 
-	file_path = "C:\\Users\\User\\Desktop\\vb.exe"
+	file_path = "C:\\Users\\User\\Desktop\\123456.exe"
 	obj = PEDetails(file_path)
+	heu = HeuristicsAnalyser(obj)
+	# print("Multiplpe:", heu.has_multiple_pe_headers())
+	# obj.run()
+	d = DataAnalyser(obj)
+	print(d.get_ml_data())
+	# ent = EntropyAnalysis(obj)
+	
 	# # obj.run()
 
 	# heu = HeuristicsAnalyser(obj)
 	# print(heu.has_multiple_pe_headers())
 
-	data_analyzer = DataAnalyser(obj)
+	# data_analyzer = DataAnalyser(obj)
 
-	data_analyzer.get_ml_data()
+	# data_analyzer.get_ml_data()
