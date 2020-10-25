@@ -16,6 +16,7 @@ except ImportError:
 try:
 	import wincert.wintrust as wintrust
 except ImportError:
+	# If fail try pip install pythonforwindows
 	print("Unable to import wintrust module")
 	sys.exit()
 
@@ -756,30 +757,9 @@ class DataAnalyser:
 
 if __name__ == '__main__':
 
-	# files_path = "c:\\Users\\User\\Desktop\\dlls\\"
-	# fail_count = 0
-	# pass_count = 0
-	# for  f in os.listdir(files_path):
-	# 	try: 
-	# 		print(str(files_path+f))
-	# 		obj = PEDetails(str(files_path+f))
-	# 		ent = EntropyAnalysis(obj)
-	# 		data_analyzer = DataAnalyser(obj)
-	# 		data_analyzer.run_analysis()
-
-	# 		# print(ent.get_all_entropy_details())
-
-	# 		# print(f)
-	# 		pass_count += 1
-	# 	except TypeError as e:
-	# 		fail_count += 1
-	# 		pass
-
-	
-	# print("Number of passses: ", pass_count, "Number of fails: ", fail_count)
 
 
-	file_path = "C:\\Users\\User\\Downloads\\trojan_artemis-20201021T101355Z-001\\trojan_artemis\\Artemis\\InstallBC201401"
+	file_path = "C:\\Users\\User\\Desktop\\vb.exe"
 	obj = PEDetails(file_path)
 	# # obj.run()
 
