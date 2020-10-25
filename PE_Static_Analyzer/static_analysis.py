@@ -378,7 +378,7 @@ class HeuristicsAnalyser:
 			if (buf[i:i+2] == self.SIGNATURES["MZ"] and (i + 0x118) <= buffer_size):
 				lfa_off = i+ 0x3c
 				# print("Type: " ,type(buf[lfa_off:lfa_off+4]))
-				p_e_lfanew = int.from_bytes(buf[lfa_off:lfa_off+4], byteorder='little')
+				p_e_lfanew = i+int.from_bytes(buf[lfa_off:lfa_off+4], byteorder='little')
 				
 
 
@@ -387,6 +387,7 @@ class HeuristicsAnalyser:
 				opp_off1 = i+self.SIG_OFFSETS["OPP"][0]
 				opp_off2 = i+self.SIG_OFFSETS["OPP"][1]
 
+				# print (p_e_lfanew, pe_off1, pe_off2)
 				if p_e_lfanew != pe_off1 and p_e_lfanew != pe_off2:
 					pass
 
@@ -795,7 +796,6 @@ class DataAnalyser:
 
 		# Sets 'pretty_dict_str' to the formatted string value
 		# pretty_dict_str = pprint.pformat(dictionary)
-
 if __name__ == '__main__':
 
 
@@ -808,6 +808,7 @@ if __name__ == '__main__':
 	# obj.run()
 	d = DataAnalyser(obj)
 	print(d.get_ml_data())
+	# print(d.get_ml_data())
 	# ent = EntropyAnalysis(obj)
 	
 	# # obj.run()
