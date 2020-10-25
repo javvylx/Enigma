@@ -739,6 +739,7 @@ class DataAnalyser:
 					"Count_Writable_sects": len(self.pe_object.get_sections_details("Writable")),
 					"Count_Resources": heuristics.get_resources_count(),
 					"OEP_Sect_entropy": heuristics.oep_section_details()[4],
+					"Sections_average_entropy": ent.get_sections_average_entropy(),
 					"File_Entropy":ent.get_file_entropy(),
 					"Opp_Magic":self.pe_object.pe.OPTIONAL_HEADER.Magic,
 					"Count_PE_Headers":pe_headers_count,
