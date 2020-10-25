@@ -266,7 +266,7 @@ class EntropyAnalysis:
 	}
 	
 	def __init__(self, pe_object: PEDetails):
-		self.entropy_details, self.file_entropy = self._get_entropy_details(pe_object)
+		self.sections_details, self.file_entropy = self._get_entropy_details(pe_object)
 
 	@staticmethod
 	def _evaluate_entropy(buff):
@@ -298,42 +298,42 @@ class EntropyAnalysis:
 
 
 	def get_all_entropy_details(self):
-		return self.entropy_details
+		return self.sections_details
 		
 	def file_is_packed(self, confidence="Any"):
-		return any(self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](y) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](y) for x,y in self.entropy_details if x == "File")
+		return any(self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](y) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](y) for x,y in self.sections_details if x == "File")
 
 	def file_is_encrypted(self, confidence="Any"):
-		return any(self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](y) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](y) for x,y in self.entropy_details if x == "File")
-		# print(self.entropy_details)
+		return any(self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](y) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](y) for x,y in self.sections_details if x == "File")
+		# print(self.sections_details)
 		
 	def get_file_entropy(self):
 		return self.file_entropy
-		# return [y for x,y in self.entropy_details if x == "#File"][0]
+		# return [y for x,y in self.sections_details if x == "#File"][0]
 
 		
 	def get_sections_average_entropy(self):
-		return sum(e for n,e in self.entropy_details if x != "#File")/(len(self.entropy_details)-1)
+		return sum(e for n,e in self.sections_details)/(len(self.sections_details))
 
 	def get_encrypted_sections(self, confidence="Any"):
 		try:
 			if confidence == "Any":
-				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.sections_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
 			elif confidence == "HIGH":
-				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.sections_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e))]
 			elif  confidence == "LOW":
-				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.sections_details if (self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
 		except Exception as e:
 			return None
 
 	def get_packed_sections(self, confidence="Any"):
 		try:
 			if confidence == "Any":
-				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.sections_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
 			elif confidence == "HIGH":
-				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.sections_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e))]
 			elif  confidence == "LOW":
-				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.sections_details if (self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
 		except Exception as e:
 			return None
 
@@ -744,10 +744,10 @@ class DataAnalyser:
 					"Opp_Magic":self.pe_object.pe.OPTIONAL_HEADER.Magic,
 					"Count_PE_Headers":pe_headers_count,
 					"OEP_not_in_sections": heuristics.oep_not_in_any_sections(),
-					"Count_packed_sections_high":ent.get_number_of_packed_sections("HIGH")
-					"Count_encrypted_sections_high":ent.get_number_of_encrypted_sections("HIGH")
-					"Count_packed_sections_any":ent.get_number_of_packed_sections()
-					"Count_encrypted_sections_any":ent.get_number_of_encrypted_sections()
+					"Count_packed_sections_high":ent.get_number_of_packed_sections("HIGH"),
+					"Count_encrypted_sections_high":ent.get_number_of_encrypted_sections("HIGH"),
+					"Count_packed_sections_any":ent.get_number_of_packed_sections(),
+					"Count_encrypted_sections_any":ent.get_number_of_encrypted_sections(),
 
 					"is_digitally_signed" :wintrust.is_signed(self.pe_object.file_path), 
 					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
@@ -860,53 +860,95 @@ if __name__ == '__main__':
 			f.writelines("%s\n" % n for  n in f_names)
 
 
-	fp = "C:\\Users\\SITUser\\Downloads\\Win32_DLL\\Win32_DLL\\"
+	fp1 = "C:\\Users\\SITUser\\Downloads\\Win32_DLL\\Win32_DLL\\"
 	fp2 = "C:\\Users\\SITUser\\Downloads\\Win32_EXE\\Win32_EXE\\"
 
-	i=0
+	fp_7_exe = "C:\\Users\\SITUser\\Downloads\\Win_7\\exe\\"
+	fp_7_sys = "C:\\Users\\SITUser\\Downloads\\Win_7\\sys\\"
+	fp_7_dll = "C:\\Users\\SITUser\\Downloads\\Win_7\\sys\\"
+
+
+	fp_8_exe_1 = "C:\\Users\\SITUser\\Downloads\\Win8_32_1\\exe\\"
+	fp_8_sys_1 = "C:\\Users\\SITUser\\Downloads\\Win8_32_1\\sys\\"
+	fp_8_dll_1 = "C:\\Users\\SITUser\\Downloads\\Win8_32_1\\dll\\"
+	fp_8_exe_2 = "C:\\Users\\SITUser\\Downloads\\Win8_32_2\\exe\\"
+	fp_8_sys_2 = "C:\\Users\\SITUser\\Downloads\\Win8_32_2\\sys\\"
+	fp_8_dll_2 = "C:\\Users\\SITUser\\Downloads\\Win8_32_2\\dll\\"
+
+	
+	fp_10_exe_1 = "C:\\Users\\SITUser\\Downloads\\Win10_64_1\\exe\\"
+	fp_10_sys_1 = "C:\\Users\\SITUser\\Downloads\\Win10_64_1\\sys\\"
+	fp_10_dll_1 = "C:\\Users\\SITUser\\Downloads\\Win10_64_1\\dll\\"
+
+
 	S1 = "C:\\Users\\SITUser\\Desktop\\fp1_dlls.csv"
 	S2 = "C:\\Users\\SITUser\\Desktop\\fp2_exes.csv"
 
+
+
+	S3_7_exe = "C:\\Users\\SITUser\\Desktop\\win7_32_exe.csv"
+	S3_7_sys = "C:\\Users\\SITUser\\Desktop\\win7_32_sys.csv"
+	S3_7_dll = "C:\\Users\\SITUser\\Desktop\\win7_32_dll.csv"
+
+
+	S4_8_exe_1 = "C:\\Users\\SITUser\\Desktop\\Win8_32_1_exe.csv"
+	S4_8_sys_1 = "C:\\Users\\SITUser\\Desktop\\Win8_32_1_sys.csv"
+	S4_8_dll_1 = "C:\\Users\\SITUser\\Desktop\\Win8_32_1_dll.csv"
+	S4_8_exe_2 = "C:\\Users\\SITUser\\Desktop\\Win8_32_2_exe.csv"
+	S4_8_sys_2 = "C:\\Users\\SITUser\\Desktop\\Win8_32_2_sys.csv"
+	S4_8_dll_2 = "C:\\Users\\SITUser\\Desktop\\Win8_32_2_dll.csv"
+
+	S5_10_exe_1 = "C:\\Users\\SITUser\\Desktop\\Win10_64_1_exe.csv"
+	S5_10_sys_1 = "C:\\Users\\SITUser\\Desktop\\Win10_64_1_sys.csv"
+	S5_10_dll_1 = "C:\\Users\\SITUser\\Desktop\\Win10_64_1_dll.csv"
+
+	combo = [(fp1, S1), (fp2, S2), (fp_8_exe_1, S4_8_exe_1), (fp_8_sys_1, S4_8_sys_1), (fp_8_dll_1, S4_8_dll_1), (fp_8_exe_2, S4_8_exe_2), (fp_8_sys_2, S4_8_sys_2), (fp_8_dll_2, S4_8_dll_2), (fp_10_exe_1, S5_10_exe_1), (fp_10_sys_1, S5_10_sys_1), (fp_10_dll_1, S5_10_dll_1)]
+	i=0
+
 	import csv
 
-	headers = ["File_Name", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "File_Entropy", "Opp_Magic", "Count_PE_Headers", "OEP_not_in_sections", "Count_packed_sections_high", "Count_encrypted_sections_high", "Count_packed_sections_any", "Count_encrypted_sections_any", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "IsDriver", "IsPe", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
+	headers = ["File_Name", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "Sections_average_entropy", "File_Entropy", "Opp_Magic", "Count_PE_Headers", "OEP_not_in_sections", "Count_packed_sections_high", "Count_encrypted_sections_high", "Count_packed_sections_any", "Count_encrypted_sections_any", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "IsDriver", "IsPe", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
 	# Remove files with dot json
 	pass_count = 0
 	fail_count = 0
 	failed_files = []
+
+	# combo = [[fp1, S1], [fp2, S2], ]
 	# try:
-	with open(S2, 'w') as csvfile:
-		writer = csv.DictWriter(csvfile, fieldnames=headers)
-		writer.writeheader()
-		for f in os.listdir(fp2):
-			try:
-				data = {}
-				obj = PEDetails(fp2+f)
-				res = DataAnalyser(obj)
-				data = res.get_ml_data()
+	for x in combo:
 
-				# print(data)
-				writer.writerow(data)
+		with open(x[1], 'w') as csvfile:
+			writer = csv.DictWriter(csvfile, fieldnames=headers)
+			writer.writeheader()
+			for f in os.listdir(x[0]):
+				try:
+					data = {}
+					obj = PEDetails(x[0]+f)
+					res = DataAnalyser(obj)
+					data = res.get_ml_data()
 
-				
-				if pass_count % 10 == 0:
-					print(pass_count)
-				pass_count += 1
+					# print(data)
+					writer.writerow(data)
 
-			except Exception as e:
+					
+					if pass_count % 10 == 0:
+						print(pass_count)
+					pass_count += 1
 
-				failed_files.append(f)
-				print(e)
-				fail_count += 1
-				if fail_count%4 == 0:
-					print(fail_count)
-				pass		
+				except Exception as e:
+
+					failed_files.append(f)
+					print(e)
+					fail_count += 1
+					if fail_count%4 == 0:
+						print(fail_count)
+					pass		
 
 
-		print("Finish")
-		print("Pass: ", pass_count, " Failed: ", fail_count)
-		store_failed_files(failed_files)
-	# except:
-	# 	print("Error")
+			print("Finish")
+			print("Pass: ", pass_count, " Failed: ", fail_count)
+			store_failed_files(failed_files)
+		# except:
+		# 	print("Error")
 
 
