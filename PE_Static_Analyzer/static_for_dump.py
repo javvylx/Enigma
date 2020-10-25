@@ -266,7 +266,7 @@ class EntropyAnalysis:
 	}
 	
 	def __init__(self, pe_object: PEDetails):
-		self.entropy_details = self._get_entropy_details(pe_object)
+		self.entropy_details, self.file_entropy = self._get_entropy_details(pe_object)
 
 	@staticmethod
 	def _evaluate_entropy(buff):
@@ -290,11 +290,11 @@ class EntropyAnalysis:
 			details = []
 			try:
 				details = [(sect['Name'].decode('utf-8').replace('\x00',''), round(EntropyAnalysis._evaluate_entropy(buf[sect['PointerToRawData']:sect['PointerToRawData']+sect['SizeOfRawData']]),4)) for sect in pe_object.get_sections_details()]
-				details.insert(0,("#File", round(EntropyAnalysis._evaluate_entropy(buf),4)))
-				return details
+				# details.insert(0,("#File", round(EntropyAnalysis._evaluate_entropy(buf),4)))
+				return details, round(EntropyAnalysis._evaluate_entropy(buf),4)
 			except Exception as e:
-				return None
-		return None
+				return None, None
+		return None, None
 
 
 	def get_all_entropy_details(self):
@@ -308,29 +308,44 @@ class EntropyAnalysis:
 		# print(self.entropy_details)
 		
 	def get_file_entropy(self):
-		return [y for x,y in self.entropy_details if x == "#File"][0]
+		return self.file_entropy
+		# return [y for x,y in self.entropy_details if x == "#File"][0]
 
 		
+	def get_sections_average_entropy(self):
+		return sum(e for n,e in self.entropy_details if x != "#File")/(len(self.entropy_details)-1)
 
 	def get_encrypted_sections(self, confidence="Any"):
 		try:
 			if confidence == "Any":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
 			elif confidence == "HIGH":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e))]
 			elif  confidence == "LOW":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
 		except Exception as e:
 			return None
 
 	def get_packed_sections(self, confidence="Any"):
 		try:
 			if confidence == "Any":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
 			elif confidence == "HIGH":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e))]
 			elif  confidence == "LOW":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+		except Exception as e:
+			return None
+
+	def get_number_of_encrypted_sections(self, confidence="Any"):
+		try:
+			return len(self.get_encrypted_sections(confidence))
+		except Exception as e:
+			return None
+
+	def get_number_of_packed_sections(self, confidence="Any"):
+		try:
+			return len(self.get_packed_sections(confidence))
 		except Exception as e:
 			return None
 
@@ -378,7 +393,7 @@ class HeuristicsAnalyser:
 			if (buf[i:i+2] == self.SIGNATURES["MZ"] and (i + 0x118) <= buffer_size):
 				lfa_off = i+ 0x3c
 				# print("Type: " ,type(buf[lfa_off:lfa_off+4]))
-				p_e_lfanew = int.from_bytes(buf[lfa_off:lfa_off+4], byteorder='little')
+				p_e_lfanew = i+int.from_bytes(buf[lfa_off:lfa_off+4], byteorder='little')
 				
 
 
@@ -387,6 +402,7 @@ class HeuristicsAnalyser:
 				opp_off1 = i+self.SIG_OFFSETS["OPP"][0]
 				opp_off2 = i+self.SIG_OFFSETS["OPP"][1]
 
+				# print (p_e_lfanew, pe_off1, pe_off2)
 				if p_e_lfanew != pe_off1 and p_e_lfanew != pe_off2:
 					pass
 
@@ -727,6 +743,10 @@ class DataAnalyser:
 					"Opp_Magic":self.pe_object.pe.OPTIONAL_HEADER.Magic,
 					"Count_PE_Headers":pe_headers_count,
 					"OEP_not_in_sections": heuristics.oep_not_in_any_sections(),
+					"Count_packed_sections_high":ent.get_number_of_packed_sections("HIGH")
+					"Count_encrypted_sections_high":ent.get_number_of_encrypted_sections("HIGH")
+					"Count_packed_sections_any":ent.get_number_of_packed_sections()
+					"Count_encrypted_sections_any":ent.get_number_of_encrypted_sections()
 
 					"is_digitally_signed" :wintrust.is_signed(self.pe_object.file_path), 
 					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
@@ -773,6 +793,8 @@ class DataAnalyser:
 					"FileAlignment":  self.pe_object.get_opp_file_alignment(),
 					"SizeOfStackReverse": self.pe_object.get_opp_size_of_stack_reserve(),
 					"IsDLL": self.pe_object.pe.is_dll(),
+					"IsDriver": self.pe_object.pe.is_driver(),
+					"IsPe": self.pe_object.pe.is_exe(),
 					"SizeOfStackCommit": self.pe_object.get_opp_size_of_stack_commit(),					
 					"IAT_RVA": self.pe_object.get_data_iat_rva(),
 					"OS_Maj_Version": self.pe_object.get_opp_maj_os_ver(),
@@ -846,7 +868,7 @@ if __name__ == '__main__':
 
 	import csv
 
-	headers = ["File_Name", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "File_Entropy", "Opp_Magic", "Count_PE_Headers", "OEP_not_in_sections", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
+	headers = ["File_Name", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "File_Entropy", "Opp_Magic", "Count_PE_Headers", "OEP_not_in_sections", "Count_packed_sections_high", "Count_encrypted_sections_high", "Count_packed_sections_any", "Count_encrypted_sections_any", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "IsDriver", "IsPe", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
 	# Remove files with dot json
 	pass_count = 0
 	fail_count = 0

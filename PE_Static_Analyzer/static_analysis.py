@@ -266,7 +266,7 @@ class EntropyAnalysis:
 	}
 	
 	def __init__(self, pe_object: PEDetails):
-		self.entropy_details = self._get_entropy_details(pe_object)
+		self.entropy_details, self.file_entropy = self._get_entropy_details(pe_object)
 
 	@staticmethod
 	def _evaluate_entropy(buff):
@@ -290,11 +290,11 @@ class EntropyAnalysis:
 			details = []
 			try:
 				details = [(sect['Name'].decode('utf-8').replace('\x00',''), round(EntropyAnalysis._evaluate_entropy(buf[sect['PointerToRawData']:sect['PointerToRawData']+sect['SizeOfRawData']]),4)) for sect in pe_object.get_sections_details()]
-				details.insert(0,("#File", round(EntropyAnalysis._evaluate_entropy(buf),4)))
-				return details
+				# details.insert(0,("#File", round(EntropyAnalysis._evaluate_entropy(buf),4)))
+				return details, round(EntropyAnalysis._evaluate_entropy(buf),4)
 			except Exception as e:
-				return None
-		return None
+				return None, None
+		return None, None
 
 
 	def get_all_entropy_details(self):
@@ -308,29 +308,44 @@ class EntropyAnalysis:
 		# print(self.entropy_details)
 		
 	def get_file_entropy(self):
-		return [y for x,y in self.entropy_details if x == "#File"][0]
+		return self.file_entropy
+		# return [y for x,y in self.entropy_details if x == "#File"][0]
 
 		
+	def get_sections_average_entropy(self):
+		return sum(e for n,e in self.entropy_details if x != "#File")/(len(self.entropy_details)-1)
 
 	def get_encrypted_sections(self, confidence="Any"):
 		try:
 			if confidence == "Any":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
 			elif confidence == "HIGH":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_ENCRYPTED"](e))]
 			elif  confidence == "LOW":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_ENCRYPTED"](e))]
 		except Exception as e:
 			return None
 
 	def get_packed_sections(self, confidence="Any"):
 		try:
 			if confidence == "Any":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e) or self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
 			elif confidence == "HIGH":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["HIGH_THLD_PACKED"](e))]
 			elif  confidence == "LOW":
-				return [n for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+				return [(n,e) for n,e in self.entropy_details if (self.ENTP_CLASSIFICATION["LOW_THLD_PACKED"](e))]
+		except Exception as e:
+			return None
+
+	def get_number_of_encrypted_sections(self, confidence="Any"):
+		try:
+			return len(self.get_encrypted_sections(confidence))
+		except Exception as e:
+			return None
+
+	def get_number_of_packed_sections(self, confidence="Any"):
+		try:
+			return len(self.get_packed_sections(confidence))
 		except Exception as e:
 			return None
 
@@ -728,6 +743,10 @@ class DataAnalyser:
 					"Opp_Magic":self.pe_object.pe.OPTIONAL_HEADER.Magic,
 					"Count_PE_Headers":pe_headers_count,
 					"OEP_not_in_sections": heuristics.oep_not_in_any_sections(),
+					"Count_packed_sections_high":ent.get_number_of_packed_sections("HIGH")
+					"Count_encrypted_sections_high":ent.get_number_of_encrypted_sections("HIGH")
+					"Count_packed_sections_any":ent.get_number_of_packed_sections()
+					"Count_encrypted_sections_any":ent.get_number_of_encrypted_sections()
 
 					"is_digitally_signed" :wintrust.is_signed(self.pe_object.file_path), 
 					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
@@ -774,6 +793,8 @@ class DataAnalyser:
 					"FileAlignment":  self.pe_object.get_opp_file_alignment(),
 					"SizeOfStackReverse": self.pe_object.get_opp_size_of_stack_reserve(),
 					"IsDLL": self.pe_object.pe.is_dll(),
+					"IsDriver": self.pe_object.pe.is_driver(),
+					"IsPe": self.pe_object.pe.is_exe(),
 					"SizeOfStackCommit": self.pe_object.get_opp_size_of_stack_commit(),					
 					"IAT_RVA": self.pe_object.get_data_iat_rva(),
 					"OS_Maj_Version": self.pe_object.get_opp_maj_os_ver(),
