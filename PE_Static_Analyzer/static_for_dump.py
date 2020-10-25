@@ -834,20 +834,19 @@ if __name__ == '__main__':
 
 	def store_failed_files(f_names):
 		with open ("failed_names.txt", 'w') as f:
-			f.writelines(f.writelines("%s\n" % n for  n in f_names))
+			f.writelines("%s\n" % n for  n in f_names)
 
 
 	fp = "C:\\Users\\SITUser\\Downloads\\Win32_DLL\\Win32_DLL\\"
 	fp2 = "C:\\Users\\SITUser\\Downloads\\Win32_EXE\\Win32_EXE\\"
 
 	i=0
-	S1 = "C:\\Users\\SITUser\\Desktop\\fp1.csv"
+	S1 = "C:\\Users\\SITUser\\Desktop\\fp1_dlls.csv"
 	S2 = "C:\\Users\\SITUser\\Desktop\\fp2_exes.csv"
-
 
 	import csv
 
-	headers = ["File_Name", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
+	headers = ["File_Name", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "File_Entropy", "Opp_Magic", "Count_PE_Headers", "OEP_not_in_sections", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
 	# Remove files with dot json
 	pass_count = 0
 	fail_count = 0
