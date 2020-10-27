@@ -147,7 +147,9 @@ $(function () {
 
 	function genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, bodyElements) {
 		return ['div', {class: 'unselectable mb-4 ' + gridClass},
-			['div', {id: cardId, class: 'card shadow h-100 py-2' + " border-bottom-" + colorStyle + " " + hoverStyle}, 
+			['div', {id: cardId, class: 'card shadow h-100 py-2 ' + colorStyle + " " + hoverStyle}, 
+			// ['div', {id: cardId, class: 'card shadow h-100 py-2' + " border-bottom-" + colorStyle + " " + hoverStyle}, 
+
 				['div', {class: 'card-body'},
 					bodyElements
 				]
@@ -179,6 +181,15 @@ $(function () {
 		];
 	}
 
+	function genSmallBodyNoImgCtx(title, descId, desc, colorStyle) {
+		return ['div', {class: 'row no-gutterse align-items-center justify-content-center mb-0 d-flex'},
+			['div', {class: 'col'},
+				['div', {class: "text-xl font-weight-bold text-uppercase mb-5 text-" + colorStyle}, title],
+				['div', {id: descId, class: "h5 mb-0 font-weight-bold text-gray-800"}, desc]
+			]			
+		];
+	}
+
 	function genTableBodyCtx(title, desc, iconClass, colorStyle, tableHeader, tableRows) {
 		return ['div', {class: 'row no-gutterse align-items-center justify-content-center mb-0 d-flex'},
 			['div', {class: 'col mr-2'},
@@ -206,10 +217,10 @@ $(function () {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
 	}
 
-	function genTriageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc, iconClass) {
-		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
-	}
 
+	function genNoImageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc) {
+		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyNoImgCtx(title, descId, desc, colorStyle));	
+	}
 	function genTableCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, desc, iconClass) {
 
 	}
@@ -576,15 +587,15 @@ $(function () {
 
 // gridClass, colorStyle, title, desc, iconClass
 
-	var homeMemoryDumpCtx = genHomeCardCtx("home-memory-card", "col-xl-6 col-md-6 col-sm-12 col-12", "primary", "home-card", "Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
+	var homeMemoryDumpCtx = genHomeCardCtx("home-memory-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-primary", "home-card", "Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
 
-	var homeTriageCtx = genHomeCardCtx("home-triage-card", "col-xl-6 col-md-6 col-sm-12 col-12", "success", "home-card", "Triage Analyis", "Conducts full analysis of memory dump with analysis modules", "fa-6x fab fa-searchengin");
+	var homeTriageCtx = genHomeCardCtx("home-triage-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-success", "home-card", "Triage Analyis", "Conducts full analysis of memory dump with analysis modules", "fa-6x fab fa-searchengin");
 
-	var homeMalwareCtx = genHomeCardCtx("home-malware-card", "col-xl-6 col-md-6 col-sm-12 col-12", "danger", "home-card", "Malware Heuristics", "Classify & identify IOCs of PE file using heuristics", "fa-6x fas fa-biohazard");
+	var homeMalwareCtx = genHomeCardCtx("home-malware-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-danger", "home-card", "Malware Heuristics", "Classify & identify IOCs of PE file using heuristics", "fa-6x fas fa-biohazard");
 
-	var homeEventLogCtx = genHomeCardCtx("home-event-card", "col-xl-6 col-md-6 col-sm-12 col-12", "danger", "home-card", "Event Logs Correlator", "Identify potential footprints of malwares with event logs", "fa-6x fas fa-chart-area");
+	var homeEventLogCtx = genHomeCardCtx("home-event-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-danger", "home-card", "Event Logs Correlator", "Identify potential footprints of malwares with event logs", "fa-6x fas fa-chart-area");
 
-	var homeReview = genHomeCardCtx("home-review-card", "col-xl-12 col-md-12 col-sm-12 col-12 pb-3", "info", "home-card", "Triage Review", "Review past Triage analysis results", "fa-6x fas fa-scroll");
+	var homeReview = genHomeCardCtx("home-review-card", "col-xl-12 col-md-12 col-sm-12 col-12 pb-3", "border-bottom-info", "home-card", "Triage Review", "Review past Triage analysis results", "fa-6x fas fa-scroll");
 
 
 	var dashboardCtxs = [homeMemoryDumpCtx,homeTriageCtx,homeMalwareCtx,homeEventLogCtx, homeReview];
@@ -629,12 +640,12 @@ $(function () {
 		genParaCtx("The whole triage process covers the following ", "h4 col-12 mb-5" ),
 
 
-		genTriageCardCtx("triage-func-network", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Network Connectivity", "triage-func-network-label", "", "fa-2x fas fa-wifi icon-cog"),
-		genTriageCardCtx("triage-func-command", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Commands Executed", "triage-func-command-label", "", "fa-2x fas fa-terminal"),
-		genTriageCardCtx("triage-func-process", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Processes", "triage-func-process-label", "", "fa-2x fas fa-microchip"),
-		genTriageCardCtx("triage-func-files", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Files", "triage-func-files-label", "", "fa-2x fas fa-file-alt"),
-		genTriageCardCtx("triage-func-domains", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Domains", "triage-func-domains-label", "", "fa-2x fas fa-server"),
-		genTriageCardCtx("triage-func-virustotal", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Virustotal", "triage-func-virustotal-label", "", "fa-2x fas fa-viruses")],
+		genTriageCardCtx("triage-func-network", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Network Connectivity", "triage-func-network-label", "", "fa-2x fas fa-wifi icon-cog"),
+		genTriageCardCtx("triage-func-command", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Commands Executed", "triage-func-command-label", "", "fa-2x fas fa-terminal"),
+		genTriageCardCtx("triage-func-process", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Processes", "triage-func-process-label", "", "fa-2x fas fa-microchip"),
+		genTriageCardCtx("triage-func-files", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Files", "triage-func-files-label", "", "fa-2x fas fa-file-alt"),
+		genTriageCardCtx("triage-func-domains", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Domains", "triage-func-domains-label", "", "fa-2x fas fa-server"),
+		genTriageCardCtx("triage-func-virustotal", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Virustotal", "triage-func-virustotal-label", "", "fa-2x fas fa-viruses")],
 		"row"
 	);
 
@@ -655,23 +666,54 @@ $(function () {
 		"fas fa-play",
 		"info"
 	);
+	var triageResultsMetaNameCtx = 
+			genNoImageCardCtx("triage-result-meta-name", // card ID
+					"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", //gridClass
+					"py-0", //colorStyle
+					"border-bottom-info", //hoverStyle
+					"Name", //title
+					"triage-result-meta-name", //descId
+					"ICTNYP-NB17");
 
-	var triageResultMetaDataCtx = ['div', {id:'res-triage-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
-		['div', {class: 'card'},
-			genCardHeaderCtx("Metadata",
-				"m-0 font-weight-bold text-secondary", 
-				"ml-2 fa-1x fas fas fa-chart-bar"),
-			['div', {class: 'card-body row'},
-				
-			]
-		]
+	// genNoImageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc) {
+	var triageResultsMetaImageDateCtx = 
+		genNoImageCardCtx("triage-result-meta-datetime", // card ID
+			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", //gridClass
+			"py-0", //colorStyle
+			"border-bottom-info", //hoverStyle
+			"Image DateTime", //title
+			"triage-result-meta-datetime-label", //descId
+			"2020-10-27 12:49:25 UTC+0000");
 
-	];
+	var triageResultsMetaModelCtx = 
+		genNoImageCardCtx("triage-result-meta-model", // card ID
+				"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", //gridClass
+				"py-0", //colorStyle
+				"border-bottom-info", //hoverStyle
+				"Model", //title
+				"triage-result-meta-model-label", //descId
+				"Latitude 5590");
+
+	var triageResultsMetaManufacturerCtx = 
+			genNoImageCardCtx("triage-result-meta-manufacturer", // card ID
+					"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", //gridClass
+					"py-0", //colorStyle
+					"border-bottom-info", //hoverStyle
+					"Manufacturer", //title
+					"triage-result-meta-manufacturer-label", //descId
+					"Dell Inc.");
+
+
+
+	// Name ImgDateTime Model Manufacturer 
+
+
+
 
 	var triageResultProcessCountCtx = 
 		genTriageCardCtx("triage-result-process-info", // card ID
 			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
-			"primary", 
+			"border-bottom-primary", 
 			"", 
 			"Number of Processes", 
 			"triage-process-info-label", 
@@ -680,13 +722,35 @@ $(function () {
 
 	var triageResultDomainResultsCtx = 
 		genTriageCardCtx("triage-result-domain-info", // card ID
-				"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
-				"primary", 
-				"", 
-				"Domains/IPS Found", 
-				"triage-domain-info-label", 
-				"3 "+ "IP Addresses Found", 
-				"fa-3x fas fa-server");
+			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
+			"border-bottom-primary", 
+			"", 
+			"Domains/IPS Found", 
+			"triage-domain-info-label", 
+			"3 "+ "IP Addresses Found", 
+			"fa-3x fas fa-server");
+
+	var triageResultMalignFilesCtx = 
+		genTriageCardCtx("triage-result-malign-files-info", // card ID
+			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
+			"border-bottom-danger", 
+			"", 
+			"Number of Malign Files", 
+			"triage-domain-info-label", 
+			"3 out of 200 are flagged", 
+			"fa-3x fas fa-viruses");
+
+	var triageResultMalignEventsCtx = 
+		genTriageCardCtx("triage-result-malign-events-info", // card ID
+			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
+			"border-bottom-danger", 
+			"", 
+			"Flagged Events", 
+			"triage-domain-info-label", 
+			"2 suspicious events found", 
+			"fa-3x fas fa-viruses");
+
+
 
 	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-whoIs-table-div", 
 		"triage-WhoIs-inner-div", 
@@ -697,6 +761,7 @@ $(function () {
 			// ["IP Address", "Org" "Security.evtx", "15", "Your mother v cute"],
 			// ["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
 		]);
+
 
 
 	var triageResultEvtTableCtx = genTableWithDivCtx("triage-evt-table-div", 
@@ -736,15 +801,23 @@ $(function () {
 			genCardHeaderCtx("Results",
 				"m-0 font-weight-bold text-secondary", 
 				"ml-2 fa-1x fas fas fa-chart-bar"),
-			['div', {class: 'card-body row'},
-				triageResultProcessCountCtx,
-				triageResultDomainResultsCtx,
-				triageResultWhoIsResultsCtx,
-				triageResultEvtTableCtx, 
-				triageResultsExesTableCtx,
-				triageResultsDllTableCtx
-			]
-			
+				['div', {class: 'card-body row'},
+					triageResultsMetaNameCtx,
+					triageResultsMetaImageDateCtx,
+					triageResultsMetaModelCtx,
+					triageResultsMetaManufacturerCtx,
+
+					triageResultProcessCountCtx,
+					triageResultDomainResultsCtx,
+
+					triageResultMalignFilesCtx,
+					triageResultMalignEventsCtx,
+					
+					triageResultWhoIsResultsCtx,
+					triageResultEvtTableCtx, 
+					triageResultsExesTableCtx,
+					triageResultsDllTableCtx
+				]	
 
 
 			// ['div', {class: 'card-header py-3'}]
@@ -762,10 +835,10 @@ $(function () {
 
 	var malwareFunctionsCtx = genPageIntroCardCtx("Functions", "fas fa-atom", [
 		genParaCtx("This module analyses Portable Executables (PE) files in several aspect", "fa-2x h4 col-12 mb-5" ),
-		genMalwareCardCtx("malware-func-heuristics", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Heuristics", "malware-func-heuristics-label", "", "fa-2x fas fa-viruses"),
-		genMalwareCardCtx("malware-func-entropy", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Entropy", "malware-func-entropy-label", "", "fa-2x fas fa-sort-numeric-up-alt"),
-		genMalwareCardCtx("malware-func-imports", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Functions", "malware-func-imports-label", "", "fa-2x fas fa-file-import"),
-		genMalwareCardCtx("malware-func-ml", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "ML", "malware-func-ml-label", "", "fa-2x fas fa-robot")],
+		genMalwareCardCtx("malware-func-heuristics", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "border-bottom-primary", "", "Heuristics", "malware-func-heuristics-label", "", "fa-2x fas fa-viruses"),
+		genMalwareCardCtx("malware-func-entropy", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "border-bottom-primary", "", "Entropy", "malware-func-entropy-label", "", "fa-2x fas fa-sort-numeric-up-alt"),
+		genMalwareCardCtx("malware-func-imports", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "border-bottom-primary", "", "Functions", "malware-func-imports-label", "", "fa-2x fas fa-file-import"),
+		genMalwareCardCtx("malware-func-ml", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "border-bottom-primary", "", "ML", "malware-func-ml-label", "", "fa-2x fas fa-robot")],
 		"row"
 	);
 
@@ -817,7 +890,7 @@ $(function () {
 	var malwareResultHeuristicsScoreCtx = 
 		genMalwareCardCtx("malware-single-heuristics-info", // card ID
 			"col-xl-12 col-lg-12 col-md-6 malware-results-card mt-3", 
-			"primary", 
+			"border-left-primary", 
 			"", 
 			"Heuristics Score", 
 			"malware-single-heuristics-info-label", 
@@ -828,7 +901,7 @@ $(function () {
 	var malwareResultEmberPredictionScoreCtx = 
 		genMalwareCardCtx("malware-single-ember-score", 
 			"col-xl-12 col-lg-12 col-md-6 malware-results-card", 
-			"primary", 
+			"border-left-primary", 
 			"", 
 			"Ember Prediction", 
 			"malware-single-ember-score-label", 
@@ -838,7 +911,7 @@ $(function () {
 	var malwareResultMLPredictionScoreCtx =
 		genMalwareCardCtx("malware-single-ml-score", 
 			"col-xl-12 col-lg-12 col-md-6 malware-results-card", 
-			"primary", 
+			"border-left-primary", 
 			"", 
 			"ML Prediction", 
 			"malware-single-ml-score-label", 
@@ -857,7 +930,7 @@ $(function () {
 
 	var malwareResultEntropyDetailsCtx = genInfoCardCtx('malware-single-section-details', 
 		'col-xl-12 col-lg-12 col-md-6 malware-results-card', 
-		'primary', 
+		'border-bottom-primary', 
 		"", //hoverStyle
 		''); //Put table here
 
@@ -1137,80 +1210,10 @@ $(function () {
 						</div>
 
 						<div id='row-about' class='row content-row'>
-
-
-
-							<div class="col-lg-6">
-								<div class="card position-relative">
-									<div class="card-header py-3">
-										<h6 class="m-0 font-weight-bold text-primary">Kevin Tan</h6>
-									</div>
-									<div class="card-body">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/kevin.png" alt="">
-										
-										<div class="mb-1"></div>
-										<p class="mb-0 small"></p>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-lg-6">
-								<div class="card position-relative">
-									<div class="card-header py-3">
-										<h6 class="m-0 font-weight-bold text-primary">Patrick Kang</h6>
-									</div>
-									<div class="card-body">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/patrick.png" alt="">
-										
-										<div class="mb-1"></div>
-										<p class="mb-0 small"></p>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-lg-6">
-								<div class="card position-relative">
-									<div class="card-header py-3">
-										<h6 class="m-0 font-weight-bold text-primary">Cleaven Goh</h6>
-									</div>
-									<div class="card-body">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/cleaven.png" alt="">
-										
-										<div class="mb-1"></div>
-										<p class="mb-0 small"></p>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-lg-6">
-								<div class="card position-relative">
-									<div class="card-header py-3">
-										<h6 class="m-0 font-weight-bold text-primary">Jerome Tan</h6>
-									</div>
-									<div class="card-body">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/jerome.png" alt="">
-										
-										<div class="mb-1"></div>
-										<p class="mb-0 small"></p>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-lg-6">
-								<div class="card position-relative">
-									<div class="card-header py-3">
-										<h6 class="m-0 font-weight-bold text-primary">Lim Long Xian</h6>
-									</div>
-									<div class="card-body">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/longxian.jpg" alt="">
-										
-										<div class="mb-1"></div>
-										<p class="mb-0 small"></p>
-									</div>
-								</div>
-							</div>
 							
 						</div>
+
+
 					</div>
 				<!-- Footer -->
 				<footer class="sticky-footer bg-white">

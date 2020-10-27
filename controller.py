@@ -1,4 +1,4 @@
-
+import os
 
 class ModulesControler:
 
@@ -15,16 +15,38 @@ class ModulesControler:
 
 	def start_triage_analysis(self, folder_path):
 		# Extract Info
-		# 
+		
+		if folder_path[-1] != "\\":
+			folder_path += "\\"
 
-		triage_result = {"ProcessesCount": 0,
+
+
+
+		print(folder_path)
+
+		triage_result = {
+					"ImgName": "",
+					"ImgDateTime":"",
+					"ImgModel":"",
+					"ImgManufacturer":"",
+
+
+					"ProcessesCount": 0,
 					"DomainsCount": 0,
-					""
+					"MalignFileCount": 0,
+					"FlaggedEvents":0,
+					"WhoIsDomainDetails": [],
 
+					"EventLogAnalysisDetails": [],
 
+					"FilesAnalysisDetails": [],
 
+					"DLLAnalysisDetails":[]
 
 		}
+
+
+		
 		return triage_result
 
 
@@ -57,4 +79,5 @@ class ModulesControler:
 if __name__ == '__main__':
 	M = ModulesControler()
 
-	M.execute_ram_dump()
+	M.start_triage_analysis("C:\\Users\\User\\Desktop\\2202-WELTPEIOC-Suite\\ram_output")
+
