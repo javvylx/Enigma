@@ -1,0 +1,46 @@
+Process(V) ImageBase  Name                 Result
+---------- ---------- -------------------- ------
+0x84ed1b98 ---------- System               Error: PEB at 0x0 is unavailable (possibly due to paging)
+0x85041698 0x47740000 smss.exe             OK: executable.216.exe
+0x856076d0 0x49ef0000 csrss.exe            OK: executable.284.exe
+0x85c8a500 0x49ef0000 csrss.exe            OK: executable.320.exe
+0x85c95d28 0x00190000 wininit.exe          OK: executable.328.exe
+0x85c8b8e8 0x00280000 winlogon.exe         OK: executable.352.exe
+0x85cbf4e8 0x00b10000 services.exe         OK: executable.416.exe
+0x85cc5030 0x002a0000 lsass.exe            OK: executable.424.exe
+0x85cc63c8 0x009e0000 lsm.exe              OK: executable.432.exe
+0x85d1b9b8 0x00aa0000 svchost.exe          OK: executable.524.exe
+0x85d2a030 0x00f50000 VBoxService.ex       OK: executable.584.exe
+0x85d3cd28 0x00aa0000 svchost.exe          OK: executable.648.exe
+0x85d5f760 0x00aa0000 svchost.exe          OK: executable.736.exe
+0x85d67aa8 0x00aa0000 svchost.exe          OK: executable.776.exe
+0x85d6d030 0x00aa0000 svchost.exe          OK: executable.800.exe
+0x85d7a6d8 0x00aa0000 svchost.exe          OK: executable.824.exe
+0x85d8cc70 0x00aa0000 svchost.exe          OK: executable.908.exe
+0x85db8338 0x00aa0000 svchost.exe          OK: executable.1036.exe
+0x85df0c18 0x00b50000 spoolsv.exe          OK: executable.1176.exe
+0x85e17970 0x00aa0000 svchost.exe          OK: executable.1220.exe
+0x85e5e920 0x00aa0000 svchost.exe          OK: executable.1360.exe
+0x85e61030 0x00aa0000 svchost.exe          OK: executable.1388.exe
+0x85eab0d8 0x00310000 taskhost.exe         OK: executable.1472.exe
+0x85ec0c70 0x003b0000 dwm.exe              OK: executable.1544.exe
+0x85e414b0 0x00400000 cygrunsrv.exe        OK: executable.1556.exe
+0x85ed2030 0x00500000 explorer.exe         OK: executable.1600.exe
+0x84fb5398 ---------- cygrunsrv.exe        Error: PEB at 0x7ffd9000 is unavailable (possibly due to paging)
+0x85031d28 0x00bb0000 conhost.exe          OK: executable.1828.exe
+0x85f4f1c0 0x00400000 sshd.exe             OK: executable.1868.exe
+0x85f69d28 0x00db0000 wlms.exe             OK: executable.1908.exe
+0x85fb1030 0x00dd0000 sppsvc.exe           OK: executable.796.exe
+0x85fd9030 0x012f0000 VBoxTray.exe         OK: executable.1804.exe
+0x85fdf030 0x00aa0000 svchost.exe          OK: executable.1716.exe
+0x86048c38 0x00dc0000 SearchIndexer.       OK: executable.2292.exe
+0x860c8030 0x00aa0000 svchost.exe          OK: executable.3060.exe
+0x85394030 0x01180000 wuauclt.exe          OK: executable.1196.exe
+0x8ae103c0 0x00310000 taskhost.exe         OK: executable.3936.exe
+0x88789418 0x00400000 SearchProtocol       OK: executable.1944.exe
+0x8af09030 0x00910000 SearchFilterHo       OK: executable.1444.exe
+0x853dd8e0 0x00c00000 DumpIt.exe           OK: executable.3360.exe
+0x8640fa40 0x00bb0000 conhost.exe          OK: executable.2976.exe
+0x886bf758 0x00400000 BC14.exe             OK: executable.3676.exe
+0x88697958 0x00c00000 DumpIt.exe           OK: executable.1812.exe
+0x853b39b0 0x00bb0000 conhost.exe          OK: executable.540.exe
