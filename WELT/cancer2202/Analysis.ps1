@@ -17,10 +17,9 @@ param(
 )
 #>
 
-
 # for testing, remove from final. $n = folder to store results in, $f = .xml dump absolute path
 $n = "2202monkatest"
-$f = "C:\Users\USER\Desktop\welt\testlog.xml"
+$f = $args[0]
 # case name and timestamp
 #$casefile = "$n-$(get-date -f ddMMyyyy-HHmm)" 
 
