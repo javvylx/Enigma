@@ -1,6 +1,7 @@
 import os
 import re
 import csv
+from collections import defaultdict
 
 class ModulesControler:
 
@@ -28,7 +29,7 @@ class ModulesControler:
 	FLD_COM_INFO = ["Name", "Manufacturer", "Model", ]
 
 
-
+	FLD_WHOIS = ["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
 
 	def __init__(self):
 		
@@ -46,8 +47,14 @@ class ModulesControler:
 		img_info_det = self.triage_parse_image_profiles(folder_path)
 		img_com_det = self.triage_parse_image_computer_info(folder_path)
 
-		img_dll_hash_det = self.triage_parse_dlls_hashes(folder_path)
-		print(img_dll_hash_det)
+		img_dll_hashes = self.triage_parse_dlls_hashes(folder_path)
+		img_exe_hashes = self.triage_parse_exe_hashes(folder_path)
+
+		img_whois = self.triage_parse_whois(folder_path)
+
+
+		print(img_whois)
+		# print(img_dll_hash_det)
 		# print(img_info_det)
 		
 		# print(img_com_det)
@@ -65,7 +72,7 @@ class ModulesControler:
 					"DomainsCount": 0,
 					"MalignFileCount": 0,
 					"FlaggedEvents":0,
-					"WhoIsDomainDetails": [],
+					"WhoIsDomainDetails": img_whois,
 
 					"EventLogAnalysisDetails": [],
 
@@ -112,6 +119,26 @@ class ModulesControler:
 						ret_data[x[0].rstrip()] = x[1]
 		return ret_data
 
+	def triage_parse_whois(self, a_folder):
+		# Returns a list of dicts
+		ret_data = []
+
+		with open(a_folder+self.FILE_WHOIS, 'r') as f:
+			buf = f.read()
+			cleaned = re.sub(r'\n{2,}', '\n\n', buf)
+			segments = cleaned.split("\n\n")
+			for segment in segments:
+				s_dict = defaultdict(None)
+				if len(segment) != 0:					
+					for line in segment.split('\n'):
+						x = line.split(':',1)
+						if x[0] in self.FLD_WHOIS:
+							s_dict[x[0].strip()] = x[1].strip() 
+					ret_data.append(s_dict)
+		return ret_data
+
+
+			
 
 	def triage_parse_csv_hash(self, a_folder, file_name):		
 		data = {}
@@ -127,19 +154,9 @@ class ModulesControler:
 	def triage_parse_exe_hashes(self, a_folder):
 		return self.triage_parse_csv_hash(a_folder, self.FILE_EXE_HASH)
 
+	def triage_evaluate_malware(self, a_folder, file_details):
+		pass
 
-		    
-		    # with open('coors_new.csv', mode='w') as outfile:
-		    #     writer = csv.writer(outfile)
-		    #     mydict = {rows[0]:rows[1] for rows in reader}
-
-
-		# ret_data = {}
-		# with open(a_folder+self.FILE_DLL_HASH, 'r') as f:
-		# 	data = [l for l in f if l]
-		# 	print(data)
-			# buf = f.readline()
-			# print(buf)
 
 
 	def triage_analyze_security_log(self, file_path):

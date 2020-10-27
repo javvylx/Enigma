@@ -147,7 +147,7 @@ $(function () {
 
 	function genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, bodyElements) {
 		return ['div', {class: 'unselectable mb-4 ' + gridClass},
-			['div', {id: cardId, class: 'card shadow h-100 py-2 ' + colorStyle + " " + hoverStyle}, 
+			['div', {id: cardId, class: 'card shadow h-100  ' + colorStyle + " " + hoverStyle}, 
 			// ['div', {id: cardId, class: 'card shadow h-100 py-2' + " border-bottom-" + colorStyle + " " + hoverStyle}, 
 
 				['div', {class: 'card-body'},
@@ -638,13 +638,14 @@ $(function () {
 
 	var triageFunctionsDescCtx = genPageIntroCardCtx("Functionalities", "fas fa-atom", [
 		genParaCtx("The whole triage process covers the following ", "h4 col-12 mb-5" ),
-
-
-		genTriageCardCtx("triage-func-network", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Network Connectivity", "triage-func-network-label", "", "fa-2x fas fa-wifi icon-cog"),
-		genTriageCardCtx("triage-func-command", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Commands Executed", "triage-func-command-label", "", "fa-2x fas fa-terminal"),
 		genTriageCardCtx("triage-func-process", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Processes", "triage-func-process-label", "", "fa-2x fas fa-microchip"),
 		genTriageCardCtx("triage-func-files", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Files", "triage-func-files-label", "", "fa-2x fas fa-file-alt"),
+
 		genTriageCardCtx("triage-func-domains", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Domains", "triage-func-domains-label", "", "fa-2x fas fa-server"),
+		genTriageCardCtx("triage-func-malware", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Malware", "triage-func-malware-label", "", "fa-2x fas fa-biohazard icon-cog"),
+		genTriageCardCtx("triage-func-logs-analysis", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Logs-Analysis", "triage-func-logs-analysis-label", "", "fa-2x fas fa-chart-area"),
+		
+		
 		genTriageCardCtx("triage-func-virustotal", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "border-bottom-success", "", "Virustotal", "triage-func-virustotal-label", "", "fa-2x fas fa-viruses")],
 		"row"
 	);
@@ -777,8 +778,8 @@ $(function () {
 	var triageResultsExesTableCtx = genTableWithDivCtx("triage-exes-table-div", 
 		"triage-exes-inner-div", 
 		"triage-exes-table", 
-		'Processes/Files', 
-		["File Name", "MD5", "SHA1", "Viristotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
+		'Executables', 
+		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
 		[
 			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "72.3%", "73.5%"],
 			["JeromeNoodes1", "SHA1", "HashYourDaddy2", "30/60", "1/20", "72.3%", "73.5%"]
@@ -788,7 +789,7 @@ $(function () {
 		"triage-dlls-inner-div", 
 		"triage-dlls-table", 
 		'Dynamic Linking Libraries (DLLs)', 
-		["File Name", "MD5", "SHA1", "Viristotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
+		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
 		[
 			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "72.3%", "73.5%"],
 			["JeromeNoodes1","SHA1", "hashYourDaddy2", "30/60", "1/20", "72.3%", "73.5%"]
@@ -812,7 +813,7 @@ $(function () {
 
 					triageResultMalignFilesCtx,
 					triageResultMalignEventsCtx,
-					
+
 					triageResultWhoIsResultsCtx,
 					triageResultEvtTableCtx, 
 					triageResultsExesTableCtx,
