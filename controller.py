@@ -10,18 +10,31 @@ class ModulesControler:
 		# 
 		pass
 
-	def execute_ram_dump(self):
-		status = subprocess.run(self.RAM_DUMP_EXE_PATH, shell=True)
+	
+
+
+	def start_triage_analysis(self, folder_path):
+		# Extract Info
+		# 
+
+		triage_result = {"ProcessesCount": 0,
+					"DomainsCount": 0,
+					""
+
+
+
+
+		}
+		return triage_result
 
 
 	def triage_get_image_profiles(self):
-
 		# Parse from  Imageinfo.txt
+			
 		pass
 
 	def triage_get_image_computer_info(self):
-		# Parse from computer_info.txt
-		
+		# Parse from computer_info.txt		
 		pass
 
 
@@ -36,6 +49,8 @@ class ModulesControler:
 		pass
 
 
+	def execute_ram_dump(self):
+		status = subprocess.run(self.RAM_DUMP_EXE_PATH, shell=True)
 
 
 

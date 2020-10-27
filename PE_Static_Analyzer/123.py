@@ -16,11 +16,16 @@ test_data = open("C:\\Users\\User\\Desktop\\123456.exe", 'rb').read()
 
 
 # kps = "C:\\Users\\user\\Desktop\\showkevin.csv"
-kp = "C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test\\exesample\\"
+# kp = "C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test\\exesample\\"
 
-for f in os.listdir(kp):
-	test_buf = open(kp+f, 'rb').read()
-	print(ember.predict_sample(lgbm_model, test_buf))
+# for f in os.listdir(kp):
+# 	test_buf = open(kp+f, 'rb').read()
+# 	print(ember.predict_sample(lgbm_model, test_buf))
+
+buf = open("C:\\Users\\User\\Desktop\\2202-WELTPEIOC-Suite\\ram_output", 'r').read()
+
+print
+
 
 # data_path = 'C:\\Users\\User\\Desktop\\New folder (2)\\ember_dataset_2018_2\\ember2018'
 # ember.create_vectorized_features(data_path)

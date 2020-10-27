@@ -242,7 +242,6 @@ $(function () {
 
 	function genTextInputCtx(inputId, placeHolder) {
 		return ['input', {class: 'form-control', id: inputId, placeholder: placeHolder}];
-
 	}
 	
 	function genRequiredTextCtx(cardId, cardTitle, inputId, inputPlaceHolder, colorStyle) {
@@ -260,7 +259,6 @@ $(function () {
 				]        
 			]
 		];
-
 	}
 
 	function genFileSelectCtx(cardId, cardTitle, inputId, inputPlaceHolder, inputType, btnId, btnLabel, btnIconClass, colorStyle) {
@@ -658,7 +656,17 @@ $(function () {
 		"info"
 	);
 
+	var triageResultMetaDataCtx = ['div', {id:'res-triage-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
+		['div', {class: 'card'},
+			genCardHeaderCtx("Metadata",
+				"m-0 font-weight-bold text-secondary", 
+				"ml-2 fa-1x fas fas fa-chart-bar"),
+			['div', {class: 'card-body row'},
+				
+			]
+		]
 
+	];
 
 	var triageResultProcessCountCtx = 
 		genTriageCardCtx("triage-result-process-info", // card ID
@@ -679,6 +687,17 @@ $(function () {
 				"triage-domain-info-label", 
 				"3 "+ "IP Addresses Found", 
 				"fa-3x fas fa-server");
+
+	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-whoIs-table-div", 
+		"triage-WhoIs-inner-div", 
+		"triage-WhoIs-table", 
+		'WhoIsDomain Lookup for IP Addresses', 
+		["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"],
+		[
+			// ["IP Address", "Org" "Security.evtx", "15", "Your mother v cute"],
+			// ["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
+		]);
+
 
 	var triageResultEvtTableCtx = genTableWithDivCtx("triage-evt-table-div", 
 		"triage-evt-inner-div", 
@@ -710,6 +729,8 @@ $(function () {
 			["JeromeNoodes1","SHA1", "hashYourDaddy2", "30/60", "1/20", "72.3%", "73.5%"]
 		]);
 
+
+
 	var triageResultsPanelCtx = ['div', {id:'res-triage-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
 		['div', {class: 'card'},
 			genCardHeaderCtx("Results",
@@ -718,6 +739,7 @@ $(function () {
 			['div', {class: 'card-body row'},
 				triageResultProcessCountCtx,
 				triageResultDomainResultsCtx,
+				triageResultWhoIsResultsCtx,
 				triageResultEvtTableCtx, 
 				triageResultsExesTableCtx,
 				triageResultsDllTableCtx
