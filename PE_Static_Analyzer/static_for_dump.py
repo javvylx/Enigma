@@ -902,12 +902,14 @@ if __name__ == '__main__':
 	S5_10_sys_1 = "C:\\Users\\SITUser\\Desktop\\Win10_64_1_sys.csv"
 	S5_10_dll_1 = "C:\\Users\\SITUser\\Desktop\\Win10_64_1_dll.csv"
 
-	combo = [(fp1, S1), (fp2, S2), (fp_8_exe_1, S4_8_exe_1), (fp_8_sys_1, S4_8_sys_1), (fp_8_dll_1, S4_8_dll_1), (fp_8_exe_2, S4_8_exe_2), (fp_8_sys_2, S4_8_sys_2), (fp_8_dll_2, S4_8_dll_2), (fp_10_exe_1, S5_10_exe_1), (fp_10_sys_1, S5_10_sys_1), (fp_10_dll_1, S5_10_dll_1)]
+
+	S_ALL = "C:\\Users\\SITUser\\Desktop\\all_together.csv"
+	combo = [(fp1, S1, "malign"), (fp2, S2, "malign"), (fp_8_exe_1, S4_8_exe_1, "benign"), (fp_8_sys_1, S4_8_sys_1, "benign"), (fp_8_dll_1, S4_8_dll_1, "benign"), (fp_8_exe_2, S4_8_exe_2, "benign"), (fp_8_sys_2, S4_8_sys_2, "benign"), (fp_8_dll_2, S4_8_dll_2, "benign"), (fp_10_exe_1, S5_10_exe_1, "benign"), (fp_10_sys_1, S5_10_sys_1, "benign"), (fp_10_dll_1, S5_10_dll_1, "benign")]
 	i=0
 
 	import csv
 
-	headers = ["File_Name", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "Sections_average_entropy", "File_Entropy", "Opp_Magic", "Count_PE_Headers", "OEP_not_in_sections", "Count_packed_sections_high", "Count_encrypted_sections_high", "Count_packed_sections_any", "Count_encrypted_sections_any", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "IsDriver", "IsPe", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
+	headers = ["File_Name", "Category", "High_File_Entropy", "Count_High_sect_entropy", "Count_Sect_no_raw_Size", "Count_Writable_sects", "Count_Resources", "OEP_Sect_entropy", "Sections_average_entropy", "File_Entropy", "Opp_Magic", "Count_PE_Headers", "OEP_not_in_sections", "Count_packed_sections_high", "Count_encrypted_sections_high", "Count_packed_sections_any", "Count_encrypted_sections_any", "is_digitally_signed" , "Total_sect_more_than_file", "has_consistent_checksum", "has_consistent_size_of_code", "has_multiple_pe_header", "has_no_exec_sect", "has_duplicated_section_names", "has_executable_section_without_code", "has_no_import_directory", "has_no_export_directory", "has_no_debug_directory", "has_known_encrypted_sections", "has_known_packed_sections", "OEP_not_code", "OEP_uncommon_name", "OEP_not_exec", "Sus_to_non_sus_function_ratio", "has_anti_debug_api", "has_vanilla_injection", "has_keylogger_api", "has_raw_socket_api", "has_http_api", "has_registry_api", "has_process_creation_api", "has_process_manipulation_api", "has_service_manipulation_api", "has_privilege_api", "has_dacl_api", "has_dynamic_import", "has_packer_api", "has_temporary_files", "has_hdd_enumeration", "has_driver_enumeration", "has_eventlog_deletion", "has_screenshot_api", "has_audio_api", "has_shutdown_functions", "has_networking_api", "has_password_dumping_api", "has_object_manipulation_api", "has_obfuscation_api", "has_suspicious_system_api", "FileAlignment", "SizeOfStackReverse", "IsDLL", "IsDriver", "IsPe", "SizeOfStackCommit", "IAT_RVA", "OS_Maj_Version", "SizeOfCode", "SizeOfHeaders", "OS_min_Version", "ImageBase", "SizeOfInitializedData", "SizeOfUninitializedData"]
 	# Remove files with dot json
 	pass_count = 0
 	fail_count = 0
@@ -915,9 +917,10 @@ if __name__ == '__main__':
 
 	# combo = [[fp1, S1], [fp2, S2], ]
 	# try:
-	for x in combo:
+	
 
-		with open(x[1], 'w') as csvfile:
+	with open(S_ALL, 'w') as csvfile:
+		for x in combo:
 			writer = csv.DictWriter(csvfile, fieldnames=headers)
 			writer.writeheader()
 			for f in os.listdir(x[0]):
@@ -926,7 +929,7 @@ if __name__ == '__main__':
 					obj = PEDetails(x[0]+f)
 					res = DataAnalyser(obj)
 					data = res.get_ml_data()
-
+					data['Category'] = x[2]
 					# print(data)
 					writer.writerow(data)
 
@@ -947,7 +950,7 @@ if __name__ == '__main__':
 
 			print("Finish")
 			print("Pass: ", pass_count, " Failed: ", fail_count)
-			store_failed_files(failed_files)
+			# store_failed_files(failed_files)
 		# except:
 		# 	print("Error")
 
