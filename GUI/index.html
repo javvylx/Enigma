@@ -34,6 +34,15 @@ window.inputFilePaths = {ramFolder: ''};
 
 $(function () {
 
+	function genCardHeaderCtx(title, fontClass, faClass) { 
+		return ['div', {class: 'card-header py-3'},
+			['a', {class: fontClass}, title],
+			['i', {class: faClass}]
+
+		];
+
+	}
+
 	function genSideDividerCtx() {
 		return ['hr', {class: 'sidebar-divider'}];
 	}
@@ -61,12 +70,12 @@ $(function () {
 				['div', {class: 'card-header py-3'},
 					['a', {class: 'm-0 font-weight-bold text-primary'},title],
 					['i', {class: 'ml-2 fa-1x ' + titleImgClass + " "}]
-	            ],
-	            ['div', {class: 'card-body ' + rowClass},
-	                	paragraphs
-	            ]
-	        ]
-	    ];
+				],
+				['div', {class: 'card-body ' + rowClass},
+						paragraphs
+				]
+			]
+		];
 
 	}
 
@@ -75,9 +84,9 @@ $(function () {
 			['div', {class: 'border-bottom-secondary carddiscored shadow mb-4'}, 
 				['div', {class: 'card-header py-3'},
 					['h6', {class: 'm-0 font-weight-bold text-primary'},title]                
-	            ], paragraphs
-	        ]
-	    ];
+				], paragraphs
+			]
+		];
 
 	}
 
@@ -143,34 +152,56 @@ $(function () {
 		if (type === "FILE") {
 			input = ['input',  {id: inputId, class: 'custom-file-input', required: "required"},
 				['label', {id : inputId + "-label", class: 'custom-file-label', for: 'validatedCustomFile'}, placeHolder],
-	    		['div', {class: 'invalid-feedback'}, "Invalid file"]
-	    	];
+				['div', {class: 'invalid-feedback'}, "Invalid file"]
+			];
 		} else if (type === "FOLDER") {
 			input = ['input',  {id: inputId, class: 'custom-file-input'},
 				['label', {id : inputId + "-label", class: 'custom-file-label', for: 'validatedCustomFile'}, placeHolder],
-	    		['div', {class: 'invalid-feedback'}, "Invalid folder"]
+				['div', {class: 'invalid-feedback'}, "Invalid folder"]
 			];
 		}
 		return ['div', {class: 'custom-file'}, input];
 
 	}
 
+	function genTextInputCtx(inputId, placeHolder) {
+		return ['input', {class: 'form-control', id: inputId, placeholder: placeHolder}];
+
+	}
 	
+	function genRequiredTextCtx(cardId, cardTitle, inputId, inputPlaceHolder, colorStyle) {
+		return ['div', {class: 'col-xl-12 col-md-12 mb-4'},
+			['div', {class: 'card  shadow h-100 py-3 border-left-' + colorStyle + ' '},
+				['div', {class: 'card-body'},
+					['div', {class: 'row no-gutters align-items-center'},
+						['div', {class: 'col mr-2'},
+							['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, cardTitle],
+							genTextInputCtx(inputId, inputPlaceHolder),
+							
+						]                   
+						
+					]
+				]        
+			]
+		];
+
+	}
+
 	function genFileSelectCtx(cardId, cardTitle, inputId, inputPlaceHolder, inputType, btnId, btnLabel, btnIconClass, colorStyle) {
 		return ['div', {class: 'col-xl-12 col-md-12 mb-4'},
 			['div', {class: 'card  shadow h-100 py-3 border-left-' + colorStyle + ' '},
 				['div', {class: 'card-body'},
 					['div', {class: 'row no-gutters align-items-center'},
 						['div', {class: 'col mr-2'},
-	                    	['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, cardTitle],
-	                    	genInputSelectorCtx(inputId, inputPlaceHolder, inputType), 
-	                    	genButtonCtx(btnId, btnLabel, btnIconClass, colorStyle)
-	                  	]                  	
-	                    
-	                ]
-	            ]        
-	        ]
-	    ];
+							['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, cardTitle],
+							genInputSelectorCtx(inputId, inputPlaceHolder, inputType), 
+							genButtonCtx(btnId, btnLabel, btnIconClass, colorStyle)
+						]                   
+						
+					]
+				]        
+			]
+		];
 	}
 
 
@@ -181,27 +212,272 @@ $(function () {
 				['div', {class: 'row card-header'},
 					['div', {class: ''},
 						['p', {class: 'm-0 font-weight-bold text-primary'},title],
-						['a', {class: 'fa-2x fas fa-wifi'}]	            		
+						['a', {class: 'fa-2x fas fa-wifi'}]                     
 					],
 					['div', {class: 'ml-auto my-auto mr-5'},
 
 						['input', {class: 'ml-auto big-checkbox form-check-input', id: "defaultCheck1", type: 'checkbox', value: ''}],
 
-					]					
-	            ]
-	            
-	        ]
-	    ];	
-	}
-
-
-	function genTriageFunctionCheckCtx() {
-		// function genInfoBodyCtx(title, iconClass, colorStyle)
-		return genInfoCardCtx("col-xl-3 col-md-4", "primary", genTriageCheckBoxCtx("chk1", "Network", "fas fa-wifi"));
+					]                   
+				]
+				
+			]
+		];  
 	}
 
 
 
+	function genTableHeadersCtx(headersData) {
+		var temp = ['tr'];
+		for (let i = 0; i < headersData.length; i++) {
+			temp.push(['th', headersData[i]]);
+		}
+		temp = ['thead'].push(temp);
+		// console.log(temp)
+		return temp
+
+	}
+
+	function genTableRowDataCtx(rowsData) {
+		var temp = ['tr'];
+		// Iterate the thing to see if got multiple Data Rows
+		for (let i = 0; i < rowsData.length; i++) {
+			for (let j =0; j < rowsData[i].length; j++) {
+				temp.push(['td', rowsData[i][j]]);      
+			}
+			
+		}
+		temp = ['tbody'].push(temp);
+		// console.log(temp);
+		return temp
+	}
+
+	function genTableWithDivCtx(mainDivId, subDivId, tblId, divDesc, headersData, rowsData) {
+		return ['div', {id: mainDivId, class: 'col-xl-12 col-md-12 mb-4'},
+			['div', {class: 'card shadow mb-4'},
+				['div', {class: 'card-header py-3'},
+					['h6',  {class: 'm-0 font-weight-bold text-primary'}, divDesc]
+				],
+				['div', {id: subDivId, class: 'card-body'},
+					['div', {class: 'table-responsive'},
+						['table', {id: tblId, class: 'table table-bordered', id: 'dataTable',  width: '100%', cellspacing: '0'},
+							['thead', 
+								['tr',
+									[headersData.values, function(x) {
+										return ['th', x]
+									}]
+								]
+							],
+							['tbody',
+								[rowsData.values, function(a) {
+									return ['tr', 
+										[a.values, function(b) {
+											return ['td', b]
+										}]
+
+									]
+								}]
+							]
+					   ]
+					]
+				]
+			]
+		];  
+		
+	}
+
+
+	// function genTableWithDivCtx(mainDivId, subDivId, tblId, divDesc, headersData, rowsData) {
+ //         return ['div', {id: mainDivId, class: 'col-xl-12 col-md-12 mb-4'},
+	//          ['div', {class: 'card shadow mb-4'},
+	//             ['div', {class: 'card-header py-3'},
+	//                  ['h6',  {class: 'm-0 font-weight-bold text-primary'}, divDesc]
+	//             ],
+	//             ['div', {id: subDivId, class: 'card-body'},
+	//              ['div', {class: 'table-responsive'},
+	//                  ['table', {id: tblId, class: 'table table-bordered', id: 'dataTable',  width: '100%', cellspacing: '0'},
+	//                      ['thead', 
+	//                          ['tr',
+	//                              ['th', ,'TimeStamp'],
+	//                              ['th', 'EventID'],
+	//                              ['th', 'Classification Type'],
+	//                              ['th', 'Desc']
+	//                          ]
+	//                      ],
+	//                      ['tbody',
+	//                          ['tr',
+	//                              ['td', 'Passaway time'],
+	//                              ['td', 'Your daddy ID'],
+	//                              ['td', 'Dropout'],
+	//                              ['td', 'Im gona suicide']
+	//                          ],
+	//                          ['tr',
+	//                              ['td', 'Passaway time'],
+	//                              ['td', 'Your daddy ID'],
+	//                              ['td', 'Dropout'],
+	//                              ['td', 'Im gona suicide']
+	//                          ]
+	//                      ]
+	//                 ]
+	//                  ]
+	//             ]
+	//         ]
+ //        ];   
+		
+ //     }
+
+
+	// genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results')])
+
+	function genCardBodyImgCtx(imgPath) {
+		return ['div', {class: 'text-center'},
+			['img', {class: 'img-fluid px-3 px-sm-4 mt-3 mb-4 tech-info-img', src: imgPath}]
+		];
+	}
+
+	
+
+	function genCardInfoCtx(title, imgSrc, bodyEles, cardClass, cardHeaderClass, titleClass) {
+		return ['div', {class: cardClass},
+			['div', {class: cardHeaderClass},
+				['h6', {class: titleClass}, title]
+			],
+			['div', {class: 'card-body'},
+				bodyEles                        
+			]
+		];
+	}
+
+	function genCardBodyCtx(bodyImgPath, paraElements) {
+		return [genTechCardBodyImgCtx(bodyImgPath),
+			paraElements
+		];
+
+	}
+
+	function genTechCardBodyImgCtx(imgPath) {
+		return genCardBodyImgCtx(imgPath);
+	}
+
+
+
+	function genTechCardInfoCtx(title, imgSrc, bodyEles) {
+		return genCardInfoCtx(title, imgSrc, bodyEles, 'card shadow mb-4', 'card-header py-3', 'm-0 font-weight-bold text-primary');
+	}
+
+	function genTechCardBodyParaCtx(linkLabel, hyperLinkUrl, paraText) {
+		return ['p',
+			['a', {rel: 'nofollow', href: hyperLinkUrl}, linkLabel], paraText 
+		];
+
+	}
+
+
+	function genAboutCardInfoCtx(title, imgSrc, bodyEles) {
+		return genCardInfoCtx(title, imgSrc, bodyEles, 'card shadow mb-4', 'card-header py-3', 'm-0 font-weight-bold text-primary');
+	}
+
+	function genAboutCardBodyParaCtx(paraClass, paraText) {
+		return ['p', {class: paraClass}, paraText ];
+
+	}
+
+
+	// <div class="card shadow mb-4">
+	// 	<div class="card-body">
+	// 		<div class="text-center">
+	// 			<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/genesis.png" alt="">
+	// 		</div>
+	// 		<p>
+	// 			As technologies advance over the years, the rates of targeted cyber-attacks become even more prevalent. When these attacks happen, many companies do not know when or how their infrastructures are being compromised, and thus are unable to provide a direction for forensic investigations.
+	// 		</p>
+	// 		<p>
+	// 			Our solution aims to provide as much information as possible within the forensic bailiwick of an investigation. It consists of a trilogy of modules - a Windows Event Log analyzer, a PE static analyzer, and an IOC detector. Together with an interactive GUI to ease navigation between modules and display our results, we believe that our solution will be extremely valuable in the forensics community.
+	// 		</p>
+	// 	</div>
+	// </div>
+
+
+
+	
+	
+	var cardTechBodyPythonEleCtx = [
+		genTechCardBodyImgCtx('img/python.png'),
+		['p',
+			['a', {rel: 'nofollow', href: 'https://www.python.org/'},'Python'],
+			' is an interpreted, object-oriented, high-level programming language with dynamic semantics. Its high-level built in data structures, combined with dynamic typing and dynamic binding, make it very attractive for Rapid Application Development, as well as for use as a scripting or glue language to connect existing components together.'
+		]
+	];
+
+
+	// First Tech Card
+	var techInfoPythonCtx = genTechCardInfoCtx(
+		'Python', 
+		'img/python.png', 
+		genCardBodyCtx('img/python.png', 
+			genTechCardBodyParaCtx('Python', 
+				'https://www.python.org/', 
+				' is an interpreted, object-oriented, high-level programming language with dynamic semantics. Its high-level built in data structures, combined with dynamic typing and dynamic binding, make it very attractive for Rapid Application Development, as well as for use as a scripting or glue language to connect existing components together.'
+			)
+		)
+	);
+
+	
+
+	var techInfoSeleniumCtx = genTechCardInfoCtx(
+		'Selenium', 
+		'img/selenium.png', 
+		genCardBodyCtx('img/selenium.png', 
+			genTechCardBodyParaCtx('Selenium', 
+				'https://selenium-python.readthedocs.io/',
+				' bindings provides a simple API to write functional/acceptance tests using Selenium WebDriver. Through Selenium Python API you can access all functionalities of Selenium WebDriver in an intuitive way.'
+			)
+		)
+	); 
+	var techInfoJqueryCtx = genTechCardInfoCtx(
+		'Jquery', 
+		'img/jquery.png', 
+		genCardBodyCtx('img/jquery.png', 
+			genTechCardBodyParaCtx('Jquery', 
+				'https://jquery.com/',
+				' is a fast, small, and feature-rich JavaScript library. It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much simpler with an easy-to-use API that works across a multitude of browsers.'
+			)
+		)
+	); 
+	var techInfoBootstrapCtx = genTechCardInfoCtx(
+		'Bootstrap', 
+		'img/bootstrap.png', 
+		genCardBodyCtx('img/bootstrap.png', 
+			genTechCardBodyParaCtx('Bootstrap', 
+				'https://getbootstrap.com/',
+				' is a free and open-source CSS framework directed at responsive, mobile-first front-end web development. It contains CSS- and (optionally) JavaScript-based design templates for typography, forms, buttons, navigation, and other interface components.'
+			)
+		)
+	); 
+	var techInfoPowershellCtx = genTechCardInfoCtx(
+		'Powershell', 
+		'img/powershell.png', 
+		genCardBodyCtx('img/powershell.png', 
+			genTechCardBodyParaCtx('Powershell', 
+				'https://docs.microsoft.com/en-us/powershell/',
+				' is a cross-platform task automation and configuration management framework, consisting of a command-line shell and scripting language. Unlike most shells, which accept and return text, PowerShell is built on top of the .NET Common Language Runtime (CLR), and accepts and returns .NET objects. This fundamental change brings entirely new tools and methods for automation.'
+			)
+		)
+	); 
+
+	var techInfoBashBunnyCtx = genTechCardInfoCtx(
+		'Bashbunny', 
+		'img/bash_bunny.png', 
+		genCardBodyCtx('img/bash_bunny.png', 
+			genTechCardBodyParaCtx('Bashbunny', 
+				'https://shop.hak5.org/products/bash-bunny',
+				' by Hak5 is the world’s most advanced USB attack platform. It delivers penetration testing attacks and IT automation tasks in seconds by emulating combinations of trusted USB devices – like gigabit Ethernet, serial, flash storage and keyboards. With it, computers are tricked into divulging data, exfiltrating documents, installing backdoors and many more exploits.'
+			)
+		)
+	); 
+
+
+	
 	// Display Side Bar
 	var sideHomeCtx = genSideItemCtx("side-home", "Home", "fas fa-tachometer-alt active");
 	var sideMemoryCtx = genSideItemCtx("side-memory", "Memory Dump", "fas fa-memory");
@@ -239,12 +515,12 @@ $(function () {
 
 
 
-// Network		netscan
-// Commands	cmdscan
-// Process		ProcessDump
-// Files Processes	dlldump (doing now)
+// Network      netscan
+// Commands cmdscan
+// Process      ProcessDump
+// Files Processes  dlldump (doing now)
 // Process Tree
-// Domains		
+// Domains      
 
 // gridClass, colorStyle, title, desc, iconClass
 
@@ -265,20 +541,20 @@ $(function () {
 			['div', {class: 'card-body'},
 				['div', {class: 'row no-gutters align-items-center'},
 					['div', {class: 'col mr-2'},
-                    	['div',{class: 'text-xl font-weight-bold text-success text-uppercase mb-1'}, "Available RAM Size"],
-                    	['div', {class: 'h2 mb-0 font-weight-bold text-gray-800'}, "32 GB"]
-                  	],
-                  	['div', {class: 'col-auto'}, 
-                  		['i' , {class: 'fas fa-memory fa-6x text-gray-300'}]
-                  	]
-                    
-                ]
-            ]        
-        ]
-    ];
+						['div',{class: 'text-xl font-weight-bold text-success text-uppercase mb-1'}, "Available RAM Size"],
+						['div', {class: 'h2 mb-0 font-weight-bold text-gray-800'}, "32 GB"]
+					],
+					['div', {class: 'col-auto'}, 
+						['i' , {class: 'fas fa-memory fa-6x text-gray-300'}]
+					]
+					
+				]
+			]        
+		]
+	];
 
 
- 	var memRequiredInputCtx = genFileSelectCtx("mem-card-select-folder",
+	var memRequiredInputCtx = genFileSelectCtx("mem-card-select-folder",
 		"Choose your folder to dump RAM",
 		"mem-input-folder",
 		"Choose folder...",
@@ -287,24 +563,29 @@ $(function () {
 		"Execute Dump",
 		"fas fa-play",
 		"info"
- 	);
+	);
 
- 	var triageInstructionsCtx = genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
- 		genParaCtx("Fill in case name & choose folder location to dump analysis output", "", "")
+	var triageInstructionsCtx = genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
+		genParaCtx("Fill in case name & choose folder location to dump analysis output", "", "")
 	]);
 
- 	var triageFunctionsDescCtx = genPageIntroCardCtx("Functionalities", "fas fa-atom", [
- 		genParaCtx("The whole triage process covers the following ", "h4 col-12 mb-5" ),
- 		genTriageCardCtx("triage-func-network", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Network Connectivity", "", "fa-2x fas fa-wifi icon-cog"),
- 		genTriageCardCtx("triage-func-command", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Commands Executed", "", "fa-2x fas fa-terminal"),
- 		genTriageCardCtx("triage-func-process", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Processes", "", "fa-2x fas fa-microchip"),
- 		genTriageCardCtx("triage-func-files", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Files", "", "fa-2x fas fa-file-alt"),
- 		genTriageCardCtx("triage-func-domains", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Domains", "", "fa-2x fas fa-server"),
- 		genTriageCardCtx("triage-func-virustotal", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Virustotal", "", "fa-2x fas fa-viruses")],
- 		"row"
- 	);
+	var triageFunctionsDescCtx = genPageIntroCardCtx("Functionalities", "fas fa-atom", [
+		genParaCtx("The whole triage process covers the following ", "h4 col-12 mb-5" ),
+		genTriageCardCtx("triage-func-network", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Network Connectivity", "", "fa-2x fas fa-wifi icon-cog"),
+		genTriageCardCtx("triage-func-command", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Commands Executed", "", "fa-2x fas fa-terminal"),
+		genTriageCardCtx("triage-func-process", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Processes", "", "fa-2x fas fa-microchip"),
+		genTriageCardCtx("triage-func-files", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Files", "", "fa-2x fas fa-file-alt"),
+		genTriageCardCtx("triage-func-domains", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Domains", "", "fa-2x fas fa-server"),
+		genTriageCardCtx("triage-func-virustotal", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Virustotal", "", "fa-2x fas fa-viruses")],
+		"row"
+	);
 
 
+	var triageRequiredFieldsCtx = genRequiredTextCtx('trigage-card-input-fields',
+		'Please fill in the required fields',
+		'triage-card-input-case-name', //Try impv to put list and handle it
+		'Case name', 
+		'info');
 
 	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_image",
 		"Choose your RAM image file",
@@ -315,19 +596,19 @@ $(function () {
 		"Execute analysis",
 		"fas fa-play",
 		"info"
- 	);
-
- 	var malwareFunctionsCtx = genPageIntroCardCtx("Functions", "fas fa-atom", [
- 		genParaCtx("This module analyses Portable Executables (PE) files in several aspect", "fa-2x h4 col-12 mb-5" ),
- 		genMalwareCardCtx("malware-func-heuristics", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Heuristics", "", "fa-2x fas fa-viruses"),
- 		genMalwareCardCtx("malware-func-entropy", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Entropy", "", "fa-2x fas fa-sort-numeric-up-alt"),
- 		genMalwareCardCtx("malware-func-imports", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Functions", "", "fa-2x fas fa-file-import"),
- 		genMalwareCardCtx("malware-func-ml", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "ML", "", "fa-2x fas fa-robot")],
- 		"row"
 	);
 
- 	var malwareRequiredInputCtx = genFileSelectCtx("malware-card-select-file",
- 		"Choose your PE file to analyse",
+	var malwareFunctionsCtx = genPageIntroCardCtx("Functions", "fas fa-atom", [
+		genParaCtx("This module analyses Portable Executables (PE) files in several aspect", "fa-2x h4 col-12 mb-5" ),
+		genMalwareCardCtx("malware-func-heuristics", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Heuristics", "", "fa-2x fas fa-viruses"),
+		genMalwareCardCtx("malware-func-entropy", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Entropy", "", "fa-2x fas fa-sort-numeric-up-alt"),
+		genMalwareCardCtx("malware-func-imports", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Functions", "", "fa-2x fas fa-file-import"),
+		genMalwareCardCtx("malware-func-ml", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "ML", "", "fa-2x fas fa-robot")],
+		"row"
+	);
+
+	var malwareRequiredInputCtx = genFileSelectCtx("malware-card-select-file",
+		"Choose your PE file to analyse",
 		"malware-input-folder",
 		"Choose file...",
 		"FILE",
@@ -335,15 +616,15 @@ $(function () {
 		"Execute analysis",
 		"fas fa-play",
 		"info"
- 	);
+	);
 
 
- 	var evtInstructionsCtx = genPageIntroCardCtx("Information", "fas fa-info-circle", [
- 		genParaCtx("Select desired windows log to analyse. Some examples of windows logs are Security.evtx, System.evtx, etc.", "", "")
+	var evtInstructionsCtx = genPageIntroCardCtx("Information", "fas fa-info-circle", [
+		genParaCtx("Select desired windows log to analyse. Some examples of windows logs are Security.evtx, System.evtx, etc.", "", "")
 	]);
 
- 	var evtRequiredInputCtx = genFileSelectCtx("evt-card-select-file",
- 		"Choose your Windows Log to analyse",
+	var evtRequiredInputCtx = genFileSelectCtx("evt-card-select-file",
+		"Choose your Windows Log to analyse",
 		"evt-input-folder",
 		"Choose file...",
 		"FILE",
@@ -351,65 +632,45 @@ $(function () {
 		"Execute correlation",
 		"fas fa-play",
 		"info"
- 	);
-
- 	function genTableWithDivCtx(mainDivId, subDivId, tblId, divDesc) {
- 		return ['div', {id: mainDivId, class: 'col-xl-12 col-md-12 mb-4'},
-	 		['div', {class: 'card shadow mb-4'},
-	            ['div', {class: 'card-header py-3'},
-	             	['h6',  {class: 'm-0 font-weight-bold text-primary'}, divDesc]
-	            ],
-	            ['div', {id: subDivId, class: 'card-body'},
-	            	['div', {class: 'table-responsive'},
-		            	['table', {id: tblId, class: 'table table-bordered', id: 'dataTable',  width: '100%', cellspacing: '0'},
-							['thead', 
-								['tr',
-									['th', ,'TimeStamp'],
-									['th', 'EventID'],
-									['th', 'Classification Type'],
-									['th', 'Desc']
-								]
-							],
-			                ['tbody',
-			                    ['tr',
-			                    	['td', 'Passaway time'],
-			                    	['td', 'Your daddy ID'],
-			                    	['td', 'Dropout'],
-			                    	['td', 'Im gona suicide']
-				                ],
-				                ['tr',
-									['td', 'Passaway time'],
-									['td', 'Your daddy ID'],
-									['td', 'Dropout'],
-									['td', 'Im gona suicide']
-			                    ]
-			                ]
-		               ]
-	              	]
-	            ]
-	        ]
-        ];	
-        
- 	}
-
- 	// var evtResultsTableCtx = 
- 	// Population of elements into specific rows
-
-	$('#row-home').html(HTML(dashboardCtxs));
-	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
-	// 1
-	$('#row-memory').html(HTML([memRamSizeCardCtx, memRequiredInputCtx]));
-
-	// 2
-	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredInputCtx]));
-
-	// 3
-	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx]));
-
-	$('#row-event').html(HTML([evtInstructionsCtx, evtRequiredInputCtx, genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results')]));
+	);
 
 
-	$('#dataTable').DataTable();
+	var malwareResultsHeuristicsCardCtx = genInfoCardCtx('malware-single-heuristics-info', 
+		"col-xl-6 col-md-6 col-sm-12 col-12 justify-content-center",
+		"col-xl-6 col-md-6 col-sm-12 col-12 justify-content-center",
+
+		"primary",
+		"",
+		['div', {class: 'row no-gutters align-items-center'},
+			['div', {class: 'col mr-2'},
+				['div',{class: 'text-xl font-weight-bold text-primary text-uppercase mb-1'}, "Heuristics"],
+				['div', {id:'res-malware-single-heuristics-score', class: 'h5 mb-0 font-weight-bold text-gray-800'}, "2 / 31 "]
+			],
+			['div', {class: 'col-auto'}, 
+				['i' , {class: 'fas fa-viruses fa-6x text-gray-300'}]
+			]
+			
+		]);
+
+	var malwareResultsPanelCtx = ['div', {id:'res-malware-single-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
+		['div', {class: 'card '},
+			// ['div', {class: 'card-header py-3'}]
+			genCardHeaderCtx("Results", "m-0 font-weight-bold text-secondary", "ml-2 fa-1x fas fas fa-chart-bar"),
+			genMalwareCardCtx("malware-single-heuristics-info", "col-xl-12 col-lg-12 col-md-6 triage-desc-card", "primary", "", "Heuristics Score", "2 / 23", "fa-3x fas fa-viruses"),
+
+
+		]
+
+	];
+
+	// genInfoBodyCtx(title, desc, iconClass, colorStyle)
+
+
+	// genHomeCardCtx("home-memory-card", "col-xl-6 col-md-6 col-sm-12 col-12", "primary", "home-card", "Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
+
+
+	var evtTempTableCtx = genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results', ['h1','h2','h3', 'h4'], [['R1','R2','R3', 'R4'], ['r5','r6','r7', 'r8']]);
+
 
 	var arrTitles = {
 			"home": "What do you want to do",
@@ -421,6 +682,81 @@ $(function () {
 			"technologies": "Technologies Used"
 	};
 
+	
+
+
+	var aboutIntroDetails = [
+		{"Name":"kevin", "imagePath":"img/kevin.png"},		
+		{"Name":"patrick", "imagePath":"img/patrick.png"},
+		{"Name":"jerome", "imagePath":"img/jerome.png"},
+		{"Name":"cleaven", "imagePath":"img/cleaven.png"},		
+		{"Name":"longxian", "imagePath":"img/longxian.jpg"}		
+	];
+		
+	var aboutIntroCtx = genAboutCardInfoCtx(
+			"Introduction",
+			'img/genesis.png',
+			genCardBodyCtx('img/genesis.png',[
+				genAboutCardBodyParaCtx("","As technologies advance over the years, the rates of targeted cyber-attacks become even more prevalent. When these attacks happen, many companies do not know when or how their infrastructures are being compromised, and thus are unable to provide a direction for forensic investigations."),
+				genAboutCardBodyParaCtx("","Our solution aims to provide as much information as possible within the forensic bailiwick of an investigation. It consists of a trilogy of modules - a Windows Event Log analyzer, a PE static analyzer, and an IOC detector. Together with an interactive GUI to ease navigation between modules and display our results, we believe that our solution will be extremely valuable in the forensics community.")]
+			)
+		);
+
+	// var aboutUserProfiles = [aboutIntroDetails.values, function(x) {
+	// 	return ['p', 
+	// 		['a', x.Name],
+	// 		['a', x.imagePath]
+	// 	]
+	// }]
+
+	// alert(HTML(aboutUserProfiles));
+	// 
+	// 
+	
+	// alert(typeof(aboutIntroDetails.values));
+
+	/*<div class="col-lg-6">
+		<div class="card position-relative">
+			<div class="card-header py-3">
+				<h6 class="m-0 font-weight-bold text-primary">Kevin Tan</h6>
+			</div>
+			<div class="card-body">
+				<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/kevin.png" alt="">
+				
+				<div class="mb-1"></div>
+				<p class="mb-0 small"></p>
+			</div>
+		</div>
+	</div>*/
+
+
+	// var evtResultsTableCtx = 
+	// Population of elements into specific rows
+
+	$('#row-home').html(HTML(dashboardCtxs));
+	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
+	// 1
+	$('#row-memory').html(HTML([memRamSizeCardCtx, memRequiredInputCtx]));
+
+	// 2
+	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredFieldsCtx, triageRequiredInputCtx]));
+
+
+	
+	// 3
+	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx, malwareResultsPanelCtx]));
+
+	$('#row-event').html(HTML([evtInstructionsCtx, evtRequiredInputCtx, ]));
+
+
+	$("#row-technologies").html(HTML([techInfoPythonCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, techInfoBashBunnyCtx]));
+
+	$("#row-about").html(HTML([aboutIntroCtx]));
+
+	$('#dataTable').DataTable();
+
+	
+
 	$('.nav-item').click(function() {
 
 		// Set Sidebar to active then toggle page
@@ -428,15 +764,17 @@ $(function () {
 			$('.nav-item').removeClass('active');
 			$(this).addClass('active');
 			
-			// Hide all content row first		
+			// Hide all content row first       
 			$("#content-header").text(arrTitles[$(this).attr('id').replace("side-", "")]);
 			$(".content-row").hide();
 			$("#"+$(this).attr('id').replace("side", "content-header")).show()
 			$("#" + $(this).attr('id').replace("side", "row")).fadeIn(1000);
-			console.log($(this).attr('id'))
+			// console.log($(this).attr('id'))
 		}
 		
 	});
+
+
 
 	$('.home-card').click(function() {
 		var cat = $(this).attr('id').split('-')[1];
@@ -454,7 +792,7 @@ $(function () {
 	/* --- End of Toggle Pages --- */
 
 	window.ram_dump_inputed = function () {
-		console.log(inputFilePaths.ramFolder);
+		// console.log(inputFilePaths.ramFolder);
 		$('#mem-input-folder-label').html(inputFilePaths.ramFolder);
 		inputFilePaths.ramFolder = "";
 	};
@@ -563,105 +901,13 @@ $(function () {
 						<div id='row-technologies' class='row content-row'>
 
 							<!-- Section Heading -->
-							<h1 class="h1 mb-1 text-gray-800">Software</h1>
-							<!-- Python -->
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Python</h6>
-								</div>
-								<div class="card-body">
-									<div class="text-center">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/python.png" alt="">
-									</div>
-									<p><a target="_blank" rel="nofollow" href="https://www.python.org/">Python</a> is an interpreted, object-oriented, high-level programming language with dynamic semantics. Its high-level built in data structures, combined with dynamic typing and dynamic binding, make it very attractive for Rapid Application Development, as well as for use as a scripting or glue language to connect existing components together.</p>
-								</div>
-							</div>
-
-							<!-- Selenium -->
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Selenium</h6>
-								</div>
-								<div class="card-body">
-									<div class="text-center">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/selenium.png" alt="">
-									</div>
-									<p><a target="_blank" rel="nofollow" href="https://selenium-python.readthedocs.io/">Selenium python</a> bindings provides a simple API to write functional/acceptance tests using Selenium WebDriver. Through Selenium Python API you can access all functionalities of Selenium WebDriver in an intuitive way.</p>
-								</div>
-							</div>
-
-							<!-- Jquery -->
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Jquery</h6>
-								</div>
-								<div class="card-body">
-									<div class="text-center">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/jquery.png" alt="">
-									</div>
-									<p><a target="_blank" rel="nofollow" href="https://jquery.com/">jQuery</a> is a fast, small, and feature-rich JavaScript library. It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much simpler with an easy-to-use API that works across a multitude of browsers.</p>
-								</div>
-							</div>
-
-							<!-- Bootstrap -->
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Bootstrap</h6>
-								</div>
-								<div class="card-body">
-									<div class="text-center">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/bootstrap.png" alt="">
-									</div>
-									<p><a target="_blank" rel="nofollow" href="https://getbootstrap.com/">Bootstrap</a> is a free and open-source CSS framework directed at responsive, mobile-first front-end web development. It contains CSS- and (optionally) JavaScript-based design templates for typography, forms, buttons, navigation, and other interface components.</p>
-								</div>
-							</div>
-
-							<!-- Powershell -->
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Powershell</h6>
-								</div>
-								<div class="card-body">
-									<div class="text-center">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/powershell.png" alt="">
-									</div>
-									<p><a target="_blank" rel="nofollow" href="https://docs.microsoft.com/en-us/powershell/">PowerShell</a> is a cross-platform task automation and configuration management framework, consisting of a command-line shell and scripting language. Unlike most shells, which accept and return text, PowerShell is built on top of the .NET Common Language Runtime (CLR), and accepts and returns .NET objects. This fundamental change brings entirely new tools and methods for automation.</p>
-								</div>
-							</div>
-
-							<!-- Section Heading -->
-							<h1 class="h3 mb-1 text-gray-800">Hardware</h1>
-							<!-- Bashbunny -->
-							<div class="card shadow mb-4">
-								<div class="card-header py-3">
-									<h6 class="m-0 font-weight-bold text-primary">Bashbunny</h6>
-								</div>
-								<div class="card-body">
-									<div class="text-center">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/bash_bunny.png" alt="">
-									</div>
-									<p>The <a target="_blank" rel="nofollow" href="https://shop.hak5.org/products/bash-bunny">Bash Bunny</a> by Hak5 is the world’s most advanced USB attack platform. It delivers penetration testing attacks and IT automation tasks in seconds by emulating combinations of trusted USB devices – like gigabit Ethernet, serial, flash storage and keyboards. With it, computers are tricked into divulging data, exfiltrating documents, installing backdoors and many more exploits.</p>
-								</div>
-							</div>
+						
 
 						</div>
 
 						<div id='row-about' class='row content-row'>
 
-							<!-- about -->
-							<div class="card shadow mb-4">
-								<div class="card-body">
-									<div class="text-center">
-										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/genesis.png" alt="">
-									</div>
-									<p>
-										As technologies advance over the years, the rates of targeted cyber-attacks become even more prevalent. When these attacks happen, many companies do not know when or how their infrastructures are being compromised, and thus are unable to provide a direction for forensic investigations.
-									</p>
-									<p>
-										Our solution aims to provide as much information as possible within the forensic bailiwick of an investigation. It consists of a trilogy of modules - a Windows Event Log analyzer, a PE static analyzer, and an IOC detector. Together with an interactive GUI to ease navigation between modules and display our results, we believe that our solution will be extremely valuable in the forensics community.
-									</p>
-								</div>
-							</div>
+
 
 							<div class="col-lg-6">
 								<div class="card position-relative">
@@ -671,8 +917,8 @@ $(function () {
 									<div class="card-body">
 										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/kevin.png" alt="">
 										
-										<div class="mb-1">Project Leader</div>
-										<p class="mb-0 small">Volatility</p>
+										<div class="mb-1"></div>
+										<p class="mb-0 small"></p>
 									</div>
 								</div>
 							</div>
@@ -685,8 +931,8 @@ $(function () {
 									<div class="card-body">
 										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/patrick.png" alt="">
 										
-										<div class="mb-1">Promaster</div>
-										<p class="mb-0 small">Malware</p>
+										<div class="mb-1"></div>
+										<p class="mb-0 small"></p>
 									</div>
 								</div>
 							</div>
@@ -699,8 +945,8 @@ $(function () {
 									<div class="card-body">
 										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/cleaven.png" alt="">
 										
-										<div class="mb-1">Promaster</div>
-										<p class="mb-0 small">WELT</p>
+										<div class="mb-1"></div>
+										<p class="mb-0 small"></p>
 									</div>
 								</div>
 							</div>
@@ -713,8 +959,8 @@ $(function () {
 									<div class="card-body">
 										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/jerome.png" alt="">
 										
-										<div class="mb-1">Promaster</div>
-										<p class="mb-0 small">WELT</p>
+										<div class="mb-1"></div>
+										<p class="mb-0 small"></p>
 									</div>
 								</div>
 							</div>
@@ -727,15 +973,22 @@ $(function () {
 									<div class="card-body">
 										<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/longxian.jpg" alt="">
 										
-										<div class="mb-1">Promaster</div>
-										<p class="mb-0 small">VirusTotal</p>
+										<div class="mb-1"></div>
+										<p class="mb-0 small"></p>
 									</div>
 								</div>
 							</div>
 							
 						</div>
 					</div>
-
+				<!-- Footer -->
+				<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+				  <div class="copyright text-center my-auto">
+					<span></span>
+				  </div>
+				</div>
+			  </footer>
 
 			</div>
 			<!-- End of Content Wrapper -->
@@ -745,6 +998,8 @@ $(function () {
 		<a class="scroll-to-top rounded" href="#page-top">
 		<i class="fas fa-angle-up"></i>
 		</a>
+
+
 	
 		
 		<!-- Bootstrap core JavaScript-->

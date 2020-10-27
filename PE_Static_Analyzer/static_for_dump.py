@@ -34,7 +34,7 @@ SECT_CHAR_FLAGS = {
 }
 
 class PEDetails:
-
+	
 	ATTRS_DOS_HDR 	= "e_magic, e_lfanew"
 	ATTRS_FILE_HDR 	= "Machine, NumberOfSections, NumberOfSymbols, PointerToSymbolTable, SizeOfOptionalHeader, TimeDateStamp"
 	ATTRS_OPP_HDR 	= "ImageBase, LoaderFlags, Magic, MajorImageVersion, MajorLinkerVersion, MajorOperatingSystemVersion, MajorSubsystemVersion, MinorImageVersion, MinorLinkerVersion, MinorOperatingSystemVersion, MinorSubsystemVersion, NumberOfRvaAndSizes, Reserved1, SectionAlignment, SizeOfCode, SizeOfHeaders, SizeOfHeapCommit, SizeOfHeapReserve, SizeOfImage, SizeOfInitializedData, SizeOfStackCommit, SizeOfStackReserve, SizeOfUninitializedData, Subsystem"
