@@ -27,10 +27,64 @@
 
 <script language="javascript">
 
+var refreshB64 = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIiB2aWV3Qm94PSIwIC0yNTYgMTc5MiAxNzkyIiBpZD0ic3ZnMiIgdmVyc2lvbj0iMS4xIiBpbmtzY2FwZTp2ZXJzaW9uPSIwLjQ4LjMuMSByOTg4NiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgc29kaXBvZGk6ZG9jbmFtZT0icmVmcmVzaF9mb250X2F3ZXNvbWUuc3ZnIj4gIDxtZXRhZGF0YSBpZD0ibWV0YWRhdGExMiI+ICAgIDxyZGY6UkRGPiAgICAgIDxjYzpXb3JrIHJkZjphYm91dD0iIj4gICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2Uvc3ZnK3htbDwvZGM6Zm9ybWF0PiAgICAgICAgPGRjOnR5cGUgcmRmOnJlc291cmNlPSJodHRwOi8vcHVybC5vcmcvZGMvZGNtaXR5cGUvU3RpbGxJbWFnZSIvPiAgICAgIDwvY2M6V29yaz4gICAgPC9yZGY6UkRGPiAgPC9tZXRhZGF0YT4gIDxkZWZzIGlkPSJkZWZzMTAiLz4gIDxzb2RpcG9kaTpuYW1lZHZpZXcgcGFnZWNvbG9yPSIjZmZmZmZmIiBib3JkZXJjb2xvcj0iIzY2NjY2NiIgYm9yZGVyb3BhY2l0eT0iMSIgb2JqZWN0dG9sZXJhbmNlPSIxMCIgZ3JpZHRvbGVyYW5jZT0iMTAiIGd1aWRldG9sZXJhbmNlPSIxMCIgaW5rc2NhcGU6cGFnZW9wYWNpdHk9IjAiIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiIGlua3NjYXBlOndpbmRvdy13aWR0aD0iNjQwIiBpbmtzY2FwZTp3aW5kb3ctaGVpZ2h0PSI0ODAiIGlkPSJuYW1lZHZpZXc4IiBzaG93Z3JpZD0iZmFsc2UiIGlua3NjYXBlOnpvb209IjAuMTMxNjk2NDMiIGlua3NjYXBlOmN4PSI4OTYiIGlua3NjYXBlOmN5PSI4OTYiIGlua3NjYXBlOndpbmRvdy14PSIwIiBpbmtzY2FwZTp3aW5kb3cteT0iMjUiIGlua3NjYXBlOndpbmRvdy1tYXhpbWl6ZWQ9IjAiIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9InN2ZzIiLz4gIDxnIHRyYW5zZm9ybT0ibWF0cml4KDEsMCwwLC0xLDEyMS40OTE1MywxMjcwLjIzNzMpIiBpZD0iZzQiPiAgICA8cGF0aCBkPSJtIDE1MTEsNDgwIHEgMCwtNSAtMSwtNyBRIDE0NDYsMjA1IDEyNDIsMzguNSAxMDM4LC0xMjggNzY0LC0xMjggNjE4LC0xMjggNDgxLjUsLTczIDM0NSwtMTggMjM4LDg0IEwgMTA5LC00NSBRIDkwLC02NCA2NCwtNjQgMzgsLTY0IDE5LC00NSAwLC0yNiAwLDAgdiA0NDggcSAwLDI2IDE5LDQ1IDE5LDE5IDQ1LDE5IGggNDQ4IHEgMjYsMCA0NSwtMTkgMTksLTE5IDE5LC00NSAwLC0yNiAtMTksLTQ1IEwgNDIwLDI2NiBxIDcxLC02NiAxNjEsLTEwMiA5MCwtMzYgMTg3LC0zNiAxMzQsMCAyNTAsNjUgMTE2LDY1IDE4NiwxNzkgMTEsMTcgNTMsMTE3IDgsMjMgMzAsMjMgaCAxOTIgcSAxMywwIDIyLjUsLTkuNSA5LjUsLTkuNSA5LjUsLTIyLjUgeiBtIDI1LDgwMCBWIDgzMiBxIDAsLTI2IC0xOSwtNDUgLTE5LC0xOSAtNDUsLTE5IGggLTQ0OCBxIC0yNiwwIC00NSwxOSAtMTksMTkgLTE5LDQ1IDAsMjYgMTksNDUgbCAxMzgsMTM4IFEgOTY5LDExNTIgNzY4LDExNTIgNjM0LDExNTIgNTE4LDEwODcgNDAyLDEwMjIgMzMyLDkwOCAzMjEsODkxIDI3OSw3OTEgMjcxLDc2OCAyNDksNzY4IEggNTAgUSAzNyw3NjggMjcuNSw3NzcuNSAxOCw3ODcgMTgsODAwIHYgNyBxIDY1LDI2OCAyNzAsNDM0LjUgMjA1LDE2Ni41IDQ4MCwxNjYuNSAxNDYsMCAyODQsLTU1LjUgMTM4LC01NS41IDI0NSwtMTU2LjUgbCAxMzAsMTI5IHEgMTksMTkgNDUsMTkgMjYsMCA0NSwtMTkgMTksLTE5IDE5LC00NSB6IiBpZD0icGF0aDYiIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIHN0eWxlPSJmaWxsOmN1cnJlbnRDb2xvciIvPiAgPC9nPjwvc3ZnPg==';
+
 
 window.needsUpdate = {csv: true, benchmarking: false, plot_map: false, ram_dump_input: false };
 
 window.inputFilePaths = {ramFolder: ''};
+
+
+
+
+toastr.options = {
+	  "closeButton": true,
+	  "debug": false,
+	  "newestOnTop": false,
+	  "progressBar": false,
+	  "positionClass": "toast-top-right",
+	  "preventDuplicates": false,
+	  "onclick": null,
+	  "showDuration": "200",
+	  "hideDuration": "1000",
+	  "timeOut": "3000",
+	  "extendedTimeOut": "1000",
+	  "showEasing": "swing",
+	  "hideEasing": "linear",
+	  "showMethod": "fadeIn",
+	  "hideMethod": "fadeOut"
+	};
+
+
+showLoader = function(t) {
+  $.LoadingOverlay('show', {
+  	image: '' 
+  });
+};
+
+hideLoader = function(error) {
+  if (error) toastr.error(error);
+  $.LoadingOverlay('hide');
+};
+
+
+showLoader = function(t) {
+  // $('#refresh').addClass('disabled');
+  $.LoadingOverlay('show', {
+    image: '',
+    custom: $(HTML(['div', {id: 'download', class: 'row noselect'},
+      ['img', {class: 'refresh'}, {src: refreshB64}], 
+      ['span', {class: 'ml-2 text'}, t]
+    ]))
+  });
+}
+
+hideLoader = function(error) {
+  if (error) toastr.error(error);
+  $('#refresh').removeClass('disabled');
+  $.LoadingOverlay('hide');
+}
+
 
 $(function () {
 
@@ -113,7 +167,19 @@ $(function () {
 		];
 	}
 
-	function genSmallBodyCtx(title, desc, iconClass, colorStyle) {
+	function genSmallBodyCtx(title, descId, desc, iconClass, colorStyle) {
+		return ['div', {class: 'row no-gutterse align-items-center justify-content-center mb-0 d-flex'},
+			['div', {class: 'col mr-2'},
+				['div', {class: "text-xl font-weight-bold text-uppercase mb-5 text-" + colorStyle}, title],
+				['div', {id: descId, class: "h5 mb-0 font-weight-bold text-gray-800"}, desc]
+			],
+			['div', {class: 'col-auto'},
+				['i', {class: 'text-gray-700 ' + iconClass}]
+			]
+		];
+	}
+
+	function genTableBodyCtx(title, desc, iconClass, colorStyle, tableHeader, tableRows) {
 		return ['div', {class: 'row no-gutterse align-items-center justify-content-center mb-0 d-flex'},
 			['div', {class: 'col mr-2'},
 				['div', {class: "text-xl font-weight-bold text-uppercase mb-5 text-" + colorStyle}, title],
@@ -121,21 +187,31 @@ $(function () {
 			],
 			['div', {class: 'col-auto'},
 				['i', {class: 'text-gray-700 ' + iconClass}]
-			]
+			],
+
 		];
 	}
+
 	
 
 	function genHomeCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, desc, iconClass) {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genInfoBodyCtx(title, desc, iconClass, colorStyle));
 	}
 
-	function genTriageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, desc, iconClass) {
-		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, desc, iconClass, colorStyle));
+	function genTriageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc, iconClass) {
+		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
 	}
 
-	function genMalwareCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, desc, iconClass) {
-		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, desc, iconClass, colorStyle));
+	function genMalwareCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc, iconClass) {
+		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
+	}
+
+	function genTriageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc, iconClass) {
+		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
+	}
+
+	function genTableCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, desc, iconClass) {
+
 	}
 	// Context for inputs
 	function genButtonCtx(btnId, label, iconClass, colorStyle) {
@@ -253,6 +329,7 @@ $(function () {
 	}
 
 	function genTableWithDivCtx(mainDivId, subDivId, tblId, divDesc, headersData, rowsData) {
+		
 		return ['div', {id: mainDivId, class: 'col-xl-12 col-md-12 mb-4'},
 			['div', {class: 'card shadow mb-4'},
 				['div', {class: 'card-header py-3'},
@@ -262,21 +339,13 @@ $(function () {
 					['div', {class: 'table-responsive'},
 						['table', {id: tblId, class: 'table table-bordered', id: 'dataTable',  width: '100%', cellspacing: '0'},
 							['thead', 
-								['tr',
-									[headersData.values, function(x) {
-										return ['th', x]
-									}]
-								]
+								['tr', headersData, function(x) { return ['th', x] } ]
 							],
-							['tbody',
-								[rowsData.values, function(a) {
-									return ['tr', 
-										[a.values, function(b) {
-											return ['td', b]
-										}]
-
-									]
-								}]
+							['tbody', rowsData, function(a) {
+								return ['tr', a, function(b) {
+										return ['td', b]
+									}]									
+								}
 							]
 					   ]
 					]
@@ -381,24 +450,6 @@ $(function () {
 		return ['p', {class: paraClass}, paraText ];
 
 	}
-
-
-	// <div class="card shadow mb-4">
-	// 	<div class="card-body">
-	// 		<div class="text-center">
-	// 			<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/genesis.png" alt="">
-	// 		</div>
-	// 		<p>
-	// 			As technologies advance over the years, the rates of targeted cyber-attacks become even more prevalent. When these attacks happen, many companies do not know when or how their infrastructures are being compromised, and thus are unable to provide a direction for forensic investigations.
-	// 		</p>
-	// 		<p>
-	// 			Our solution aims to provide as much information as possible within the forensic bailiwick of an investigation. It consists of a trilogy of modules - a Windows Event Log analyzer, a PE static analyzer, and an IOC detector. Together with an interactive GUI to ease navigation between modules and display our results, we believe that our solution will be extremely valuable in the forensics community.
-	// 		</p>
-	// 	</div>
-	// </div>
-
-
-
 	
 	
 	var cardTechBodyPythonEleCtx = [
@@ -486,6 +537,7 @@ $(function () {
 	var sideEventCtx = genSideItemCtx("side-event", "Event Logs Correlator", "fas fa-chart-area");
 	var sideTechnologiesCtx = genSideItemCtx("side-technologies", "Technologies Used", "fas fa-question-circle");
 	var sideAboutCtx = genSideItemCtx("side-about", "About", "fas fa-user-secret");
+	var sideReviewCtx = genSideItemCtx("side-review", "Review Results", "fas fa-scroll");
 
 	var sideMenuCtx = [
 		sideHomeCtx,
@@ -497,6 +549,7 @@ $(function () {
 		genSideSubHeaderCtx("Analysis"),
 		sideMalwareCtx,
 		sideEventCtx,
+		sideReviewCtx,
 		genSideDividerCtx(),
 		genSideSubHeaderCtx("Misc"),
 		sideTechnologiesCtx,
@@ -512,6 +565,7 @@ $(function () {
 "row-event"
 "row-about"
 "row-technologies"
+"row-review"
 
 
 
@@ -532,8 +586,10 @@ $(function () {
 
 	var homeEventLogCtx = genHomeCardCtx("home-event-card", "col-xl-6 col-md-6 col-sm-12 col-12", "danger", "home-card", "Event Logs Correlator", "Identify potential footprints of malwares with event logs", "fa-6x fas fa-chart-area");
 
+	var homeReview = genHomeCardCtx("home-review-card", "col-xl-12 col-md-12 col-sm-12 col-12 pb-3", "info", "home-card", "Triage Review", "Review past Triage analysis results", "fa-6x fas fa-scroll");
 
-	var dashboardCtxs = [homeMemoryDumpCtx,homeTriageCtx,homeMalwareCtx,homeEventLogCtx];
+
+	var dashboardCtxs = [homeMemoryDumpCtx,homeTriageCtx,homeMalwareCtx,homeEventLogCtx, homeReview];
 
 
 	var memRamSizeCardCtx = ['div', {class: 'col-xl-12 col-md-12 mb-4'},
@@ -569,14 +625,18 @@ $(function () {
 		genParaCtx("Fill in case name & choose folder location to dump analysis output", "", "")
 	]);
 
+
+
 	var triageFunctionsDescCtx = genPageIntroCardCtx("Functionalities", "fas fa-atom", [
 		genParaCtx("The whole triage process covers the following ", "h4 col-12 mb-5" ),
-		genTriageCardCtx("triage-func-network", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Network Connectivity", "", "fa-2x fas fa-wifi icon-cog"),
-		genTriageCardCtx("triage-func-command", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Commands Executed", "", "fa-2x fas fa-terminal"),
-		genTriageCardCtx("triage-func-process", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Processes", "", "fa-2x fas fa-microchip"),
-		genTriageCardCtx("triage-func-files", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Files", "", "fa-2x fas fa-file-alt"),
-		genTriageCardCtx("triage-func-domains", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Domains", "", "fa-2x fas fa-server"),
-		genTriageCardCtx("triage-func-virustotal", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Virustotal", "", "fa-2x fas fa-viruses")],
+
+
+		genTriageCardCtx("triage-func-network", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Network Connectivity", "triage-func-network-label", "", "fa-2x fas fa-wifi icon-cog"),
+		genTriageCardCtx("triage-func-command", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Commands Executed", "triage-func-command-label", "", "fa-2x fas fa-terminal"),
+		genTriageCardCtx("triage-func-process", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Processes", "triage-func-process-label", "", "fa-2x fas fa-microchip"),
+		genTriageCardCtx("triage-func-files", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Files", "triage-func-files-label", "", "fa-2x fas fa-file-alt"),
+		genTriageCardCtx("triage-func-domains", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Domains", "triage-func-domains-label", "", "fa-2x fas fa-server"),
+		genTriageCardCtx("triage-func-virustotal", "col-xl-4 col-lg-6 col-md-6 triage-desc-card", "success", "", "Virustotal", "triage-func-virustotal-label", "", "fa-2x fas fa-viruses")],
 		"row"
 	);
 
@@ -598,12 +658,92 @@ $(function () {
 		"info"
 	);
 
+
+
+	var triageResultProcessCountCtx = 
+		genTriageCardCtx("triage-result-process-info", // card ID
+			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
+			"primary", 
+			"", 
+			"Number of Processes", 
+			"triage-process-info-label", 
+			"101 "+ "Processes running", 
+			"fa-3x fas fa-microchip");
+
+	var triageResultDomainResultsCtx = 
+		genTriageCardCtx("triage-result-domain-info", // card ID
+				"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
+				"primary", 
+				"", 
+				"Domains/IPS Found", 
+				"triage-domain-info-label", 
+				"3 "+ "IP Addresses Found", 
+				"fa-3x fas fa-server");
+
+	var triageResultEvtTableCtx = genTableWithDivCtx("triage-evt-table-div", 
+		"triage-evt-inner-div", 
+		"triage-evt-table", 
+		'Event Logs Analysis', 
+		["Timestamp", "Logfile", "RuleID", "Desc"],
+		[
+			["Sunday 2359", "Security.evtx", "15", "Your mother v cute"],
+			["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
+		]);
+
+	var triageResultsExesTableCtx = genTableWithDivCtx("triage-exes-table-div", 
+		"triage-exes-inner-div", 
+		"triage-exes-table", 
+		'Processes/Files', 
+		["File Name", "MD5", "SHA1", "Viristotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
+		[
+			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "72.3%", "73.5%"],
+			["JeromeNoodes1", "SHA1", "HashYourDaddy2", "30/60", "1/20", "72.3%", "73.5%"]
+		]);
+
+	var triageResultsDllTableCtx = genTableWithDivCtx("triage-dlls-table-div", 
+		"triage-dlls-inner-div", 
+		"triage-dlls-table", 
+		'Dynamic Linking Libraries (DLLs)', 
+		["File Name", "MD5", "SHA1", "Viristotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
+		[
+			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "72.3%", "73.5%"],
+			["JeromeNoodes1","SHA1", "hashYourDaddy2", "30/60", "1/20", "72.3%", "73.5%"]
+		]);
+
+	var triageResultsPanelCtx = ['div', {id:'res-triage-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
+		['div', {class: 'card'},
+			genCardHeaderCtx("Results",
+				"m-0 font-weight-bold text-secondary", 
+				"ml-2 fa-1x fas fas fa-chart-bar"),
+			['div', {class: 'card-body row'},
+				triageResultProcessCountCtx,
+				triageResultDomainResultsCtx,
+				triageResultEvtTableCtx, 
+				triageResultsExesTableCtx,
+				triageResultsDllTableCtx
+			]
+			
+
+
+			// ['div', {class: 'card-header py-3'}]
+			// malwareResultHeuristicsScoreCtx,
+			// malwareResultEmberPredictionScoreCtx,
+			// malwareResultMLPredictionScoreCtx,
+			// malwareResultEntropyTableCtx
+
+
+
+		]
+
+	];
+
+
 	var malwareFunctionsCtx = genPageIntroCardCtx("Functions", "fas fa-atom", [
 		genParaCtx("This module analyses Portable Executables (PE) files in several aspect", "fa-2x h4 col-12 mb-5" ),
-		genMalwareCardCtx("malware-func-heuristics", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Heuristics", "", "fa-2x fas fa-viruses"),
-		genMalwareCardCtx("malware-func-entropy", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Entropy", "", "fa-2x fas fa-sort-numeric-up-alt"),
-		genMalwareCardCtx("malware-func-imports", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Functions", "", "fa-2x fas fa-file-import"),
-		genMalwareCardCtx("malware-func-ml", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "ML", "", "fa-2x fas fa-robot")],
+		genMalwareCardCtx("malware-func-heuristics", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Heuristics", "malware-func-heuristics-label", "", "fa-2x fas fa-viruses"),
+		genMalwareCardCtx("malware-func-entropy", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Entropy", "malware-func-entropy-label", "", "fa-2x fas fa-sort-numeric-up-alt"),
+		genMalwareCardCtx("malware-func-imports", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "Functions", "malware-func-imports-label", "", "fa-2x fas fa-file-import"),
+		genMalwareCardCtx("malware-func-ml", "col-xl-3 col-lg-6 col-md-6 triage-desc-card", "primary", "", "ML", "malware-func-ml-label", "", "fa-2x fas fa-robot")],
 		"row"
 	);
 
@@ -652,16 +792,90 @@ $(function () {
 			
 		]);
 
+	var malwareResultHeuristicsScoreCtx = 
+		genMalwareCardCtx("malware-single-heuristics-info", // card ID
+			"col-xl-12 col-lg-12 col-md-6 malware-results-card mt-3", 
+			"primary", 
+			"", 
+			"Heuristics Score", 
+			"malware-single-heuristics-info-label", 
+			"2 / 23", 
+			"fa-3x fas fa-viruses");
+
+
+	var malwareResultEmberPredictionScoreCtx = 
+		genMalwareCardCtx("malware-single-ember-score", 
+			"col-xl-12 col-lg-12 col-md-6 malware-results-card", 
+			"primary", 
+			"", 
+			"Ember Prediction", 
+			"malware-single-ember-score-label", 
+			"0.154 / 1", 
+			"fa-3x fas fa-fire"); 
+
+	var malwareResultMLPredictionScoreCtx =
+		genMalwareCardCtx("malware-single-ml-score", 
+			"col-xl-12 col-lg-12 col-md-6 malware-results-card", 
+			"primary", 
+			"", 
+			"ML Prediction", 
+			"malware-single-ml-score-label", 
+			"60 %", 
+			"fa-3x fas fa-robot"); 
+
+	var malwareResultEntropyTableCtx = genTableWithDivCtx("malware-single-entropy-table-div", 
+		"malware-single-entropy-inner-div", 
+		"malware-single-entropy-table", 
+		'PE Section Details', 
+		["Name", "Entropy", "VirtualAddress", "Misc_VirtualSize", "SizeOfRawData", "Characteristics"],
+		[
+			["Name1", "Entropy1", "VirtualAddress1", "Misc_VirtualSize1", "SizeOfRawData1", "Characteristics1"],
+			["Name2", "Entropy2", "VirtualAddress2", "Misc_VirtualSize2", "SizeOfRawData2", "Characteristics2"]
+		]);
+
+	var malwareResultEntropyDetailsCtx = genInfoCardCtx('malware-single-section-details', 
+		'col-xl-12 col-lg-12 col-md-6 malware-results-card', 
+		'primary', 
+		"", //hoverStyle
+		''); //Put table here
+
+
+	// Put into results panel
 	var malwareResultsPanelCtx = ['div', {id:'res-malware-single-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
 		['div', {class: 'card '},
+			genCardHeaderCtx("Results",
+			"m-0 font-weight-bold text-secondary", 
+			"ml-2 fa-1x fas fas fa-chart-bar"),
+
 			// ['div', {class: 'card-header py-3'}]
-			genCardHeaderCtx("Results", "m-0 font-weight-bold text-secondary", "ml-2 fa-1x fas fas fa-chart-bar"),
-			genMalwareCardCtx("malware-single-heuristics-info", "col-xl-12 col-lg-12 col-md-6 triage-desc-card", "primary", "", "Heuristics Score", "2 / 23", "fa-3x fas fa-viruses"),
+			malwareResultHeuristicsScoreCtx,
+			malwareResultEmberPredictionScoreCtx,
+			malwareResultMLPredictionScoreCtx,
+			malwareResultEntropyTableCtx
+
 
 
 		]
 
 	];
+
+	
+
+	var reviewInstructionsCtx = genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
+		genParaCtx("Browse to the case folder and click execute", "", "")
+	]);
+
+
+	var reviewRequiredCaseFolderCtx = genFileSelectCtx("review-card-select-folder",
+		"Choose your case folder",
+		"review-input-folder",
+		"Choose folder...",
+		"FOLDER",
+		"review-btn-dump",
+		"Review case",
+		"fas fa-play", //Icon Picture
+		"info" //Style
+	);
 
 	// genInfoBodyCtx(title, desc, iconClass, colorStyle)
 
@@ -672,14 +886,17 @@ $(function () {
 	var evtTempTableCtx = genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results', ['h1','h2','h3', 'h4'], [['R1','R2','R3', 'R4'], ['r5','r6','r7', 'r8']]);
 
 
+
+
 	var arrTitles = {
 			"home": "What do you want to do",
 			"memory": "RAM Dump",
-			"triage": "Volatility Dump",
+			"triage": "Automated RAM Analysis",
 			"malware": "Malware Heuristics",
 			"event": "Windows Logs Correlator",
 			"about": "About",
-			"technologies": "Technologies Used"
+			"technologies": "Technologies Used",
+			"review": "Review Triage Results"
 	};
 
 	
@@ -692,6 +909,7 @@ $(function () {
 		{"Name":"cleaven", "imagePath":"img/cleaven.png"},		
 		{"Name":"longxian", "imagePath":"img/longxian.jpg"}		
 	];
+
 		
 	var aboutIntroCtx = genAboutCardInfoCtx(
 			"Introduction",
@@ -702,36 +920,22 @@ $(function () {
 			)
 		);
 
-	// var aboutUserProfiles = [aboutIntroDetails.values, function(x) {
-	// 	return ['p', 
-	// 		['a', x.Name],
-	// 		['a', x.imagePath]
-	// 	]
-	// }]
 
-	// alert(HTML(aboutUserProfiles));
-	// 
-	// 
+	var aboutPeopleCtx = [aboutIntroDetails, function (d) {
+		return ['div', {class: 'col-lg-6'},
+			['div', {class: 'card position-relative'},
+				['div', {class: 'card-header py-3'},
+					['h6', {class: 'm-0 font-weight-bold text-primary'}, d.Name]
+				],
+				['div', {class: 'card-body'},
+					['img', {class: 'img-fluid px-3 px-sm-4 mt-3 mb-4 about-info-img', src: d.imagePath}],					
+					['div',  {class: 'mb-1'}],
+					['p', {class: 'mb-0 small'}]
+				]
+			]
+		]
+	}];
 	
-	// alert(typeof(aboutIntroDetails.values));
-
-	/*<div class="col-lg-6">
-		<div class="card position-relative">
-			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary">Kevin Tan</h6>
-			</div>
-			<div class="card-body">
-				<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/kevin.png" alt="">
-				
-				<div class="mb-1"></div>
-				<p class="mb-0 small"></p>
-			</div>
-		</div>
-	</div>*/
-
-
-	// var evtResultsTableCtx = 
-	// Population of elements into specific rows
 
 	$('#row-home').html(HTML(dashboardCtxs));
 	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
@@ -739,19 +943,20 @@ $(function () {
 	$('#row-memory').html(HTML([memRamSizeCardCtx, memRequiredInputCtx]));
 
 	// 2
-	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredFieldsCtx, triageRequiredInputCtx]));
+	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredFieldsCtx, triageRequiredInputCtx, triageResultsPanelCtx]));
 
 
 	
 	// 3
 	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx, malwareResultsPanelCtx]));
 
-	$('#row-event').html(HTML([evtInstructionsCtx, evtRequiredInputCtx, ]));
+	$('#row-event').html(HTML([evtInstructionsCtx, evtRequiredInputCtx,evtTempTableCtx]));
 
+	$('#row-review').html(HTML([reviewInstructionsCtx, reviewRequiredCaseFolderCtx]));
 
-	$("#row-technologies").html(HTML([techInfoPythonCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, techInfoBashBunnyCtx]));
+	$("#row-technologies").html(HTML([techInfoBashBunnyCtx, techInfoPythonCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, ]));
 
-	$("#row-about").html(HTML([aboutIntroCtx]));
+	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
 	$('#dataTable').DataTable();
 
@@ -770,8 +975,7 @@ $(function () {
 			$("#"+$(this).attr('id').replace("side", "content-header")).show()
 			$("#" + $(this).attr('id').replace("side", "row")).fadeIn(1000);
 			// console.log($(this).attr('id'))
-		}
-		
+		}		
 	});
 
 
@@ -873,6 +1077,7 @@ $(function () {
 "row-triage"
 "row-malware"
 "row-event"
+"row-review"
 "row-about"
 "row-technologies"
  -->
@@ -895,6 +1100,10 @@ $(function () {
 						</div>
 
 						<div id='row-event' class='row content-row'>
+
+						</div>
+
+						<div id='row-review' class='row content-row'>
 
 						</div>
 

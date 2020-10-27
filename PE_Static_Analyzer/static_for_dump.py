@@ -918,38 +918,40 @@ if __name__ == '__main__':
 	# combo = [[fp1, S1], [fp2, S2], ]
 	# try:
 	
+	kps = "C:\\Users\\user\\Desktop\\showkevin.csv"
+	kp = "C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test\\exesample\\"
 
-	with open(S_ALL, 'w') as csvfile:
-		for x in combo:
-			writer = csv.DictWriter(csvfile, fieldnames=headers)
-			writer.writeheader()
-			for f in os.listdir(x[0]):
-				try:
-					data = {}
-					obj = PEDetails(x[0]+f)
-					res = DataAnalyser(obj)
-					data = res.get_ml_data()
-					data['Category'] = x[2]
-					# print(data)
-					writer.writerow(data)
+	with open(kps, 'w') as csvfile:
+		# for x in combo:
+		writer = csv.DictWriter(csvfile, fieldnames=headers)
+		writer.writeheader()
+		for f in os.listdir(kp):
+			try:
+				data = {}
+				obj = PEDetails(kp+f)
+				res = DataAnalyser(obj)
+				data = res.get_ml_data()
+				data['Category'] = "notsure"
+				# print(data)
+				writer.writerow(data)
 
-					
-					if pass_count % 10 == 0:
-						print(pass_count)
-					pass_count += 1
+				
+				if pass_count % 10 == 0:
+					print(pass_count)
+				pass_count += 1
 
-				except Exception as e:
+			except Exception as e:
 
-					failed_files.append(f)
-					print(e)
-					fail_count += 1
-					if fail_count%4 == 0:
-						print(fail_count)
-					pass		
+				failed_files.append(f)
+				print(e)
+				fail_count += 1
+				if fail_count%4 == 0:
+					print(fail_count)
+				pass		
 
 
-			print("Finish")
-			print("Pass: ", pass_count, " Failed: ", fail_count)
+		print("Finish")
+			# print("Pass: ", pass_count, " Failed: ", fail_count)
 			# store_failed_files(failed_files)
 		# except:
 		# 	print("Error")

@@ -38,7 +38,7 @@ class PEDetails:
 	ATTRS_DOS_HDR 	= "e_magic, e_lfanew"
 	ATTRS_FILE_HDR 	= "Machine, NumberOfSections, NumberOfSymbols, PointerToSymbolTable, SizeOfOptionalHeader, TimeDateStamp"
 	ATTRS_OPP_HDR 	= "ImageBase, LoaderFlags, Magic, MajorImageVersion, MajorLinkerVersion, MajorOperatingSystemVersion, MajorSubsystemVersion, MinorImageVersion, MinorLinkerVersion, MinorOperatingSystemVersion, MinorSubsystemVersion, NumberOfRvaAndSizes, Reserved1, SectionAlignment, SizeOfCode, SizeOfHeaders, SizeOfHeapCommit, SizeOfHeapReserve, SizeOfImage, SizeOfInitializedData, SizeOfStackCommit, SizeOfStackReserve, SizeOfUninitializedData, Subsystem"
-	ATTRS_SECTION 	= "Name, Misc_VirtualSize, VirtualAddress, SizeOfRawData, PointerToRawData, PointerToRelocations, PointerToLinenumbers, NumberOfRelocations, NumberOfLinenumbers"
+	ATTRS_SECTION 	= "Name, Misc_VirtualSize, VirtualAddress, SizeOfRawData, PointerToRawData, PointerToRelocations, PointerToLinenumbers, NumberOfRelocations, NumberOfLinenumbers, Characteristics"
 
 	MAIN_ENCODING = "utf-8"
 	def __init__(self, file_path, fast=True):
@@ -130,6 +130,7 @@ class PEDetails:
 		try:
 			if (char_type == "Any"):
 				return [{attr:getattr(sect, attr) for attr in self.ATTRS_SECTION.split(", ")}for sect in self.pe.sections]
+
 			else:
 				return [{attr:getattr(sect, attr) for attr in self.ATTRS_SECTION.split(", ")}for sect in self.pe.sections if (sect.Characteristics & SECT_CHAR_FLAGS[char_type] == SECT_CHAR_FLAGS[char_type])]
 		except Exception as e:
@@ -632,6 +633,50 @@ class ImportsAnalyser:
 
 		
 		
+class ResultsRetriever:
+
+	SECTION_ATTRS =  ["Name", "VirtualAddress", "Misc_VirtualSize", "SizeOfRawData", "Characteristics"]
+	def __init__(self, pe_object):
+		self.pe_object = pe_object
+		self.ent = EntropyAnalysis(pe_object)
+		self.heu = HeuristicsAnalyser(pe_object)
+
+
+	def _format(self,item):
+		x = item
+		if x[0] == "Name":
+			x[1] = str(x[1]).replace("\\x00", "")
+		else: 
+			x[1] = hex(x[1])
+		return x
+
+
+
+	def get_formated_section_details(self):
+		# For outputting to GUI table, 
+		# Name, Entropy, VirtAddr,VirtSize,RawSize, Characteristics
+		details = self.pe_object.get_sections_details()
+		entropies = self.ent.get_all_entropy_details()
+
+		ret_det = {"Headers": self.SECTION_ATTRS}
+		ret_det['Rows'] = [{attr:str(x[attr]).replace('\\x00','').replace("\'", "").replace('b', '') for attr in self.SECTION_ATTRS} for x in details]
+
+		for item in ret_det['Rows']:
+			for e in entropies:
+				if item['Name'] == e[0]:
+					item['Entropy'] = e[1]
+					pass
+
+					
+		# print(ret_det)
+		# print(entropies)
+		return ret_det
+		
+		# for x,y in ret_det['Rows']:
+
+		# ret_det = {x for x,y in details.items()}
+		# print(ret_det)
+		# print(entropies)
 
 
 
@@ -702,7 +747,6 @@ class DataAnalyser:
 		}
 
 
-
 		# Set the dict values to 1 as long as it has the API
 		if imp_apis is not None:
 			for x,y in imp_apis.items():
@@ -743,10 +787,10 @@ class DataAnalyser:
 					"Opp_Magic":self.pe_object.pe.OPTIONAL_HEADER.Magic,
 					"Count_PE_Headers":pe_headers_count,
 					"OEP_not_in_sections": heuristics.oep_not_in_any_sections(),
-					"Count_packed_sections_high":ent.get_number_of_packed_sections("HIGH")
-					"Count_encrypted_sections_high":ent.get_number_of_encrypted_sections("HIGH")
-					"Count_packed_sections_any":ent.get_number_of_packed_sections()
-					"Count_encrypted_sections_any":ent.get_number_of_encrypted_sections()
+					"Count_packed_sections_high":ent.get_number_of_packed_sections("HIGH"),
+					"Count_encrypted_sections_high":ent.get_number_of_encrypted_sections("HIGH"),
+					"Count_packed_sections_any":ent.get_number_of_packed_sections(),
+					"Count_encrypted_sections_any":ent.get_number_of_encrypted_sections(),
 
 					"is_digitally_signed" :wintrust.is_signed(self.pe_object.file_path), 
 					"Total_sect_more_than_file": heuristics.sections_bigger_than_file(),
@@ -822,13 +866,17 @@ if __name__ == '__main__':
 
 	fp2 = "C:\\Windows\\System32\\AppVStreamMap.dll"
 
-	file_path = "C:\\Users\\User\\Desktop\\123456.exe"
-	obj = PEDetails(file_path)
-	heu = HeuristicsAnalyser(obj)
-	# print("Multiplpe:", heu.has_multiple_pe_headers())
-	# obj.run()
-	d = DataAnalyser(obj)
-	print(d.get_ml_data())
+	file_path = "C:\\Users\\User\\Desktop\\test.exe"
+	obj = PEDetails(fp2)
+
+	res = ResultsRetriever(obj)
+	res.get_formated_section_details()
+	# heu = HeuristicsAnalyser(obj)
+	# # print("Multiplpe:", heu.has_multiple_pe_headers())
+	# # obj.run()
+	# d = DataAnalyser(obj)
+	# print(d.get_ml_data())
+
 	# print(d.get_ml_data())
 	# ent = EntropyAnalysis(obj)
 	

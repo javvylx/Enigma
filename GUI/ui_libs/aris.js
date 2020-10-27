@@ -1,5 +1,5 @@
 /*!
- * Aris JavaScript Library v1.0.7
+ * Aris JavaScript Library v1.0.8
  * @author Benjamin Kang Yue Sheng
  * MIT license
  * 
@@ -204,9 +204,9 @@
 	"use strict";
 
 	if ( typeof module === "object" && typeof module.exports === "object" ) {
-		module.exports = factory(global, true);
+		module.exports = factory(global, 1);
 	} else {
-		factory( global );
+		factory(global);
 	}
 
 } )( typeof window !== "undefined" ? window : this, function( window, noGlobal ) {
@@ -229,45 +229,47 @@
 	var cssBracketRe = /((?:\\.|("|')(?:\\.|.)*?\2|[^{}])*)([{}])/g;
 	var cssPropRe = /(?:^|\{|\s|;)([A-Za-z0-9\-]+)\s*\:\s*?((?:\\.|("|')(?:\\.|.)*?\3|[^;}])*)/g;
 	var cssUrlRe = /url\(\s*?["']?(.*?)["']?\s*?\)/g;
+	var cssAbsUrlRe = /^\s*?(data\:|.{1,6}\:\/\/)/;
 	var cssCommentRe = /\/\*[\s\S]*?\*\//g;
 	var fileExtRe = /\.([A-Za-z0-9]+)(?:[\?#]|$)/;
 	var filePreExtRe = /^(?:\s*?(js|css)\s*?\:)?\s*?(\S[\S\s]*)/i;
 	var stringTrimRe = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 	var splitWordsRe = /(?:(?:^|[A-Z])[a-z]+|[0-9]+|[A-Za-z]+)/g;
 
+	var hashPopRe = /(?:(^\/)|\/)[^\/]+[\/]*$/; // $1
+	var hashResolveRe = /^#\/?|(\/)(?:\.?\/)+|(?:[^\/])+\/\.\.(?:\/|$)|([^\^])\/+$/;
+	var hashCompsRe = /(?:(^|\/)(:?)([^\/]+))/g;
+	var locationPathPopRe = /((^|\/)[^\/]*)$/;
+	var htmlTagRe = /^[\w]+$/;
+
 	var noop = function (x) { return x; };
 	var head = noBrowser ? noop : document.head;
 
 	var splitWords = function (s) {
-		var a = [], m;
-		while (m = splitWordsRe.exec(s)) a.push(m[0]);
+		for (var a = [], m; m = splitWordsRe.exec(s);) a.push(m[0]);
 		return a;
 	};
 	var populateCaseVariations = function (o) {	
 		var d = {}, k, w, v;
 		for (k in o) {
-			w = splitWords(k), v = o[k];
-			if (w.length > 1) { 
-				d[lc(w.join('-'))] = v;
-				d[lc(w.join('_'))] = v;
+			v = o[k];
+			if ((w = splitWords(k)).length > 1) { 
+				d[w.join('-').toLowerCase()] = d[w.join('_').toLowerCase()] = v;
 			}
 			d[k] = v;
 		}
 		return d;
 	};
-	var ts = Object.prototype.toString;
-	var ce = function (x) { return document.createElement(x); };
-	var hasKey = function (o, k) { return o.hasOwnProperty(k); };
-	var isArray = function (x) { return x && ts.call(x) == '[object Array]' };
-	var isObject = function (x) { return x && ts.call(x) == '[object Object]' };
-	var isFunction = function (f) { return f && ts.call(f) == '[object Function]'; };
-	var lc = function (s) { return s.toLowerCase(); };
-	var uc = function (s) { return s.toUpperCase(); };
+	var isT = function (s) { return (function (x) { 
+		return x && Object.prototype.toString.call(x) == '[object '+s+']' }) };
+	var isArray = isT('Array');
+	var isObject = isT('Object');
+	var isFunction = isT('Function');
 	var trim = function (s) { return String.prototype.trim ? s.trim() : s.replace(stringTrimRe, ''); };
 
 
 	var styles = noBrowser ? [] : gcs(document.documentElement, null);
-	var cssTester = noBrowser ? [] : ce('div').style;
+	var cssTester = noBrowser ? [] : document.createElement('div').style;
 	var cssPropsList = [];
 	var cssProps = {}, bestPrefix = '', bestPrefixCount = 0;
 
@@ -297,7 +299,7 @@
 	if (styles && styles.length > 0) {
 		cssPropsList = styles;
 	} else {
-		var re = /[A-Z]/g, p, f = function(x) { return '-' + lc(x) };
+		var re = /[A-Z]/g, p, f = function(x) { return '-' + x.toLowerCase() };
 		for (p in styles) cssPropsList.push(p.replace(re, f));
 	}
 	for (var j = 0, i, p, s, o, pf; j < 2; ++j) {
@@ -306,7 +308,7 @@
 			if (j < 1 && p[0] != '') {
 				for (; p.length >= 1; p.pop()) {
 					for (s = p[0], o = 1; o < p.length; ++o) 
-						s += uc(p[o][0]) + p[o].substring(1); 
+						s += p[o][0].toUpperCase() + p[o].substring(1); 
 					if (s in cssTester) cssProps[p.join('-')] = 1;
 				}
 			} else if (j < 2 && p[0] == '') {
@@ -394,14 +396,13 @@
 		var keywordsFix = getCSSFixer(keywords, '(\\s|:)', '(\\s|;|\\}|$)', '$1' + bestPrefix + '$2$3');
 
 		return function (css) { 
-			if (functions.length) {
-				if (functions.indexOf('linear-gradient') > -1) {
-					// Gradients are supported with a prefix, convert angles to legacy
-					css = css.replace(/(\s|:|,)(repeating-)?linear-gradient\(\s*(-?\d*\.?\d*)deg/ig, 
-						function ($0, delim, repeating, deg) {
-							return delim + (repeating || '') + 'linear-gradient(' + (90-deg) + 'deg';
-						});
-				}
+			for (var i = functions.length, lg = 'linear-gradient'; i--; ) if (functions[i] == lg) {
+				// Gradients are supported with a prefix, convert angles to legacy
+				css = css.replace(/(\s|:|,)(repeating-)?linear-gradient\(\s*(-?\d*\.?\d*)deg/ig, 
+					function ($0, delim, repeating, deg) {
+						return delim + (repeating || '') + lg + '(' + (90-deg) + 'deg';
+					});
+				i = 0;
 			}
 			css = functionsFix(css);
 			css = keywordsFix(css);
@@ -411,29 +412,29 @@
 
 	var fixCSSSelectors = noBrowser ? noop : (function () {
 		var selectors = [], atrules = [];
-
+		var pl = ':placeholder';
 		var selectorsTests = {
-			':any-link': null,
-			'::backdrop': null,
-			':fullscreen': null,
+			':any-link': 0,
+			'::backdrop': 0,
+			':fullscreen': 0,
 			':full-screen': ':fullscreen',
 			//sigh
-			'::placeholder': null,
-			':placeholder': ':placeholder-shown',
-			'::input-placeholder': '::placeholder',
-			':input-placeholder': ':placeholder-shown',
-			':read-only': null,
-			':read-write': null,
-			'::selection': null
+			'::placeholder': 0,
+			':placeholder': pl + '-shown',
+			'::input-placeholder': ':' + pl,
+			':input-placeholder': pl + '-shown',
+			':read-only': 0,
+			':read-write': 0,
+			'::selection': 0
 		};
 		var atrulesTests = {
 			'keyframes': 'name',
-			'viewport': null,
+			'viewport': 0,
 			'document': 'regexp(".")'
 		};
 
-		var selectorMap = {}, t;
-		var style = head.appendChild(ce('style'));
+		var selectorMap = {}, t, test;
+		var style = head.appendChild(document.createElement('style'));
 
 		var supported = function (selector) {
 			style.textContent = selector + '{}';  // Safari 4 has issues with style.innerHTML
@@ -451,7 +452,7 @@
 		}
 
 		for (t in atrulesTests) {
-			var test = t + ' ' + (atrulesTests[t] || '');
+			test = t + ' ' + (atrulesTests[t] || '');
 			if(!supported('@' + test) && supported('@' + bestPrefix + test)) {
 				atrules.push(t);
 			}
@@ -473,7 +474,7 @@
 		var af, k, v, r = '', sc = 0, mSub, m, pf, k, af;
 		if (isObject(css)) {
 			af = {};
-			for (k in css) if (hasKey(css, k)) {
+			for (k in css) if (css.hasOwnProperty(k)) {
 				v = css[k];
 				k = trim(k);
 				if (typeof(v) == 'number' && !cssNumber[k]) {
@@ -481,7 +482,7 @@
 				}
 				v = fixCSSFunctions(v);
 				if (!(cssProps[k])) {
-					for (var pf in cssPrefixes) {
+					for (pf in cssPrefixes) {
 						af[pf + k] = v;
 					}
 				}
@@ -524,13 +525,11 @@
 	var fixCSSRelUrls = function (url, css) {
 		url = trim(url);
 		if (url[0] != '/') {
-			url = window.location.pathname.split('/').slice(0,-1).join('/') + '/' + url;
+			url = window.location.pathname.replace(locationPathPopRe, '') + '/' + url;
 		}
-		url = url.split('/').slice(0,-1).join('/');
-
+		url = url.replace(locationPathPopRe, '');
 		return css.replace(cssUrlRe, function (x, g) {
-			var p = g.indexOf('//');
-			if (g.indexOf('data:') == 0 || (p > -1 && p < 9)) return x;
+			if (g.match(cssAbsUrlRe)) return x;
 			var urlComps = url.split('/'), cssURLComps = g.split('/'), i;
 			for (i = 0; i < cssURLComps.length; ++i) {
 				if (cssURLComps[i] == '..') urlComps.pop();
@@ -542,12 +541,18 @@
 	
 	var fileReadyChecker = function (xhr, i, urlMatch, ctl) {
 		return function() {
+
 			if (xhr.readyState == 4) {
 				var status = xhr.status, responseText = '';
-				if (status == 200 || status == 0) {
-					loadedFiles[urlMatch[0]] = 1;
-					responseText = xhr.responseText;
-				} 
+				var lastModified = xhr.getResponseHeader('Last-Modified');
+				if (status >= 200 && status < 300) {
+					loadedFiles[urlMatch[0]] = [
+						lastModified, 
+						responseText = xhr.responseText
+					];
+				} else if (status == 304) {
+					responseText = loadedFiles[urlMatch[0]][1]
+				}
 				ctl.push([i, urlMatch, responseText]);
 			}
 			ctl.c();
@@ -555,15 +560,14 @@
 	};
 	var imageReadyChecker = function (img, i, urlMatch, ctl) {
 		return function () {
-			var x = [i, urlMatch, ''];
-			if (img.naturalWidth) {
+			var x = [i, urlMatch, ''], p = function () {
 				ctl.push(x);
 				ctl.c();
+			};
+			if (img.naturalWidth) {
+				p();
 			} else {
-				setTimeout(function() {
-					ctl.push(x);
-					ctl.c();
-				}, 100);
+				setTimeout(p, 100);
 			}
 		};
 	};
@@ -572,48 +576,47 @@
 		var required = [], i, r, s, xhr, m, t, img,
 		ctl = [], ctlWrap = {
 			done: function (f) {
-				ctl.d = f;
+				ctl.d = isFunction(f) ? f : noop;
 				return ctlWrap;
 			}
 		}, imageExtensions = toSet('png,bmp,gif,jpg,jpeg,svg,webp');
 		ctl.c = function () {
-			if (ctl.length == ctl.n && ctl.n > 0) {
+			if (ctl.length == ctl.n && ctl.n) {
 				ctl.n = 0;
 				ctl.sort(function (a, b) { return a[0] - b[0]; });
 				var j, r, m, el, t, url;
 				for (j = 0; j < ctl.length; ++j) {
 					r = ctl[j], t = r[1][1], url = r[1][2];
 					if (!t && (m = url.match(fileExtRe))) 
-						t = lc(m[1]);
+						t = m[1].toLowerCase();
 					if (t == 'css') {
-						el = ce('style');
+						el = document.createElement('style');
 						el.type = 'text/css';
 						el.innerText = autoFixCSS(fixCSSRelUrls(url, r[2]).replace(/[\r\n]/g, ''));
 						head.appendChild(el);
 					}
 					if (t == 'js') {
-						el = ce('script');
+						el = document.createElement('script');
 						// Allows easier debugging.
 						el.text = '//# sourceURL=' + url + '\n' + r[2];
 						head.appendChild(el).parentNode.removeChild(el);
 					}
 				}
 				
-				if (isFunction(ctl.d))
-					ctl.d();
+				ctl.d();
 			}
 		};
+		ctl.d = noop;
 		for (i = 0; i < urls.length; ++i) {
 			m = filePreExtRe.exec(urls[i]);
 			m[0] = (isUndefined(m[1]) ? '' : m[1]) + ':' + m[2];
-			if (!(m[0] in loadedFiles)) 
-				required.push(m);
+			required.push(m);
 		}
 		ctl.n = required.length;
 		for (i = 0; i < ctl.n; ++i) {
 			r = required[i];
-			if (lc(''+r[1]) == 'img' || 
-				((m = (''+r[2]).match(fileExtRe)) && imageExtensions[lc(m[1])])) {
+			if ((''+r[1]).toLowerCase() == 'img' || 
+				((m = (''+r[2]).match(fileExtRe)) && imageExtensions[m[1].toLowerCase()])) {
 				img = new Image();
 				img.onload = img.onerror = imageReadyChecker(img, i, r, ctl);
 				img.src = r[2];
@@ -621,16 +624,16 @@
 				xhr = new XMLHttpRequest();
 				xhr.onreadystatechange = fileReadyChecker(xhr, i, r, ctl);
 				s = r[2].indexOf('?') > -1 ? '&' : '?';
-				xhr.open('GET', r[2] + s + Math.random(), true);
+				xhr.open('GET', r[2] + s + Math.random(), 1);
+				if (s = loadedFiles[r[0]]) {
+					xhr.setRequestHeader('If-Modified-Since', s[0]);
+				}
 				xhr.responseType = 'text';
 				xhr.send();
 			}
 		}
-		if (ctl.n < 1) {
-			setTimeout(function() {
-				if (isFunction(ctl.d))
-					ctl.d();
-			}, 10);
+		if (!ctl.n) {
+			setTimeout(ctl.d, 10);
 		}
 		return ctlWrap;
 	};
@@ -651,81 +654,139 @@
 		return loadFiles(urls);
 	};
 
+	var mapNext = function (context, i) {
+		var v = context[i].slice(), j, o = i + 1, n = v.length, r = '';
+		for (o = i + 1; isFunction(context[o]); ++o) 
+			for (j = 0; j < n; ++j) 
+				v[j] = context[o](v[j]);
+		for (j = 0; j < n; ++j) 
+			r += HTML(v[j]);
+		return {r: r, i: o - 1};
+	};
+
 	var HTML = function(context) {
 
-		var a = arguments, n = context.length;
-		if (a.length > 1) return HTML(a);
+		var n = context.length;
 
-		var r, i, obj, k, k2, t, v, css, mSub,
-		tag = context[0], content = '', attrs = {}, concats = [];; 
-		
-		if (!isArray(context)) return '' + context;
-		if (isArray(context[0]) && n) {
-			for (r = '', i = 0; i < n; i++) r += HTML(context[i]); 
-			return r;
+		if (!n || isUndefined(context) || context === null) return '';
+
+		var a = arguments, r, i, obj, k, k2, t, v, css, mSub, j, mn, sk, skk,
+		tag = context[0] + '', content = '', attrs = {};
+
+		if (a.length > 1) {
+			for (content = [], i = 0; i < a.length; ++i)
+				content.push(a[i]);
+			return HTML(content);
 		}
 		
-		for (i = 1; i < n; i++) if (context[i]) {
+		if (!isArray(context)) return '' + context;
+
+		if (n && (isArray(context[0]) || context[0] === null || !tag.match(htmlTagRe))) {
+			for (r = '', i = 0; i < n; i++) {
+				if (isFunction(context[i+1])) {
+					mn = mapNext(context, i);
+					r += mn.r;
+					i = mn.i;
+				} else {
+					r += HTML(context[i]); 	
+				}
+				
+			}
+			return r;
+		}
+
+		for (i = 1; i < n; i++) if (context[i] !== null) {
 			obj = context[i];
 			if (isArray(obj)) {
-				content += HTML(obj); 
+				if (isFunction(context[i+1])) {
+					mn = mapNext(context, i);
+					content += mn.r;
+					i = mn.i;
+				} else {
+					content += HTML(obj); 
+				}
 			} else if (isObject(obj)) {
 				for (k in obj) {
 					v = obj[k];
-					t = lc(trim(k));
+					t = trim(k).toLowerCase();
 					if (t == 'style' && !isObject(v)) {
-						v = '' + v;
+						v += '';
 						css = {};
 						while (mSub = cssPropRe.exec(v)) 
 							css[mSub[1]] = mSub[2];
 						v = css;
 					}
-					if (hasKey(obj, k) && v != null) {
+					if (obj.hasOwnProperty(k) && v !== null) {
 						if (isObject(v)) {
-							if (!hasKey(attrs, k) || !isObject(attrs[k])) 
+							if (!attrs.hasOwnProperty(k) || !isObject(attrs[k])) 
 								attrs[k] = {};
-							for (k2 in v) if (hasKey(v, k2)) 
+							for (k2 in v) if (v.hasOwnProperty(k2)) 
 								attrs[k][k2] = v[k2];
 						} else {
-							if (t != 'class' || !hasKey(attrs, k)) 
+							if (t != 'class' || !attrs.hasOwnProperty(k)) 
 								attrs[k] = v;
 							else
 								attrs[k] += ' ' + v;
 						}
 					}
 				}
-			} else content += '' + obj;
+			} else content += obj;
 		}
 		r = '<' + tag;
 		attrs = populateCaseVariations(attrs);
-		for (k in attrs) {
+		v = Object.keys;
+		sk = v(attrs).sort();
+		for (i = 0; i < sk.length; ++i) {
+			k = sk[i];
 			t = '';
 			if (isObject(attrs[k])) { // css case
 				css = autoFixCSS(attrs[k]);
-				for (k2 in css)
+				skk = v(css).sort();
+				for (j = 0; j < skk.length; ++j) {
+					k2 = skk[j]
 					t += k2 + ':' + css[k2] + ';';
+				}
 			} else {
 				t += attrs[k];
 			}
-			r += ' ' + k + '="' + t + '"';
+			r += ' ' + k + '="' + HTML.escape(t) + '"';
 		}
 		
-		if (emptyTags[lc(trim(tag))] && !content.length)
+		if (emptyTags[trim(tag).toLowerCase()] && !content)
 			r += '>';
 		else
 			r += '>' + content + '</' + tag + '>';
 		return r;
 	};
 
+	HTML.bool = function (name, isTrue) {
+		var attrs = {};
+		if (isTrue) attrs[name] = name;
+		return attrs;
+	};
+
+	HTML.hash = function () {
+		var s, a = arguments, h = 0, i, j;
+		for (j = 0; j < a.length; ++j) {
+			for (s = HTML(a[j]), i = 0; i < s.length; ++i) {
+				h = (((h << 5) - h) + s.charCodeAt(i)) | 0;
+			}
+		}
+		return h;
+	};
+
+	var htmlEscapeChars = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#039;'
+	}, 
+	htmlEscapeRe = /[&<>"']/g, 
+	htmlEscapeFunc = function(m) { return htmlEscapeChars[m] };
+
 	HTML.escape = function(text) {
-		var chars = {
-			'&': '&amp;',
-			'<': '&lt;',
-			'>': '&gt;',
-			'"': '&quot;',
-			"'": '&#039;'
-		};
-		return text.replace(/[&<>"']/g, function(m) { return chars[m]; });
+		return text.replace(htmlEscapeRe, htmlEscapeFunc);
 	};
 
 	HTML.SVG = function(width, height) { 
@@ -741,9 +802,9 @@
 	};
 
 	var svgCmds = 'mlhvcsqtaz';
-	svgCmds = toSet((svgCmds + uc(svgCmds)).split('').join(','));
+	svgCmds = toSet((svgCmds + svgCmds.toUpperCase()).split('').join(','));
 
-	HTML.SVG.Path = function () {
+	var svgPath = function () {
 		var attrs = {d:''}, path = ['path', attrs], a = arguments, i, p, k, 
 		P = function (command) {
 			return function() {
@@ -754,7 +815,7 @@
 			};
 		};
 		for (i = 0; i < a.length; i++) {
-			if (isObject(a[i])) {
+			if (isObject(p = a[i])) {
 				p = {};
 				for (k in a[i]) {
 					if (k == 'd') {
@@ -763,115 +824,126 @@
 						p[k] = a[i][k];
 					}
 				}
-				path.push(p);
-			} else {
-				path.push(a[i]);	
-			}
+			} 
+			path.push(p);
 		}
 		for (k in svgCmds) 
 			path[k] = P(k);
 		return path
 	};
 	var svgPathAppender = function (c) {
-		return function () { return HTML.SVG.Path()[c].apply(null, arguments); };
+		return function () { return svgPath()[c].apply(null, arguments); };
 	};
 	for (var c in svgCmds) 
-		HTML.SVG.Path[c] = svgPathAppender(c);
+		svgPath[c] = svgPathAppender(c);
+
+	HTML.SVG.Path = svgPath;
 	
-	var routes, savedRoutes, routesInited = false;
+	var routes = {}, savedRoutes = {}, routesInited = 0, refreshable = 0;
 
-	var hashComps = function (h) {
-		if (!isUndefined(h) && isArray(h)) {
-			var comps = [], i, s;
-			for (i = 0; i < h.length; ++i) {
-				if (h[i].length) {
-					s = trim(h[i]);
-					if (s[0] == '#') s = s.substring(1);
-					comps.push(s);
-				}
-			}
-			return comps;
-		} else {
-			return hashComps(('' + h).split('/'));
+	var hashResolve = function (h) {
+		for (var p, t = 1; t; ) {
+			p = h; 
+			h = h.replace(hashResolveRe, '$1$2');
+			t = p != h;
 		}
+		return h;
 	};
-
-	var execRoute = function (h) {
-		var comps, p = '', e, c, i;
-		if (!isUndefined(h) && isArray(h)) {
-			comps = h;
-		} else {
-			comps = hashComps(h);
-		}
-		for (i = 0; i < comps.length; ++i) {
-			if (i) p += '/';
-			c = comps[i];
-			if (c[0] == ':') {
-				c = trim(c.substring(1));
-				if (p in savedRoutes) {
-					c = savedRoutes[p];	
-				}
-			}
-			savedRoutes[p] = c;
+	//HTML.hashResolve = hashResolve;
+	var execRoute = function (h, s) {
+		var p = '', j, c, m, a = hashResolve(h);
+		while (m = hashCompsRe.exec(a)) {
+			p += m[1];
+			c = m[3];
+			if (m[2] && (j = savedRoutes[p]))
+				c = j;
+			if (!s) savedRoutes[p] = c;
 			p += c;
 		}
-		if (p in routes) routes[p]();
-		return false;
+		for (j = p; j; j = j.replace(hashPopRe, '$1')) {
+			if (routes[j]) {
+				p = j;
+				j = '';
+			}
+		}
+		if (!s && isFunction(c = routes[p])) c();
+		return p;
 	};
 
 	var wlh = function () { return window.location.hash; };
 
 	var setupHashChange = function () {
 		if (routesInited) return;
-		routes = {};
-		savedRoutes = {};
-		routesInited = true;
-		var comps = hashComps(wlh()), p = '', c, i;
-		for (i = 0; i < comps.length; ++i) {
-			if (i) p += '/';
-			c = comps[i];
-			savedRoutes[p] = c;
-			p += c;
+		routesInited = 1;
+		var a = hashResolve(wlh()), p = '', t, r, m,
+		c, i, storedHash, h, ael = 'addEventListener', 
+		clickCallback = function (e) {
+			for (t = refreshable && e.target; t; t = t.parentElement) 
+				if (t.tagName.toUpperCase()=='A' && 
+					(r=t.getAttribute('href')) && 
+					(r=(''+r).match('#(.*)')) && 
+					(r=execRoute(r[1],1)) == execRoute(wlh(),1) && 
+					(r=routes[r])) { r(); return; }
+		};
+		while (m = hashCompsRe.exec(a)) {
+			p += m[1] + (savedRoutes[p] = m[3]);
 		}
 
 		if ('onhashchange' in window) { 
-			window.addEventListener('hashchange', function () {
+			window[ael]('hashchange', function () {
 				execRoute(wlh());
 			});
 		} else { 
-			var storedHash = wlh();
+			storedHash = wlh();
 			setInterval(function () {
-				var h = wlh();
+				h = wlh();
 				if (h != storedHash) {
 					storedHash = h;
 					execRoute(storedHash);
 				}
 			}, 100);
-		}	
+		}
+		if (document[ael]) {
+			document[ael]('click', clickCallback, false);
+		} else {
+			document.attachEvent('onclick', clickCallback);
+		}
 	};
-	
+
 	if (!noBrowser) {
 		HTML.autoFixCSS = autoFixCSS;
 		HTML.load = load;
-		HTML.route = function (r, fn) {
+		var rx = function (r, fn) {
 			setupHashChange();
-			if (isFunction(fn)) {
-				routes[hashComps(r).join('/')] = fn;
-				return HTML; 
-			} else {
-				return hashComps(wlh());
-			}
+			if (isUndefined(r)) return hashResolve(wlh());
+			if (fn) {
+				routes[hashResolve(r)] = fn;
+				// return HTML so that we can chain 
+				// HTML.route('a', fn).route('b', fn)
+				return HTML; 	
+			} 
+			// If no args are provided, 
+			// return the window.location.hash splitted.
+			return routes[execRoute(hashResolve(r), 1)];
 		};
 
-		HTML.route.go = function (r) {
+		rx.path = function (r) {
+			return isUndefined(r) ? hashResolve(wlh()): execRoute(r, 1);
+		}
+
+		rx.go = function (r) {
 			setupHashChange();
-			if (!isUndefined(r)) {
-				return execRoute(r);
-			} else {
-				return execRoute(wlh());
-			}
-			return false;
+			r = execRoute(isUndefined(r) ? wlh() : r);
+			return routes[r] ? r : !!0;
 		};
+
+		rx.refreshable = function (v) {
+			setupHashChange();
+			if (isUndefined(v)) return !!refreshable;
+			refreshable = v;
+			return HTML;
+		};
+		HTML.route = rx;
 	}
 	
 	if (!noGlobal) {
@@ -879,7 +951,7 @@
 			window.HTML = HTML;
 		var aris = HTML;
 		aris.svg = aris.SVG;
-		aris.svg.path = aris.svg.path;
+		aris.svg.path = aris.svg.Path;
 		window.aris = aris;
 	}
 	return HTML;

@@ -7,6 +7,10 @@
   width: 25rem;
 }
 
+.about-info-img {
+  width: 25rem;
+}
+
 .home-card:hover {
 	background-color: #d9d9d9 !important;
 }
