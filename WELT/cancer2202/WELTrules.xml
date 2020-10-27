@@ -1,0 +1,372 @@
+<xml>
+<ruleset>
+<short_desc>Rulesets</short_desc>
+<desc>
+This is the XML extensible Rulesets for WELT. This ruleset will be parsed against the PowerShell parser script that we have scripted.
+</desc>
+<rules>
+	<rule>
+		<rulename>Detecting Privilege Escalation</rulename>		
+		<ruledesc>This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.</ruledesc>
+		<trigger rid="1">
+			<triggerEv id="1" operator="SEQ">
+				<EventID>4648</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="SEQ">
+				<EventID>4704</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="SEQ">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Privilege Escalation</rulename>
+		<ruledesc>This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.</ruledesc>
+		<trigger rid="2">
+			<triggerEv id="1" operator="SEQ">
+				<EventID>4624</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="SEQ">
+				<EventID>4704</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="SEQ">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Privilege Escalation</rulename>
+		<ruledesc>This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.</ruledesc>
+		<trigger rid="3">
+			<triggerEv id="1" operator="SEQ">
+				<EventID>4624</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="SEQ">
+				<EventID>4672</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="SEQ">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Privilege Escalation</rulename>
+		<ruledesc>This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.</ruledesc>
+		<trigger rid="4">
+			<triggerEv id="1" operator="SEQ">
+				<EventID>4648</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="SEQ">
+				<EventID>4672</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="SEQ">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Protection Mechanism Failure</rulename>
+		<ruledesc>This detection may reveal how the attacker managed to initiate an attack.</ruledesc>
+		<trigger rid="5">
+			<triggerEv id="1" operator="OR">
+				<EventID>7035</EventID>
+				<Source>Security</Source>
+			</triggerEv>	
+			<triggerEv id="2" operator="OR">
+				<EventID>7036</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="OR">
+				<EventID>7040</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>  
+	<rule>
+		<rulename>Detecting Modification in Registry Key</rulename>
+		<ruledesc>This may indicate a possible Persistance attack, whereby the computer will still be vulnerable/infected after the user has logged off or computer has been rebooted.</ruledesc>
+		<trigger rid="6">
+			<triggerEv id="1" operator="EQ">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Firewall Service has Stopped.</rulename>
+		<ruledesc>This may indicate a potential attack.</ruledesc>
+		<trigger rid="7">
+			<triggerEv id="1" operator="EQ">
+				<EventID>5025</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Kerberos Domain Brute Force</rulename>
+		<ruledesc>Repeated instances of this event may indicate a potential Brute Force attack into a domain protected by Kerberos</ruledesc>
+		<trigger rid="8">
+			<triggerEv id="1" operator="RP">
+				<EventID>4771</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Audit Log was Cleared</rulename>
+		<ruledesc>This may potentailly indicate anti-forensics activity.</ruledesc>
+		<trigger rid="9">
+			<triggerEv id="1" operator="EQ">
+				<EventID>1102</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Handle Manipulation</rulename>
+		<ruledesc>This may potentially indicate a DoS attack on the host machine, or allow the attacker to generate large numbers of events to overwrite tpart or all of their activity so evidence of intrusion is overwritten.</ruledesc>
+		<trigger rid="10">
+			<triggerEv id="1" operator="OR">
+				<EventID>4656</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="OR">
+				<EventID>4658</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Replay Attack</rulename>
+		<ruledesc>This may indicate a relay attack. A replay attack is an attack whereby an attacker copies a stream of messages between two parties and replays the stream to one or more of the parties. Unless mitigated, the computers subject to the attack process the stream as legitimate messages, resulting in a range of bad consequences.</ruledesc>
+		<trigger rid="11">
+			<triggerEv id="1" operator="EQ">
+				<EventID>4649</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	
+	<rule>
+		<rulename>Account Logon Brute Force</rulename>
+		<ruledesc>Repeated instances of this event may indicate a brute force logon attempt</ruledesc>
+		<trigger rid="12">
+			<triggerEv id="1" operator="RP">
+				<EventID>4625</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Potential Spoofing</rulename>
+		<ruledesc>IPsec dropped an inbound clear text packet that should have been secured.This is usually due to the remote computer changing its IPsec policy without informing this computer. This could also be a spoofing attack attempt</ruledesc>
+		<trigger rid="13">
+			<triggerEv id="1" operator="EQ">
+				<EventID>4963</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="14">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="AND">
+				<EventID>4624</EventID> 
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="4" operator="AND">
+				<EventID>4704</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="6" operator="AND">
+				<EventID>4702</EventID>
+				<Source>Security</Source>
+			</triggerEv>			
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="15">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="AND">
+				<EventID>4624</EventID> 
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="4" operator="AND">
+				<EventID>4704</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="7" operator="AND">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>			
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="16">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="AND">
+				<EventID>4624</EventID> 
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="5" operator="AND">
+				<EventID>4672</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="6" operator="AND">
+				<EventID>4702</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="17">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="2" operator="AND">
+				<EventID>4624</EventID> 
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="5" operator="AND">
+				<EventID>4672</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="7" operator="AND">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>			
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="18">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="AND">
+				<EventID>4648</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="4" operator="AND">
+				<EventID>4704</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="6" operator="AND">
+				<EventID>4702</EventID>
+				<Source>Security</Source>
+			</triggerEv>	
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="19">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="AND">
+				<EventID>4648</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="4" operator="AND">
+				<EventID>4704</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="7" operator="AND">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>			
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="20">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="AND">
+				<EventID>4648</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="5" operator="AND">
+				<EventID>4672</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="6" operator="AND">
+				<EventID>4702</EventID>
+				<Source>Security</Source>
+			</triggerEv>		
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Detecting Potential Lateral Movement</rulename>
+		<ruledesc>This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data</ruledesc>
+		<trigger rid="21">
+			<triggerEv id="1" operator="AND">
+				<EventID>4657</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="3" operator="AND">
+				<EventID>4648</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="5" operator="AND">
+				<EventID>4672</EventID>
+				<Source>Security</Source>
+			</triggerEv>
+			<triggerEv id="7" operator="AND">
+				<EventID>4688</EventID>
+				<Source>Security</Source>
+			</triggerEv>			
+		</trigger>
+	</rule>
+	<rule>
+		<rulename>Potential Unauthorised RDP Access</rulename>
+		<ruledesc>This may indicate how the attacker gained access to the system</ruledesc>
+		<trigger rid="22">
+			<triggerEv id = "22" operator="EQ">
+				<EventID>4624</EventID>
+				<Source>Security</Source>
+				<LogonType>10</LogonType>
+			</triggerEv>
+		</trigger>
+	</rule>
+</rules>
+</ruleset>
+</xml>

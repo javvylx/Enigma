@@ -1,0 +1,73 @@
+To change to test in your env:
+
+ 
+
+Analysis.ps1:
+
+$n - don’t need to bother, its inside the WELT2 file
+
+$f – change to the full path of testlog.xml, can just put in desktop
+
+ 
+
+Testing:
+
+If you want you can test EQ, OR, RP
+
+Spoof the event ids, meaning see the ruleset, which Event ID will trigger the rule , then change the EventID field in the testlog jiukeyile
+
+ 
+
+How I test:
+
+Cd C:\Users\cleav\Desktop\WELT2    #do in the welt directory
+
+.\Analysis.ps1
+
+ 
+
+AND:
+
+Up to u to see how you wanna do it, currently my way very troublesome.
+
+ 
+
+Old code is obsolete, but can use as reference even though we don’t know what we did monkaGiga
+
+ 
+
+ 
+
+So for AND and SEQ,
+
+These 2 are related, how you do AND will be how you do SEQ, just that SEQ MUST BE IN S E Q U E N C E
+
+ 
+
+
+
+dumping just run the script and write the params i got document the params
+
+then the sec log that was dumped put to desktop.
+
+go into analysis.ps1
+
+change $f to the fullpath of the dump
+
+change $casefile (iirc) to the name of the folder u want
+
+then run analysis.ps1
+
+
+
+format:
+{details:[{"event_id":"1", 
+        "time":"1200",
+        "EventID": "xxxx",
+        "Comments": "this means that your mother die"},
+      {"event_id":"1", 
+        "time":"1200",
+        "EventID": "xxxx",
+        "Comments": "this means that your mother die"
+      }
+]}
