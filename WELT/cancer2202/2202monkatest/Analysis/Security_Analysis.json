@@ -1,0 +1,160 @@
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7035",
+	"Timestamp: "2020-10-13 13:16:17.346581",
+	"EventRecordID: "182896",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7040",
+	"Timestamp: "2020-10-13 13:16:17.346415",
+	"EventRecordID: "182895",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ EQ triggered
+	"RuleTriggered: "6",
+	"RuleName: "Detecting Modification in Registry Key",
+	"EventID: "4657",
+	"Timestamp: "2020-10-13 13:16:17.344557",
+	"EventRecordID: "182888",
+	"Description: "This may indicate a possible Persistance attack, whereby the computer will still be vulnerable/infected after the user has logged off or computer has been rebooted.",
+	}
+{ OR triggered
+	"RuleTriggered: "10",
+	"RuleName: "Handle Manipulation",
+	"EventID: "4656",
+	"Timestamp: "2020-10-13 13:16:17.346769",
+	"EventRecordID: "182897",
+	"Description: "This may potentially indicate a DoS attack on the host machine, or allow the attacker to generate large numbers of events to overwrite tpart or all of their activity so evidence of intrusion is overwritten.",
+	}
+{ AND triggered
+	"RuleTriggered: "14",
+	"RuleName: "Detecting Potential Lateral Movement",
+	"EventIDs: "4657 4624 4704 4702",
+	"LastTimestamp: "2020-10-13 13:16:17.345469",
+	"LastEventRecordID: "182890",
+	"Description: "This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data",
+	}
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7035",
+	"Timestamp: "2020-10-13 13:16:17.346581",
+	"EventRecordID: "182896",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7040",
+	"Timestamp: "2020-10-13 13:16:17.346415",
+	"EventRecordID: "182895",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ EQ triggered
+	"RuleTriggered: "6",
+	"RuleName: "Detecting Modification in Registry Key",
+	"EventID: "4657",
+	"Timestamp: "2020-10-13 13:16:17.344557",
+	"EventRecordID: "182888",
+	"Description: "This may indicate a possible Persistance attack, whereby the computer will still be vulnerable/infected after the user has logged off or computer has been rebooted.",
+	}
+{ OR triggered
+	"RuleTriggered: "10",
+	"RuleName: "Handle Manipulation",
+	"EventID: "4656",
+	"Timestamp: "2020-10-13 13:16:17.346769",
+	"EventRecordID: "182897",
+	"Description: "This may potentially indicate a DoS attack on the host machine, or allow the attacker to generate large numbers of events to overwrite tpart or all of their activity so evidence of intrusion is overwritten.",
+	}
+{ AND triggered
+	"RuleTriggered: "14",
+	"RuleName: "Detecting Potential Lateral Movement",
+	"EventIDs: "4657 4624 4704 4702",
+	"LastTimestamp: "2020-10-13 13:16:17.345469",
+	"LastEventRecordID: "182890",
+	"Description: "This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data",
+	}
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7035",
+	"Timestamp: "2020-10-13 13:16:17.346581",
+	"EventRecordID: "182896",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7040",
+	"Timestamp: "2020-10-13 13:16:17.346415",
+	"EventRecordID: "182895",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ EQ triggered
+	"RuleTriggered: "6",
+	"RuleName: "Detecting Modification in Registry Key",
+	"EventID: "4657",
+	"Timestamp: "2020-10-13 13:16:17.344557",
+	"EventRecordID: "182888",
+	"Description: "This may indicate a possible Persistance attack, whereby the computer will still be vulnerable/infected after the user has logged off or computer has been rebooted.",
+	}
+{ OR triggered
+	"RuleTriggered: "10",
+	"RuleName: "Handle Manipulation",
+	"EventID: "4656",
+	"Timestamp: "2020-10-13 13:16:17.346769",
+	"EventRecordID: "182897",
+	"Description: "This may potentially indicate a DoS attack on the host machine, or allow the attacker to generate large numbers of events to overwrite tpart or all of their activity so evidence of intrusion is overwritten.",
+	}
+{ AND triggered
+	"RuleTriggered: "14",
+	"RuleName: "Detecting Potential Lateral Movement",
+	"EventIDs: "4657 4624 4704 4702",
+	"LastTimestamp: "2020-10-13 13:16:17.345469",
+	"LastEventRecordID: "182890",
+	"Description: "This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data",
+	}
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7035",
+	"Timestamp: "2020-10-13 13:16:17.346581",
+	"EventRecordID: "182896",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ OR triggered
+	"RuleTriggered: "5",
+	"RuleName: "Detecting Protection Mechanism Failure",
+	"EventID: "7040",
+	"Timestamp: "2020-10-13 13:16:17.346415",
+	"EventRecordID: "182895",
+	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+	}
+{ EQ triggered
+	"RuleTriggered: "6",
+	"RuleName: "Detecting Modification in Registry Key",
+	"EventID: "4657",
+	"Timestamp: "2020-10-13 13:16:17.344557",
+	"EventRecordID: "182888",
+	"Description: "This may indicate a possible Persistance attack, whereby the computer will still be vulnerable/infected after the user has logged off or computer has been rebooted.",
+	}
+{ OR triggered
+	"RuleTriggered: "10",
+	"RuleName: "Handle Manipulation",
+	"EventID: "4656",
+	"Timestamp: "2020-10-13 13:16:17.346769",
+	"EventRecordID: "182897",
+	"Description: "This may potentially indicate a DoS attack on the host machine, or allow the attacker to generate large numbers of events to overwrite tpart or all of their activity so evidence of intrusion is overwritten.",
+	}
+{ AND triggered
+	"RuleTriggered: "14",
+	"RuleName: "Detecting Potential Lateral Movement",
+	"EventIDs: "4657 4624 4704 4702",
+	"LastTimestamp: "2020-10-13 13:16:17.345469",
+	"LastEventRecordID: "182890",
+	"Description: "This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data",
+	}
