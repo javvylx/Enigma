@@ -8,10 +8,40 @@
 
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="css/google-fonts.css" rel="stylesheet">
-
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="ui_libs/toastr.min.css">
+
 <link href="css/style.css" rel="stylesheet">
 <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+<style type="text/css">
+
+
+
+#download .refresh {
+    width: 30px; height: 30px;
+    margin-top: -7px;
+    -animation: spin .9s infinite linear;
+    -webkit-animation: spin2 .9s infinite linear;
+  }
+  @-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg);}
+    to { transform: rotate(360deg);}
+  }
+  #download {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;    
+  }
+</style>
+
+
+
 
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -20,6 +50,7 @@
 <!-- <link rel="stylesheet" type="text/css" href="ui_libs/bootstrap.css"> -->
 <script src="ui_libs/popper.min.js"></script>
 <script src="ui_libs/toastr.min.js"></script>
+
 <script src="ui_libs/loadingoverlay.min.js"></script>
 <script src="ui_libs/aris.js"></script>
 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
@@ -30,11 +61,13 @@
 var refreshB64 = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIiB2aWV3Qm94PSIwIC0yNTYgMTc5MiAxNzkyIiBpZD0ic3ZnMiIgdmVyc2lvbj0iMS4xIiBpbmtzY2FwZTp2ZXJzaW9uPSIwLjQ4LjMuMSByOTg4NiIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgc29kaXBvZGk6ZG9jbmFtZT0icmVmcmVzaF9mb250X2F3ZXNvbWUuc3ZnIj4gIDxtZXRhZGF0YSBpZD0ibWV0YWRhdGExMiI+ICAgIDxyZGY6UkRGPiAgICAgIDxjYzpXb3JrIHJkZjphYm91dD0iIj4gICAgICAgIDxkYzpmb3JtYXQ+aW1hZ2Uvc3ZnK3htbDwvZGM6Zm9ybWF0PiAgICAgICAgPGRjOnR5cGUgcmRmOnJlc291cmNlPSJodHRwOi8vcHVybC5vcmcvZGMvZGNtaXR5cGUvU3RpbGxJbWFnZSIvPiAgICAgIDwvY2M6V29yaz4gICAgPC9yZGY6UkRGPiAgPC9tZXRhZGF0YT4gIDxkZWZzIGlkPSJkZWZzMTAiLz4gIDxzb2RpcG9kaTpuYW1lZHZpZXcgcGFnZWNvbG9yPSIjZmZmZmZmIiBib3JkZXJjb2xvcj0iIzY2NjY2NiIgYm9yZGVyb3BhY2l0eT0iMSIgb2JqZWN0dG9sZXJhbmNlPSIxMCIgZ3JpZHRvbGVyYW5jZT0iMTAiIGd1aWRldG9sZXJhbmNlPSIxMCIgaW5rc2NhcGU6cGFnZW9wYWNpdHk9IjAiIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiIGlua3NjYXBlOndpbmRvdy13aWR0aD0iNjQwIiBpbmtzY2FwZTp3aW5kb3ctaGVpZ2h0PSI0ODAiIGlkPSJuYW1lZHZpZXc4IiBzaG93Z3JpZD0iZmFsc2UiIGlua3NjYXBlOnpvb209IjAuMTMxNjk2NDMiIGlua3NjYXBlOmN4PSI4OTYiIGlua3NjYXBlOmN5PSI4OTYiIGlua3NjYXBlOndpbmRvdy14PSIwIiBpbmtzY2FwZTp3aW5kb3cteT0iMjUiIGlua3NjYXBlOndpbmRvdy1tYXhpbWl6ZWQ9IjAiIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9InN2ZzIiLz4gIDxnIHRyYW5zZm9ybT0ibWF0cml4KDEsMCwwLC0xLDEyMS40OTE1MywxMjcwLjIzNzMpIiBpZD0iZzQiPiAgICA8cGF0aCBkPSJtIDE1MTEsNDgwIHEgMCwtNSAtMSwtNyBRIDE0NDYsMjA1IDEyNDIsMzguNSAxMDM4LC0xMjggNzY0LC0xMjggNjE4LC0xMjggNDgxLjUsLTczIDM0NSwtMTggMjM4LDg0IEwgMTA5LC00NSBRIDkwLC02NCA2NCwtNjQgMzgsLTY0IDE5LC00NSAwLC0yNiAwLDAgdiA0NDggcSAwLDI2IDE5LDQ1IDE5LDE5IDQ1LDE5IGggNDQ4IHEgMjYsMCA0NSwtMTkgMTksLTE5IDE5LC00NSAwLC0yNiAtMTksLTQ1IEwgNDIwLDI2NiBxIDcxLC02NiAxNjEsLTEwMiA5MCwtMzYgMTg3LC0zNiAxMzQsMCAyNTAsNjUgMTE2LDY1IDE4NiwxNzkgMTEsMTcgNTMsMTE3IDgsMjMgMzAsMjMgaCAxOTIgcSAxMywwIDIyLjUsLTkuNSA5LjUsLTkuNSA5LjUsLTIyLjUgeiBtIDI1LDgwMCBWIDgzMiBxIDAsLTI2IC0xOSwtNDUgLTE5LC0xOSAtNDUsLTE5IGggLTQ0OCBxIC0yNiwwIC00NSwxOSAtMTksMTkgLTE5LDQ1IDAsMjYgMTksNDUgbCAxMzgsMTM4IFEgOTY5LDExNTIgNzY4LDExNTIgNjM0LDExNTIgNTE4LDEwODcgNDAyLDEwMjIgMzMyLDkwOCAzMjEsODkxIDI3OSw3OTEgMjcxLDc2OCAyNDksNzY4IEggNTAgUSAzNyw3NjggMjcuNSw3NzcuNSAxOCw3ODcgMTgsODAwIHYgNyBxIDY1LDI2OCAyNzAsNDM0LjUgMjA1LDE2Ni41IDQ4MCwxNjYuNSAxNDYsMCAyODQsLTU1LjUgMTM4LC01NS41IDI0NSwtMTU2LjUgbCAxMzAsMTI5IHEgMTksMTkgNDUsMTkgMjYsMCA0NSwtMTkgMTksLTE5IDE5LC00NSB6IiBpZD0icGF0aDYiIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIHN0eWxlPSJmaWxsOmN1cnJlbnRDb2xvciIvPiAgPC9nPjwvc3ZnPg==';
 
 
-window.needsUpdate = {csv: true, benchmarking: false, plot_map: false, ram_dump_input: false };
-
-window.inputFilePaths = {ramFolder: ''};
+window.needsUpdate = {csv: true, ramDumpInput: false, triageCaseInput: false, triageExecuteAnalysis: false};
 
 
+window.inputFilePaths = {ramFolder: '', triageImagePath: ''};
+
+triageFields = {caseName: '', imageFilePath: ''};
+triageResults = {};
 
 
 toastr.options = {
@@ -56,16 +89,9 @@ toastr.options = {
 	};
 
 
-showLoader = function(t) {
-  $.LoadingOverlay('show', {
-  	image: '' 
-  });
-};
-
-hideLoader = function(error) {
-  if (error) toastr.error(error);
-  $.LoadingOverlay('hide');
-};
+showSuccess = function(s) {
+  toastr.success(s);
+}
 
 
 showLoader = function(t) {
@@ -815,9 +841,10 @@ $(function () {
 					triageResultMalignEventsCtx,
 
 					triageResultWhoIsResultsCtx,
-					triageResultEvtTableCtx, 
+					
 					triageResultsExesTableCtx,
-					triageResultsDllTableCtx
+					triageResultsDllTableCtx,
+					triageResultEvtTableCtx
 				]	
 
 
@@ -1091,21 +1118,50 @@ $(function () {
 	});
 	/* --- End of Toggle Pages --- */
 
-	window.ram_dump_inputed = function () {
+	window.ramDumpInputed = function () {
 		// console.log(inputFilePaths.ramFolder);
 		$('#mem-input-folder-label').html(inputFilePaths.ramFolder);
 		inputFilePaths.ramFolder = "";
 	};
 
+
+	window.triageImageInputed = function() {
+		$('#triage-input-image-label').html(inputFilePaths.triageImagePath);
+		inputFilePaths.triageImagePath = "";
+	}
+
 	
-	$('#mem-input-folder').click(function(){
-		needsUpdate.ram_dump_input = true;
+
+
+	$('#triage-input-image').click(function(){
+		needsUpdate.triageCaseInput = true;
 	});
 
+	window.triageFinishedAnalysis = function() {
+
+	}	
+
+	$('#triage-btn-run').click(function() {
+		triageFields = {caseName: 'Kevin2010', imageFilePath: 'c:\\users\\user\\desktop\\test.txt'}
+		needsUpdate.triageExecuteAnalysis = true;
+
+
+
+	});
+
+
+	
+	$('#mem-input-folder').click(function(){
+		needsUpdate.ramDumpInput = true;
+	});
+
+	
 
 	$('#memory-folder-input').on('change', function(e) {
 		console.log(getMethods(e));
 		$('#memory-folder-input-label').text(e.target.files[0].webkitRelativePath);
+		triageFields.caseName =  
+		triageFields.imageFilePath = $('#triage-input-image-label').html();
 
 	});
 
@@ -1114,6 +1170,8 @@ $(function () {
 		$('#side-home').addClass("active");
 		$('.content-row').hide();
 		$('#row-home').show();
+
+		$('.results-container').hide();
 	}
 
 	startUp();
