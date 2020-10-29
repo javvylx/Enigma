@@ -17,26 +17,30 @@ param(
 )
 #>
 
-# for testing, remove from final. $n = folder to store results in, $f = .xml dump absolute path
+# for testing, remove from final. $n = folder to store results in, $evtxdump = .evtx dump absolute path (aft bashbunny dump)
 $n = "2202monkatest"
-$f = $args[0]
-# case name and timestamp
+$evtxdump = $args[0]
+#case name and timestamp
 #$casefile = "$n-$(get-date -f ddMMyyyy-HHmm)" 
 
 $casefile = $n
 # if not created, create
 if (!(test-path ".\$casefile")){
 		new-item -type directory -Path ".\$casefile"
-        "Analysis" | % {New-Item -Name ".\$casefile\$_" -type directory}
+        "Logs", "Analysis" | % {New-Item -Name ".\$casefile\$_" -type directory}
 
+		write-host "Logs folder is created successfully!" -foregroundcolor "green"
 		write-host "Analysis folder is created successfully!" -foregroundcolor "green"
 		write-host "-------------------------------------------------------------------------"
 }
 
+python .\python-evtx-master\scripts\evtx_dump.py $evtxdump > .\$casefile\Logs\Security.xml
+write-host "Convertion of Security logs into .xml format for analaysis has completed!" -foregroundcolor "green"
+
 [xml]$rules = get-content "WELTrules.xml"
 $ruleNodes = $rules.SelectNodes("/xml/ruleset/rules/rule")
 
-[xml]$evdump = get-content $f | % { $_.replace('version="1.1"','version="1.0"') }
+[xml]$evdump = get-content .\$casefile\Logs\Security.xml | % { $_.replace('version="1.1"','version="1.0"') }
 $nodes = $evdump.Events.Event
 
 
