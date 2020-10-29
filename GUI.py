@@ -1,5 +1,5 @@
-
 import os, json, sys, time
+from controller import *
 sys.path.append(os.getcwd()+"\\python-3.8.2-embed-amd64")
 sys.path.append(os.getcwd())
 from selenium import webdriver
@@ -191,14 +191,58 @@ class Browser(object):
 	def __del__(self):
 		self._quit()
 
+def tk_ask_input(mode="file"):
+	root = tk.Tk()
+	root.withdraw()
+
+	# Make it almost invisible - no decorations, 0 size, top left corner.
+	# root.overrideredirect(True)
+	# root.geometry('0x0+0+0')
+
+	# Show window again and lift it to top so it can get focus,
+	# otherwise dialogs will end up behind the terminal.
+	# root.deiconify()
+	# root.lift()
+	root.focus_force()
+
+	if mode == "file":
+
+		ret = filedialog.askopenfilenames(parent=root) # Or some other dialog
+	elif mode == "folder":
+		ret = str(filedialog.askdirectory(parent=root)) # Or some other dialog
+
+	root.destroy()
+	return ret
 
 # Read from this point onwards only
 # ####################################
 def launch():
 	
 	# Hide Tkinter
+	# root = tk.Tk()
+	# root.withdraw()
+
+	# M = ModulesControler()
+
 	root = tk.Tk()
-	root.withdraw()
+	# root.withdraw()
+
+	# Make it almost invisible - no decorations, 0 size, top left corner.
+	# root.overrideredirect(True)
+	# root.geometry('0x0+0+0')
+
+	# Show window again and lift it to top so it can get focus,
+	# otherwise dialogs will end up behind the terminal.
+	# root.deiconify()
+	# root.lift()
+	
+
+
+
+		
+	
+		
+
 	
 
 	with Browser(headless=False) as browser:
@@ -232,13 +276,53 @@ def launch():
 					break
 
 
-				if needs_update['ram_dump_input']:
+				if needs_update['ramDumpInput']:
 					cout << "Ram Dump Mode\n"
 					ram_folder_location = str(filedialog.askdirectory())
 					# print(ram_folder_location)
 
 
-					browser.execute_script("window.inputFilePaths['ramFolder'] = \"%s\"; window.ram_dump_inputed();" %ram_folder_location)
+					cout << "Update Triage Case Folder Path\n"
+					browser.execute_script("window.inputFilePaths['ramFolder'] = \"%s\"; window.ramDumpInputed();" %ram_folder_location)
+
+
+				if needs_update['triageCaseInput']:
+					cout << "Update Triage Case Folder Path\n"
+					root.focus_force()
+
+					triage_case_path = str(filedialog.askopenfilename())
+					# Get folder using tkinter
+
+
+					print(triage_case_path)
+					browser.execute_script("window.inputFilePaths['triageImagePath'] = \"%s\"; window.triageImageInputed();" %triage_case_path)
+
+
+
+
+
+				if needs_update['triageExecuteAnalysis']:
+					cout << "Triage Results Mode\n"
+
+
+
+					case_name = browser.execute_script("return triageFields['caseName'];")
+					case_img_path = browser.execute_script("return triageFields['imageFilePath'];")
+
+					cout << case_name << " " << case_img_path 
+					browser.execute_script("showLoader('Conducting Triage Analysis...');")
+
+					
+					
+					browser.execute_script("hideLoader();")
+					browser.execute_script("showSuccess('Finished Triage Analysis!');")
+
+					cout << "Done\n"
+					
+					# M.start_triage_analysis("C:\\Users\\User\\Desktop\\2202-WELTPEIOC-Suite\\ram_output")
+
+
+
 
 				# Procedure for analyzing graphs
 				# if needs_update['graph']:
