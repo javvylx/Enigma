@@ -314,8 +314,8 @@ def launch():
 					cout << case_name << " " << case_img_path 
 					browser.execute_script("showLoader('Conducting Triage Analysis...');")
 
-					
-					
+
+					browser.execute_script("modesResults.triage")
 					
 					browser.execute_script("hideLoader();")
 					browser.execute_script("showSuccess('Finished Triage Analysis!');")
