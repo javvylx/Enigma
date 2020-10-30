@@ -12,7 +12,7 @@ foreach($node in $nodes){
         if ($evid -eq $triggerEvEventID){
             $time = $node.System.TimeCreated.SystemTime
             write-host "$triggerEvEventID matched!" -foregroundcolor "red"
-		    $output = '{ EQ triggered
+		    $output = '{
 	"RuleTriggered: "'+$triggerRID+'",
 	"RuleName: "'+$rulename+'",
 	"EventID: "'+$evid+'",
@@ -36,7 +36,7 @@ foreach($node in $nodes){
 				$Ip = $Ip.get_innerxml()
 				
 				write-host "$triggerEvEventID matched!" -foregroundcolor "red"
-				$output = '{ EQ_RDP triggered
+				$output = '{
 	"RuleTriggered: "'+$triggerRID+'",
 	"RuleName: "'+$rulename+'",
 	"EventID: "'+$evid+'",

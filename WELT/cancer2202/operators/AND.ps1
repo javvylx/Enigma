@@ -13,7 +13,7 @@ foreach($node in $nodes)
     }
     
     if ((compare-object $EventANDArray $TriggerANDArray -SyncWindow 0).Length -eq 0){
-		$output = '{ AND triggered
+		$output = '{
 	"RuleTriggered: "'+$triggerRID+'",
 	"RuleName: "'+$rulename+'",
 	"EventIDs: "'+$EventANDArray+'",

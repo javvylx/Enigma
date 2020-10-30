@@ -16,7 +16,7 @@ foreach($node in $nodes)
 			if($count -ge 3 -and $triggerEvEventID -eq $evid)
 				{
 					write-host "Multiple occurences of $evid found!" -foregroundcolor "darkyellow"
-		            $output = '{ RP triggered
+		            $output = '{
 	"RuleTriggered: "'+$triggerRID+'",
 	"RuleName: "'+$rulename+'",
 	"EventID: "'+$evid+'",

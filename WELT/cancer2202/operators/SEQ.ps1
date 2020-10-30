@@ -26,7 +26,7 @@ foreach($node in $nodes)
 	        }
         }
         if($verifySEQ -eq $true) {
-			$output = '{ SEQ triggered
+			$output = '{
 	"RuleTriggered: "'+$triggerRID+'",
 	"RuleName: "'+$rulename+'",
 	"EventIDs: "'+$EventSEQArray+'",

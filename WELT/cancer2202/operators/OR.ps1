@@ -11,7 +11,7 @@ foreach($node in $nodes)
 
     if($triggerEvOperator -eq "OR" -and $triggerEvEventID -eq $evid){
 	    write-host "$triggerEvEventID found in eventdump!" -foregroundcolor "darkyellow"
-	    $output = '{ OR triggered
+	    $output = '{
 	"RuleTriggered: "'+$triggerRID+'",
 	"RuleName: "'+$rulename+'",
 	"EventID: "'+$evid+'",
