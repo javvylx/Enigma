@@ -14,12 +14,12 @@ foreach($node in $nodes)
     
     if ((compare-object $EventANDArray $TriggerANDArray -SyncWindow 0).Length -eq 0){
 		$output = '{
-	"RuleTriggered: "'+$triggerRID+'",
-	"RuleName: "'+$rulename+'",
-	"EventIDs: "'+$EventANDArray+'",
-	"LastTimestamp: "'+$time+'",
-	"LastEventRecordID: "'+$evrid+'",
-	"Description: "'+$ruledesc+'",
+	"RuleTriggered" : "'+$triggerRID+'",
+	"RuleName" : "'+$rulename+'",
+	"EventIDs" : "'+$EventANDArray+'",
+	"LastTimestamp" : "'+$time+'",
+	"LastEventRecordID" : "'+$evrid+'",
+	"Description" : "'+$ruledesc+'"
 	}'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
         $EventANDArray.clear()

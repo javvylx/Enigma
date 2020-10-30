@@ -12,12 +12,12 @@ foreach($node in $nodes)
     if($triggerEvOperator -eq "OR" -and $triggerEvEventID -eq $evid){
 	    write-host "$triggerEvEventID found in eventdump!" -foregroundcolor "darkyellow"
 	    $output = '{
-	"RuleTriggered: "'+$triggerRID+'",
-	"RuleName: "'+$rulename+'",
-	"EventID: "'+$evid+'",
-	"Timestamp: "'+$time+'",
-	"EventRecordID: "'+$evrid+'",
-	"Description: "'+$ruledesc+'",
+	"RuleTriggered": "'+$triggerRID+'",
+	"RuleName": "'+$rulename+'",
+	"EventID": "'+$evid+'",
+	"Timestamp": "'+$time+'",
+	"EventRecordID": "'+$evrid+'",
+	"Description": "'+$ruledesc+'"
 	}'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
 	}

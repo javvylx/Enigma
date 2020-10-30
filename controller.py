@@ -36,6 +36,8 @@ class ModulesControler:
 	FLDR_WELT_JSON	= WELT_PATH+"\\EventLogOutput\\Analysis"
 	
 
+	FILE_WELT_JSON = FLDR_WELT_JSON + "\\Security_Analysis.json"
+
 
 	# Choose which fields to extract
 	FLDS_IMG_INFO = ["Suggested Profile(s)", "Image date and time"]
@@ -226,9 +228,18 @@ class ModulesControler:
 		status = subprocess.run(self.RAM_DUMP_EXE_PATH, shell=True)
 
 
+	def try_read_json(self):
+		import json
+		with open(self.FILE_WELT_JSON, 'r') as f:
+			data = json.load(f)
+
+		print(data)
+		
+
 
 if __name__ == '__main__':
 	M = ModulesControler()
 
 	M.triage_analyze_security_log("C:\\Users\\Kevin\\Documents\\GitHub\\2202-WELTPEIOC-Suite\\WELT\\Tools\\Security.evtx")
 
+	# M.try_read_json()

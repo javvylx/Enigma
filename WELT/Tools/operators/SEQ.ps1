@@ -27,12 +27,12 @@ foreach($node in $nodes)
         }
         if($verifySEQ -eq $true) {
 			$output = '{
-	"RuleTriggered: "'+$triggerRID+'",
-	"RuleName: "'+$rulename+'",
-	"EventIDs: "'+$EventSEQArray+'",
-	"LastTimestamp: "'+$time+'",
-	"LastEventRecordID: "'+$evrid+'",
-	"Description: "'+$ruledesc+'",
+	"RuleTriggered" : "'+$triggerRID+'",
+	"RuleName" : "'+$rulename+'",
+	"EventIDs" : "'+$EventSEQArray+'",
+	"LastTimestamp" : "'+$time+'",
+	"LastEventRecordID" : "'+$evrid+'",
+	"Description" : "'+$ruledesc+'"
 	}'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
             $EventSEQArray.clear()

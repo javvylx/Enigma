@@ -17,12 +17,12 @@ foreach($node in $nodes)
 				{
 					write-host "Multiple occurences of $evid found!" -foregroundcolor "darkyellow"
 		            $output = '{
-	"RuleTriggered: "'+$triggerRID+'",
-	"RuleName: "'+$rulename+'",
-	"EventID: "'+$evid+'",
-	"Timestamp: "'+$time+'",
-	"EventRecordID: "'+$evrid+'",
-	"Description: "'+$ruledesc+'",
+	"RuleTriggered" : "'+$triggerRID+'",
+	"RuleName" : "'+$rulename+'",
+	"EventID" : "'+$evid+'",
+	"Timestamp" : "'+$time+'",
+	"EventRecordID" : "'+$evrid+'",
+	"Description" : "'+$ruledesc+'"
 	}'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
 				}
