@@ -71,8 +71,13 @@ window.inputFilePaths = {ramImage: '', triageFolderPath: ''};
 
 volFields = {caseName: ''}
 
-triageFields = {caseName: '', imageFilePath: ''};
-modesResults = { triage: '' };
+triageFields = {caseFolderPath: ''};
+
+
+
+modesResultsData = {vol: '', triage: '' };
+
+
 
 
 toastr.options = {
@@ -377,7 +382,7 @@ $(function () {
 				],
 				['div', {id: subDivId, class: 'card-body'},
 					['div', {class: 'table-responsive'},
-						['table', {id: tblId, class: 'table table-bordered', id: 'dataTable',  width: '100%', cellspacing: '0'},
+						['table', {id: tblId, class: 'table table-bordered results-table',  width: '100%', cellspacing: '0'},
 							['thead', 
 								['tr', headersData, function(x) { return ['th', x] } ]
 							],
@@ -716,7 +721,7 @@ $(function () {
 	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_dump_folder",
 		"Choose your volatility dump folder",
 		"triage-dump-folder",
-		"Choose file...",
+		"Choose folder...",
 		"FILE",
 		"triage-dump-run",
 		"Execute analysis",
@@ -729,7 +734,7 @@ $(function () {
 					"py-0", //colorStyle
 					"border-bottom-info", //hoverStyle
 					"Name", //title
-					"triage-result-meta-name", //descId
+					"triage-result-meta-name-label", //descId
 					"ICTNYP-NB17");
 
 	// genNoImageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc) {
@@ -793,7 +798,7 @@ $(function () {
 			"border-bottom-danger", 
 			"", 
 			"Number of Malign Files", 
-			"triage-domain-info-label", 
+			"triage-malign-files-info-label", 
 			"3 out of 200 are flagged", 
 			"fa-3x fas fa-viruses");
 
@@ -803,7 +808,7 @@ $(function () {
 			"border-bottom-danger", 
 			"", 
 			"Flagged Events", 
-			"triage-domain-info-label", 
+			"triage-malign-events-info-label", 
 			"2 suspicious events found", 
 			"fa-3x fas fa-viruses");
 
@@ -1109,7 +1114,7 @@ $(function () {
 
 	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
-	$('#dataTable').DataTable();
+	$('.results-table').DataTable();
 
 	
 
@@ -1163,10 +1168,7 @@ $(function () {
 			needsUpdate.volExecuteDump = true;
 		} else {
 			toastr.error("Please input valid case name");
-		}
-
-
-		
+		}	
 
 	})
 
@@ -1190,16 +1192,65 @@ $(function () {
 	
 
 	window.triageFinishedAnalysis = function() {
+		triageFields.caseFolderPath = ""; //Reset triageFields inputs
+
+		console.log(modesResultsData.triage)
+
+		// Update all tables using the modesResultsData['triage']
+		
 
 	}	
 
+	updateTableData = function(tblId, tblHeaders, tblData) {
+		console.log(tblData);
+
+		var toAppend = [
+			['thead', 
+				['tr', tblHeaders, function(h) { return ['th', h] } ]
+			],
+			['tbody', tblData, function(a) {
+				return ['tr', Object.values(a), function(b) {
+						return ['td', b]
+					}]									
+				}
+			]
+		];
+
+		$("#"+tblId).html(HTML(toAppend));
+
+		
+
+	}
+
 	$('#triage-dump-run').click(function() {
-		triageFields = {caseName: 'Kevin2010', imageFilePath: 'c:\\users\\user\\desktop\\test.txt'}
+		triageFields.caseFolderPath = $('#triage-dump-folder-label').html();
+
+		console.log(triageFields.caseFolderPath);
+		// triageFields = imageFilePath: 'c:\\users\\user\\desktop\\test.txt'}
 		needsUpdate.triageExecuteAnalysis = true;
 
 
+		// #triage-result-meta-name
+		// triage-result-meta-datetime-label
+		// triage-result-meta-model-label
+		// triage-domain-info-label
+		// triage-malign-files-info-label
+		// triage-malign-events-info-label
+		// 
+		// triage-WhoIs-table
+		// triage-exes-table
+		// triage-dlls-table
+		
+		// 
+
 
 	});
+
+	window.execTriageDumpRun = function () {
+		updateTableData("triage-exes-table", 
+			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
+			modesResultsData['triage']['FilesAnalysisDetails']);
+	};
 
 
 	

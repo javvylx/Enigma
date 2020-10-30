@@ -2,14 +2,15 @@ import os
 import re
 import csv
 import json
+import sys
 from collections import defaultdict
 import subprocess
 from IOC import ioc
 
-
-# from pestaticanalyzer import staticanalysis
-# from embermodel import predict
-# from tsmodel import test,dataset
+# Comment the 3 below if u all havent pip install
+from pestaticanalyzer import staticanalysis
+from embermodel import predict
+from tsmodel import test,dataset
 
 class ModulesControler:
 
@@ -51,11 +52,13 @@ class ModulesControler:
 	FLD_WHOIS = ["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
 
 	def __init__(self):
-		# self.file_analyzer = staticanalysis.PEAnalyser()
-		# self.ember = predict.EmberUtility()
+		self.file_analyzer = staticanalysis.PEAnalyser()
+		self.ember = predict.EmberUtility()
 		# self._ts = 
-		pass
+		# pass
 		
+
+
 
 	def start_triage_analysis(self, folder_path):
 		# Extract Info
@@ -63,6 +66,11 @@ class ModulesControler:
 		if folder_path[-1] != "\\":
 			folder_path += "\\"
 
+
+		with open("results.txt", 'r') as f:
+			data = json.load(f)
+
+		return data
 
 
 		img_info_det = self.triage_parse_image_profiles(folder_path)
@@ -73,8 +81,15 @@ class ModulesControler:
 
 		img_whois = self.triage_parse_whois(folder_path)
 
+
+		# print(img_exe_hashes)
+		# print("-------------")
+		# print(img_dll_hashes)
+
+		# sys.exit()
 		mal_exes = self.triage_evaluate_malware(folder_path+self.FLDR_EXE, img_exe_hashes)
 		mal_dlls = self.triage_evaluate_malware(folder_path+self.FLDR_DLL, img_dll_hashes)
+
 
 
 
@@ -104,6 +119,10 @@ class ModulesControler:
 					"EventLogAnalysisDetails": []
 
 		}
+
+
+		# with open("results.txt", 'w') as f:
+		# 	f.write(json.dumps(triage_result))
 
 		print(triage_result)
 		return triage_result
@@ -184,32 +203,46 @@ class ModulesControler:
 		# file details will contain the name with two hashes
 		temp_folder = "C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test\\exesample\\"
 		print(a_folder)
-		
+		i = 0
 		# print(file_details)
 		ret_data = []
-		for f in os.listdir(temp_folder): # remember change temp folder back to a_folder
+		for f in os.listdir(a_folder): # remember change temp folder back to a_folder
 			f_dict = defaultdict(bool)
+			try:
 
-			heuristics_details = self.file_analyzer.get_heuristics_dict(temp_folder+f)
-			ml_data = self.file_analyzer.get_ml_data(temp_folder+f)
+				heuristics_details = self.file_analyzer.get_heuristics_dict(a_folder+f)
+				heuristics_flag_count = sum(1 for x in heuristics_details.values() if x == 1 or x == True)
+			except:
+				heuristics_details = None
 
-			tp = [(x,y) for x,y in ml_data.items()]
+			try: 
+				ml_data = self.file_analyzer.get_ml_data(a_folder+f)
+				tp = [(x,y) for x,y in ml_data.items()]
+				inference_net = test.InferenceNet(self.CHECKPOINT_PATH)
+				inputs = inference_net.get_vectorized_row(tp)
+				ts_score = str(inference_net.run(inputs))
+			except:
+				ts_score = None
 
-			inference_net = test.InferenceNet(self.CHECKPOINT_PATH)
-			inputs = inference_net.get_vectorized_row(tp)
-			ts_val = inference_net.run(inputs)
-		
-			heuristics_flag_count = sum(1 for x in heuristics_details.values() if x == 1 or x == True)
+			# try:
+			# 	ember_score = str(self.ember.predict_malware(a_folder+f))
+			# except:
+			# 	ember_score = None
+
 
 			f_dict['File Name'] = f
 			f_dict['MD5'] = file_details[f][0]
 			f_dict['SHA1'] = file_details[f][1]
 			f_dict["VirusTotal"] = 0
-			f_dict["Heuristics Indicators"] = str(heuristics_flag_count) + "/" + str(len(heuristics_details))
-			f_dict["Ember Model"] = str(self.ember.predict_malware(temp_folder+f))
-			f_dict["Tensorflow Model"] = ts_val
-
+			f_dict["Heuristics Indicators"] = str(heuristics_flag_count) + "/" + str(len(heuristics_details)) if heuristics_details is not None else "Error"
+			f_dict["Tensorflow Model"] = ts_score if ts_score is not None else "Error"
+			# f_dict["Ember Model"] = ember_score if ember_score is not None else "Error"
+			
 			ret_data.append(f_dict)
+			i += 1
+
+			if i % 4 == 0:
+				print(f_dict)
 
 		return ret_data
 			
@@ -253,8 +286,14 @@ class ModulesControler:
 
 
 if __name__ == '__main__':
+
+
 	M = ModulesControler()
+	M.start_triage_analysis("C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test")
+
+	# pass
+	# M = ModulesControler()
 
 	# M.triage_analyze_security_log(os.getcwd()+"\\WELT\\Tools\\Security.evtx")
 
-	M.try_read_json()
+	# M.try_read_json()

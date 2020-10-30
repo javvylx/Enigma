@@ -7,6 +7,7 @@ import subprocess
 import ast
 import tkinter as tk
 from tkinter import filedialog
+import controller
 
 
 if 'pythonw' in sys.executable:
@@ -191,17 +192,21 @@ class Browser(object):
 		self._quit()
 
 def tk_ask_input(mode="file"):
+
 	root = tk.Tk()
 	root.withdraw()
 
 	# Make it almost invisible - no decorations, 0 size, top left corner.
-	# root.overrideredirect(True)
-	# root.geometry('0x0+0+0')
+	root.overrideredirect(True)
+	root.geometry('0x0+0+0')
+	root.wm_attributes('-topmost', 1)
 
 	# Show window again and lift it to top so it can get focus,
 	# otherwise dialogs will end up behind the terminal.
 	# root.deiconify()
 	# root.lift()
+	root.deiconify()
+	root.lift()
 	root.focus_force()
 
 	if mode == "file":
@@ -223,7 +228,7 @@ def launch():
 
 	# M = ModulesControler()
 
-	root = tk.Tk()
+	# root = tk.Tk()
 	# root.withdraw()
 
 	# Make it almost invisible - no decorations, 0 size, top left corner.
@@ -235,6 +240,7 @@ def launch():
 	# root.deiconify()
 	# root.lift()
 	
+	control = controller.ModulesControler()
 	
 
 	with Browser(headless=False) as browser:
@@ -272,35 +278,39 @@ def launch():
 
 
 				if needs_update['volRamDumpInput']:
+					# Just to ask for ram dump file 
 					cout << "Ram Dump Mode\n"
 					ram_image_file_path = tk_ask_input("file")
 					browser.execute_script("")
-
-
-					# print(ram_folder_location)
-
 
 					cout << "Update Triage Case Folder Path\n"
 					browser.execute_script("window.inputFilePaths['ramImage'] = \"%s\"; window.volRamDumpInputed();" %ram_image_file_path)
 
 
 
-				if needs_updaet['volExecuteDump']:
+				if needs_update['volExecuteDump']:
+					# Uses controller to call volatility to dump case details
 					cout << "Volatlity Execute mode\n"
-					case_name = browser.execute_script("return volFields['caseName'];")
+					case_name = browser.execute_script("return volFields['caseName'];")					
+					
+					
+					browser.execute_script("showLoader('Conducting Volatility Dump...');")
 					# check if already have case first
 					# if dont have then success can start dumping to a fixed name folder with dateetc..
-					
+
+					# Put ur code within here kevin
 					# 
+					# 
+					# 
+					browser.execute_script("showSuccess('Finished dumping case details!');")
 
 
 
 
 				if needs_update['triageCaseFolderInput']:
 					cout << "Update Triage Case Folder Path\n"
-					root.focus_force()
 
-					triage_case_path = str(filedialog.askopenfilename())
+					triage_case_path = tk_ask_input('folder')
 					# Get folder using tkinter
 
 
@@ -318,18 +328,19 @@ def launch():
 
 
 
-					case_name = browser.execute_script("return triageFields['caseName'];")
-					case_img_path = browser.execute_script("return triageFields['imageFilePath'];")
-
-					cout << case_name << " " << case_img_path 
-					browser.execute_script("showLoader('Conducting Triage Analysis...');")
-
-
-					browser.execute_script("modesResults.triage")
 					
-					browser.execute_script("hideLoader();")
-					browser.execute_script("showSuccess('Finished Triage Analysis!');")
+					case_folder = browser.execute_script("return triageFields['caseFolderPath'];")
 
+					browser.execute_script("showLoader('Conducting Triage Analysis...');")
+					cout << "Case folder : " << case_folder
+					results = control.start_triage_analysis(case_folder)
+
+					cout << "Received controller results: " << results << "\n"
+
+
+
+					browser.execute_script("modesResultsData['triage'] = JSON.parse('%s'); window.execTriageDumpRun(); window.triageFinishedAnalysis(); hideLoader(); showSuccess('Finished Triage Analysis!');"  % json.dumps(results))
+					# browser.execute_async_script("")
 					cout << "Done\n"
 					
 					# M.start_triage_analysis("C:\\Users\\User\\Desktop\\2202-WELTPEIOC-Suite\\ram_output")
