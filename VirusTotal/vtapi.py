@@ -3,7 +3,7 @@ import csv
 import json
 import time
 
-
+# Global list
 file_name = []
 md5_hash = []
 sha1_hash = []
@@ -21,12 +21,29 @@ not_in_VT = []
 # Monthly quota = 600000 requests per month
 # academic_api_key = 'dab678a43cd131a2ed0c91d0d26cc9aa3f2c69cee5198325bf4a1a29bf44c4f7'
 def virus_total(hash):
+	"""
+	Sends API request to VirusTotal using API key
+	Args:
+		hash: hash of the file
+	Returns:
+		Response in json format	
+
+	"""
     API_KEY = 'dab678a43cd131a2ed0c91d0d26cc9aa3f2c69cee5198325bf4a1a29bf44c4f7'
     vt = VirusTotalPrivateApi(API_KEY)
     response = vt.get_file_report(hash, allinfo=1)
     return response
 
-def get_file_report(resource):
+def get_vt_report(resource):
+	"""
+	Gets and display result of VirusTotal responses to either 
+	1. hashes not found in VirusTotal
+	2. hashes are not malicious
+	3. hashes are malicious
+	Args:
+		resource: list of hashes from the csv file
+
+	"""
     try:
         for hash in resource:
             results = virus_total(hash)
@@ -55,6 +72,12 @@ def get_file_report(resource):
         exit(1)
 
 def _filter_resource_in_csv():
+	"""
+	Sorts hashes from csv file into list
+	Returns:
+		Sorted list of md5 hashes from the csv file 
+
+	"""
     with open(r'C://Users//damie//Desktop//Y2T1//ICT2202_Digital_Forensics//Assignment//exe_hash.csv') as hash_file:
         hash_csv = csv.reader(hash_file)
         for row in hash_csv:
@@ -70,7 +93,7 @@ def _filter_resource_in_csv():
 
 def main():
     get_hash = _filter_resource_in_csv()
-    get_file_report(get_hash)
+    get_vt_report(get_hash)
 
 
 if __name__ == "__main__":
