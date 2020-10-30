@@ -21,29 +21,25 @@ not_in_VT = []
 # Monthly quota = 600000 requests per month
 # academic_api_key = 'dab678a43cd131a2ed0c91d0d26cc9aa3f2c69cee5198325bf4a1a29bf44c4f7'
 def virus_total(hash):
-	"""
-	Sends API request to VirusTotal using API key
-	Args:
-		hash: hash of the file
-	Returns:
-		Response in json format	
+    """
+    Sends API request to VirusTotal using API key
+    :param hash: hash of file
+    :return: JSON response
+    """
 
-	"""
     API_KEY = 'dab678a43cd131a2ed0c91d0d26cc9aa3f2c69cee5198325bf4a1a29bf44c4f7'
     vt = VirusTotalPrivateApi(API_KEY)
     response = vt.get_file_report(hash, allinfo=1)
     return response
 
 def get_vt_report(resource):
-	"""
-	Gets and display result of VirusTotal responses to either 
+    """
+    Gets and display result of VirusTotal responses to either
 	1. hashes not found in VirusTotal
 	2. hashes are not malicious
 	3. hashes are malicious
-	Args:
-		resource: list of hashes from the csv file
-
-	"""
+    :param resource: list of hashes from the csv file
+    """
     try:
         for hash in resource:
             results = virus_total(hash)
@@ -64,20 +60,21 @@ def get_vt_report(resource):
                           ' positive signatures found.\n')
                     malicious_hash.append(hash)
             # time.sleep(2)
-        print("These hashes are not found in VirusTotal database: " + str(not_in_VT) + '\n')
-        print("These hashes are not malicious: " + str(non_malicious_hash) + '\n')
-        print("These hashes are malicious: " + str(malicious_hash) + '\n')
+        if not_in_VT:
+        	print("These hashes are not found in VirusTotal database: " + str(not_in_VT) + '\n')
+        if non_malicious_hash:
+        	print("These hashes are not malicious: " + str(non_malicious_hash) + '\n')
+        if malicious_hash:
+        	print("These hashes are malicious: " + str(malicious_hash) + '\n')
     except KeyError:
         print('Index not found')
         exit(1)
 
 def _filter_resource_in_csv():
-	"""
-	Sorts hashes from csv file into list
-	Returns:
-		Sorted list of md5 hashes from the csv file 
-
-	"""
+    """
+    Sorts hashes from csv file into list
+    :return: Sorted list of md5 hashes from the csv file
+    """
     with open(r'C://Users//damie//Desktop//Y2T1//ICT2202_Digital_Forensics//Assignment//exe_hash.csv') as hash_file:
         hash_csv = csv.reader(hash_file)
         for row in hash_csv:
