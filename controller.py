@@ -249,7 +249,7 @@ class ModulesControler:
 		# print(data)
 	
 	def start_volatility_dump(self, case ,ram_dump):
-		ioc.Analysis(case,ram_dump)
+		ioc.analysis(case,ram_dump)
 
 
 if __name__ == '__main__':
