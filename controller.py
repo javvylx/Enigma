@@ -38,7 +38,6 @@ class ModulesControler:
 	#file location for welt json file
 	FLDR_WELT_JSON	= WELT_PATH+"\\EventLogOutput\\Analysis"
 	
-
 	FILE_WELT_JSON = FLDR_WELT_JSON + "\\Security_Analysis.json"
 
 
@@ -247,8 +246,8 @@ class ModulesControler:
 
 		# print(data)
 	
-	def start_volatility_dump(self):
-		ioc.
+	def start_volatility_dump(self, case ,ram_dump):
+		ioc.Analysis(case,ram_dump)
 
 
 if __name__ == '__main__':
