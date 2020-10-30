@@ -268,17 +268,35 @@ def launch():
 					break
 
 
-				if needs_update['ramDumpInput']:
+
+
+
+				if needs_update['volRamDumpInput']:
 					cout << "Ram Dump Mode\n"
-					ram_folder_location = str(filedialog.askdirectory())
+					ram_image_file_path = tk_ask_input("file")
+					browser.execute_script("")
+
+
 					# print(ram_folder_location)
 
 
 					cout << "Update Triage Case Folder Path\n"
-					browser.execute_script("window.inputFilePaths['ramFolder'] = \"%s\"; window.ramDumpInputed();" %ram_folder_location)
+					browser.execute_script("window.inputFilePaths['ramImage'] = \"%s\"; window.volRamDumpInputed();" %ram_image_file_path)
 
 
-				if needs_update['triageCaseInput']:
+
+				if needs_updaet['volExecuteDump']:
+					cout << "Volatlity Execute mode\n"
+					case_name = browser.execute_script("return volFields['caseName'];")
+					# check if already have case first
+					# if dont have then success can start dumping to a fixed name folder with dateetc..
+					
+					# 
+
+
+
+
+				if needs_update['triageCaseFolderInput']:
 					cout << "Update Triage Case Folder Path\n"
 					root.focus_force()
 
@@ -289,7 +307,7 @@ def launch():
 
 
 
-					browser.execute_script("window.inputFilePaths['triageImagePath'] = \"%s\"; window.triageImageInputed();" %triage_case_path)
+					browser.execute_script("window.inputFilePaths['triageFolderPath'] = \"%s\"; window.triageFolderInputed();" %triage_case_path)
 
 
 

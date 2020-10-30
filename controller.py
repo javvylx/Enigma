@@ -1,9 +1,11 @@
 import os
 import re
 import csv
+import json
 from collections import defaultdict
 import subprocess
 from IOC import ioc
+
 
 # from pestaticanalyzer import staticanalysis
 # from embermodel import predict
@@ -232,7 +234,7 @@ class ModulesControler:
 
 
 	def try_read_json(self):
-		import json
+		
 
 		with open(self.FILE_WELT_JSON, 'r') as f:
 			buf = f.read()
