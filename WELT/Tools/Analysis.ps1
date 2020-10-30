@@ -22,7 +22,7 @@ param(
 $evtxdump = $args[0] # full path of the evtx file
 
 
-$casefile = "output"
+$casefile = "EventLogOutput"
 # if not created, create
 if (!(test-path ".\WELT\Tools\$casefile")){
 		new-item -type directory -Path ".\WELT\Tools\$casefile"

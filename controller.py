@@ -15,6 +15,8 @@ class ModulesControler:
 
 	RAM_DUMP_EXE_PATH = os.getcwd() + '\\dump\\DumpIt.exe'
 
+	WELT_PATH = os.getcwd() + '\\WELT\\Tools'
+
 	FILE_IMG_INFO 	= "Imageinfo.txt"
 	FILE_WHOIS 		= "whois.txt"
 	FILE_COM_INFO 	= "computer_info.txt"
@@ -29,6 +31,10 @@ class ModulesControler:
 
 	FLDR_DLL		= "dlls\\"
 	FLDR_EXE 		= "exesample\\"
+	
+	#file location for welt json file
+	FLDR_WELT_JSON	= WELT_PATH+"\\EventLogOutput\\Analysis"
+	
 
 
 	# Choose which fields to extract
@@ -209,7 +215,7 @@ class ModulesControler:
 	def triage_analyze_security_log(self, file_path):
 		# Call python module which feeds input to powershell
 		# Returns output in a json format for JS to process		
-		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", ".\\WELT\\Tools\\Analysis.ps1" , file_path ]  
+		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", self.WELT_PATH+"\\Analysis.ps1" , file_path ]  
 		ec = subprocess.call(cmd)
 
 	def triage_evaluate_exes_info(self):
