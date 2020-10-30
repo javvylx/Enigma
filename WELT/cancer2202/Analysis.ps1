@@ -18,12 +18,11 @@ param(
 #>
 
 # for testing, remove from final. $n = folder to store results in, $evtxdump = .evtx dump absolute path (aft bashbunny dump)
-$n = "output" # args[1]
+
 $evtxdump = $args[0] # full path of the evtx file
 
-# $casefile = "$n-$(get-date -f ddMMyyyy-HHmm)" # case name and timestamp
 
-$casefile = $n
+$casefile = "output"
 # if not created, create
 if (!(test-path ".\$casefile")){
 		new-item -type directory -Path ".\$casefile"
