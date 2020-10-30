@@ -19,12 +19,15 @@ def virus_total(hash):
     return response
 
 def main():
-    with open(r'C://Users//damie//Desktop//Y2T1//ICT2202_Digital_Forensics//Assignment//hash.csv') as hash_file:
+    with open(r'C://Users//damie//Desktop//Y2T1//ICT2202_Digital_Forensics//Assignment//exe_hash.csv') as hash_file:
         hash_csv = csv.reader(hash_file)
         file_name = []
         md5_hash = []
         sha1_hash = []
         hash_scanned = []
+        malicious_hash = []
+        non_malicious_hash = []
+        not_in_VT = []
         for row in hash_csv:
             if (len(row) > 1):
                 # file_path, file_name, md5_hash, sha1_hash = row
@@ -39,17 +42,25 @@ def main():
             for hash in md5_filtered:
                 results = virus_total(hash)
                 response = int(results.get('response_code'))
-                print(results)
+                #print(results)
                 if response == 0:
-                    print(hash + ' cannot be found in VirusTotal Database')
+                    print(hash + ' cannot be found in VirusTotal Database\n')
+                    not_in_VT.append(hash)
                 elif response == 1:
                     positiveHits = int(results.get('positives'))
+                    totalHits = int(results.get('total'))
                     if positiveHits == 0:
                         print(hash + ' is not malicious\n')
+                        non_malicious_hash.append(hash)
                     else:
-                        print(hash + ' is malicious. Hit count: ' + str(positiveHits) + '\n')
-                time.sleep(2)
-
+                        final_results = "{}/{}".format(positiveHits, totalHits)
+                        print(hash + ' is malicious. Hit count: ' + '{}'.format(final_results) +
+                              ' positive signatures found.\n')
+                        malicious_hash.append(hash)
+                #time.sleep(2)
+            print("These hashes are not found in VirusTotal database: " + str(not_in_VT) + '\n')
+            print("These hashes are not malicious: " + str(non_malicious_hash) + '\n')
+            print("These hashes are malicious: " + str(malicious_hash) + '\n')
         except KeyError:
             print('Index not found')
             exit(1)
