@@ -7,6 +7,9 @@ from embermodel import predict
 from tsmodel import test,dataset
 
 class ModulesControler:
+
+	PWS_DUMP_PATH 	= os.getcwd() + '/'
+
 	CHECKPOINT_PATH = os.getcwd()+'/tsmodel/checkpoints.kn/c-12.npz'
 
 	RAM_DUMP_EXE_PATH = os.getcwd() + '\\dump\\DumpIt.exe'
@@ -31,7 +34,6 @@ class ModulesControler:
 	FLDS_IMG_INFO = ["Suggested Profile(s)", "Image date and time"]
 
 	FLD_COM_INFO = ["Name", "Manufacturer", "Model"]
-
 
 	FLD_WHOIS = ["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
 
@@ -87,10 +89,10 @@ class ModulesControler:
 					"FilesAnalysisDetails": mal_exes,
 					"DLLAnalysisDetails":mal_dlls,
 					"EventLogAnalysisDetails": []
+
 		}
 
-
-
+		print(triage_result)
 		return triage_result
 
 
@@ -192,7 +194,7 @@ class ModulesControler:
 			f_dict["VirusTotal"] = 0
 			f_dict["Heuristics Indicators"] = str(heuristics_flag_count) + "/" + str(len(heuristics_details))
 			f_dict["Ember Model"] = str(self.ember.predict_malware(temp_folder+f))
-			f_dict["Tensorflow Model"] = "{:.0%}".format(ts_val/1)
+			f_dict["Tensorflow Model"] = ts_val
 
 			ret_data.append(f_dict)
 

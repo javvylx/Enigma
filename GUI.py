@@ -294,7 +294,9 @@ def launch():
 					# Get folder using tkinter
 
 
-					print(triage_case_path)
+
+
+
 					browser.execute_script("window.inputFilePaths['triageImagePath'] = \"%s\"; window.triageImageInputed();" %triage_case_path)
 
 
@@ -312,6 +314,7 @@ def launch():
 					cout << case_name << " " << case_img_path 
 					browser.execute_script("showLoader('Conducting Triage Analysis...');")
 
+					
 					
 					
 					browser.execute_script("hideLoader();")

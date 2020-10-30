@@ -67,7 +67,7 @@ window.needsUpdate = {csv: true, ramDumpInput: false, triageCaseInput: false, tr
 window.inputFilePaths = {ramFolder: '', triageImagePath: ''};
 
 triageFields = {caseName: '', imageFilePath: ''};
-triageResults = {};
+triageResults = { };
 
 
 toastr.options = {
@@ -683,12 +683,12 @@ $(function () {
 		'Case name', 
 		'info');
 
-	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_image",
-		"Choose your RAM image file",
-		"triage-input-image",
+	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_dump_folder",
+		"Choose your volatility dump folder",
+		"triage-dump-folder",
 		"Choose file...",
 		"FILE",
-		"triage-btn-run",
+		"triage-dump-run",
 		"Execute analysis",
 		"fas fa-play",
 		"info"
@@ -1126,14 +1126,14 @@ $(function () {
 
 
 	window.triageImageInputed = function() {
-		$('#triage-input-image-label').html(inputFilePaths.triageImagePath);
+		$('#triage-dump-folder-label').html(inputFilePaths.triageImagePath);
 		inputFilePaths.triageImagePath = "";
 	}
 
 	
 
 
-	$('#triage-input-image').click(function(){
+	$('#triage-dump-folder').click(function(){
 		needsUpdate.triageCaseInput = true;
 	});
 
@@ -1141,7 +1141,7 @@ $(function () {
 
 	}	
 
-	$('#triage-btn-run').click(function() {
+	$('#triage-dump-run').click(function() {
 		triageFields = {caseName: 'Kevin2010', imageFilePath: 'c:\\users\\user\\desktop\\test.txt'}
 		needsUpdate.triageExecuteAnalysis = true;
 
@@ -1161,7 +1161,7 @@ $(function () {
 		console.log(getMethods(e));
 		$('#memory-folder-input-label').text(e.target.files[0].webkitRelativePath);
 		triageFields.caseName =  
-		triageFields.imageFilePath = $('#triage-input-image-label').html();
+		triageFields.imageFilePath = $('#triage-dump-folder-label').html();
 
 	});
 
