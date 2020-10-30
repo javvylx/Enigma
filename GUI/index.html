@@ -1101,7 +1101,7 @@ $(function () {
 	$('#row-volatility').html(HTML([volatiltiyInstructionsCtx, volatilityRequiredCaseNameCtx, volatilityRequiredRamDumpCtx]));
 
 	// 2
-	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredFieldsCtx, triageRequiredInputCtx, triageResultsPanelCtx]));
+	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredInputCtx, triageResultsPanelCtx]));
 	
 	// 3
 	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx, malwareResultsPanelCtx]));
@@ -1114,7 +1114,10 @@ $(function () {
 
 	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
-	$('.results-table').DataTable();
+
+	$('.results-table').DataTable({
+		// pageLength : 5
+	});
 
 	
 
@@ -1250,6 +1253,12 @@ $(function () {
 		updateTableData("triage-exes-table", 
 			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
 			modesResultsData['triage']['FilesAnalysisDetails']);
+
+		updateTableData("triage-dlls-table", 
+			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
+			modesResultsData['triage']['DLLAnalysisDetails']);
+
+		$('#res-triage-panel').show(100);
 	};
 
 
@@ -1264,7 +1273,7 @@ $(function () {
 		$('.content-row').hide();
 		$('#row-home').show();
 
-		// $('.results-container').hide();
+		$('.results-container').hide();
 	}
 
 	startUp();

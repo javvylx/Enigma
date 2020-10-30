@@ -200,17 +200,11 @@ def tk_ask_input(mode="file"):
 	root.overrideredirect(True)
 	root.geometry('0x0+0+0')
 	root.wm_attributes('-topmost', 1)
-
-	# Show window again and lift it to top so it can get focus,
-	# otherwise dialogs will end up behind the terminal.
-	# root.deiconify()
-	# root.lift()
 	root.deiconify()
 	root.lift()
 	root.focus_force()
 
 	if mode == "file":
-
 		ret = filedialog.askopenfilenames(parent=root) # Or some other dialog
 	elif mode == "folder":
 		ret = str(filedialog.askdirectory(parent=root)) # Or some other dialog
@@ -284,7 +278,8 @@ def launch():
 					browser.execute_script("")
 
 					cout << "Update Triage Case Folder Path\n"
-					browser.execute_script("window.inputFilePaths['ramImage'] = \"%s\"; window.volRamDumpInputed();" %ram_image_file_path)
+					if ram_image_file_path != "":
+						browser.execute_script("window.inputFilePaths['ramImage'] = \"%s\"; window.volRamDumpInputed();" %ram_image_file_path)
 
 
 
@@ -316,8 +311,8 @@ def launch():
 
 
 
-
-					browser.execute_script("window.inputFilePaths['triageFolderPath'] = \"%s\"; window.triageFolderInputed();" %triage_case_path)
+					if triage_case_path != "":
+						browser.execute_script("window.inputFilePaths['triageFolderPath'] = \"%s\"; window.triageFolderInputed();" %triage_case_path)
 
 
 
