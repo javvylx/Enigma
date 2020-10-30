@@ -566,7 +566,7 @@ $(function () {
 	
 	// Display Side Bar
 	var sideHomeCtx = genSideItemCtx("side-home", "Home", "fas fa-tachometer-alt active");
-	var sideMemoryCtx = genSideItemCtx("side-memory", "Memory Dump", "fas fa-memory");
+	var sideVolatilityCtx = genSideItemCtx("side-volatility", "Volatility Dump", "fas fa-memory");
 	var sideTriageCtx = genSideItemCtx("side-triage", "Triage Analysis", "fab fa-searchengin");
 	var sideMalwareCtx = genSideItemCtx("side-malware", "Malware Heuristics", "fas fa-biohazard");
 	var sideEventCtx = genSideItemCtx("side-event", "Event Logs Correlator", "fas fa-chart-area");
@@ -578,7 +578,7 @@ $(function () {
 		sideHomeCtx,
 		genSideDividerCtx(),
 		genSideSubHeaderCtx("Triage"),
-		sideMemoryCtx,
+		sideVolatilityCtx,
 		sideTriageCtx,
 		genSideDividerCtx(),
 		genSideSubHeaderCtx("Analysis"),
@@ -594,7 +594,7 @@ $(function () {
 // End of Display Side menu
 
 "row-home"
-"row-memory"
+"row-volatility"
 "row-triage"
 "row-malware"
 "row-event"
@@ -613,9 +613,9 @@ $(function () {
 
 // gridClass, colorStyle, title, desc, iconClass
 
-	var homeMemoryDumpCtx = genHomeCardCtx("home-memory-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-primary", "home-card", "Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
+	var homevolatilityDumpCtx = genHomeCardCtx("home-volatility-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-primary", "home-card", "Volatility", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
 
-	var homeTriageCtx = genHomeCardCtx("home-triage-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-success", "home-card", "Triage Analyis", "Conducts full analysis of memory dump with analysis modules", "fa-6x fab fa-searchengin");
+	var homeTriageCtx = genHomeCardCtx("home-triage-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-success", "home-card", "Triage Analyis", "Conducts full analysis of Volatility with analysis modules", "fa-6x fab fa-searchengin");
 
 	var homeMalwareCtx = genHomeCardCtx("home-malware-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-danger", "home-card", "Malware Heuristics", "Classify & identify IOCs of PE file using heuristics", "fa-6x fas fa-biohazard");
 
@@ -624,10 +624,10 @@ $(function () {
 	var homeReview = genHomeCardCtx("home-review-card", "col-xl-12 col-md-12 col-sm-12 col-12 pb-3", "border-bottom-info", "home-card", "Triage Review", "Review past Triage analysis results", "fa-6x fas fa-scroll");
 
 
-	var dashboardCtxs = [homeMemoryDumpCtx,homeTriageCtx,homeMalwareCtx,homeEventLogCtx, homeReview];
+	var dashboardCtxs = [homevolatilityDumpCtx,homeTriageCtx,homeMalwareCtx,homeEventLogCtx, homeReview];
 
 
-	var memRamSizeCardCtx = ['div', {class: 'col-xl-12 col-md-12 mb-4'},
+	var volatilityRamSizeCardCtx = ['div', {class: 'col-xl-12 col-md-12 mb-4'},
 		['div', {class: 'card border-left-success shadow h-100 py-3'},
 			['div', {class: 'card-body'},
 				['div', {class: 'row no-gutters align-items-center'},
@@ -645,12 +645,18 @@ $(function () {
 	];
 
 
-	var memRequiredInputCtx = genFileSelectCtx("mem-card-select-folder",
-		"Choose your folder to dump RAM",
-		"mem-input-folder",
-		"Choose folder...",
-		"FOLDER",
-		"mem-btn-dump",
+	var volatilityRequiredFieldsCtx = genRequiredTextCtx('volatility-card-input-fields',
+		'Please fill in the required fields',
+		'volatility-card-input-case-name', //Try impv to put list and handle it
+		'Case name', 
+		'info');
+
+	var volatilityRequiredInputCtx = genFileSelectCtx("volatility-card-select-file",
+		"Choose your dump RAM file",
+		"volatility-input-file",
+		"Choose file...",
+		"FILE",
+		"volatility-btn-dump",
 		"Execute Dump",
 		"fas fa-play",
 		"info"
@@ -1003,7 +1009,7 @@ $(function () {
 	// genInfoBodyCtx(title, desc, iconClass, colorStyle)
 
 
-	// genHomeCardCtx("home-memory-card", "col-xl-6 col-md-6 col-sm-12 col-12", "primary", "home-card", "Memory Dump", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
+	// genHomeCardCtx("home-volatility-card", "col-xl-6 col-md-6 col-sm-12 col-12", "primary", "home-card", "Volatility", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
 
 
 	var evtTempTableCtx = genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results', ['h1','h2','h3', 'h4'], [['R1','R2','R3', 'R4'], ['r5','r6','r7', 'r8']]);
@@ -1013,7 +1019,7 @@ $(function () {
 
 	var arrTitles = {
 			"home": "What do you want to do",
-			"memory": "RAM Dump",
+			"volatility": "Volatility Dump",
 			"triage": "Automated RAM Analysis",
 			"malware": "Malware Heuristics",
 			"event": "Windows Logs Correlator",
@@ -1063,12 +1069,10 @@ $(function () {
 	$('#row-home').html(HTML(dashboardCtxs));
 	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
 	// 1
-	$('#row-memory').html(HTML([memRamSizeCardCtx, memRequiredInputCtx]));
+	$('#row-volatility').html(HTML([volatilityRamSizeCardCtx, volatilityRequiredFieldsCtx, volatilityRequiredInputCtx]));
 
 	// 2
 	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredFieldsCtx, triageRequiredInputCtx, triageResultsPanelCtx]));
-
-
 	
 	// 3
 	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx, malwareResultsPanelCtx]));
@@ -1120,7 +1124,7 @@ $(function () {
 
 	window.ramDumpInputed = function () {
 		// console.log(inputFilePaths.ramFolder);
-		$('#mem-input-folder-label').html(inputFilePaths.ramFolder);
+		$('#volatility-input-folder-label').html(inputFilePaths.ramFolder);
 		inputFilePaths.ramFolder = "";
 	};
 
@@ -1151,15 +1155,15 @@ $(function () {
 
 
 	
-	$('#mem-input-folder').click(function(){
+	$('#volatility-input-folder').click(function(){
 		needsUpdate.ramDumpInput = true;
 	});
 
 	
 
-	$('#memory-folder-input').on('change', function(e) {
+	$('#volatility-folder-input').on('change', function(e) {
 		console.log(getMethods(e));
-		$('#memory-folder-input-label').text(e.target.files[0].webkitRelativePath);
+		$('#volatility-folder-input-label').text(e.target.files[0].webkitRelativePath);
 		triageFields.caseName =  
 		triageFields.imageFilePath = $('#triage-dump-folder-label').html();
 
@@ -1229,7 +1233,7 @@ $(function () {
 							<h1 id="content-header" class="h1 text-gray-800">What do you want to do?</h1>
 						</div>
 <!-- "row-home"
-"row-memory"
+"row-volatility"
 "row-triage"
 "row-malware"
 "row-event"
@@ -1243,7 +1247,7 @@ $(function () {
 
 						</div>
 
-						<div id='row-memory' class='row content-row'>
+						<div id='row-volatility' class='row content-row'>
 
 						</div>
 

@@ -1,0 +1,48 @@
+{
+	"RuleTriggered" : "3",
+	"RuleName" : "Detecting Privilege Escalation",
+	"EventIDs" : "4624 4672 4688",
+	"LastTimestamp" : "2020-08-17 10:30:08.082762",
+	"LastEventRecordID" : "1",
+	"Description" : "This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have."
+}
+{
+	"RuleTriggered" : "4",
+	"RuleName" : "Detecting Privilege Escalation",
+	"EventIDs" : "4648 4672 4688",
+	"LastTimestamp" : "2020-08-17 10:30:08.082762",
+	"LastEventRecordID" : "1",
+	"Description" : "This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have."
+}
+{
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-22 17:27:35.756195",
+	"EventRecordID" : "10677",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt"
+}
+{
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-22 17:27:55.132338",
+	"EventRecordID" : "10679",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt"
+}
+{
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-24 20:41:59.100552",
+	"EventRecordID" : "11592",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt"
+}
+{
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-24 21:03:50.856190",
+	"EventRecordID" : "12229",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt"
+}

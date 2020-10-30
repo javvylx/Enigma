@@ -1,13 +1,3 @@
-"""Summary
-
-Attributes:
-    currentDir (TYPE): Description
-    imagePath (TYPE): Description
-    ProfileList (TYPE): Description
-    user_agent_list (TYPE): Description
-    vol (str): Description
-    volatility (TYPE): Description
-"""
 import re
 import os
 import subprocess
@@ -21,7 +11,7 @@ import csv
 import hashlib
 from datetime import datetime
 
-mainDir = os.getcwd()
+mainDir = os.getcwd()+"\\IOC"
 vol = "volatility-2.6.standalone.exe"
 volatility = mainDir+ "\\volatility_2.6_win64_standalone.exe"
 #for testing purpose
@@ -57,12 +47,12 @@ def analysis(casename,ramImagePath):
 			imagePath = ramImagePath
 			RAM_imageinfo(imagePath)
 			ProfileList = get_profile()
-			# get_process_tree(ProfileList[0])
-			# get_netscan(ProfileList[0])
-			# iplist = getPublicIp()
-			# ipWhoISLookUp(iplist)
-			# get_cmdscan(ProfileList[0])
-			# get_processdump(ProfileList[0])
+			get_process_tree(ProfileList[0])
+			get_netscan(ProfileList[0])
+			iplist = getPublicIp()
+			ipWhoISLookUp(iplist)
+			get_cmdscan(ProfileList[0])
+			get_processdump(ProfileList[0])
 			get_dlldump(ProfileList[0])
 			print("Done")
 

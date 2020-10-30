@@ -3,11 +3,14 @@ import re
 import csv
 from collections import defaultdict
 import subprocess
+from IOC import ioc
+
 # from pestaticanalyzer import staticanalysis
 # from embermodel import predict
 # from tsmodel import test,dataset
 
 class ModulesControler:
+
 
 	PWS_DUMP_PATH 	= os.getcwd() + '/'
 
@@ -219,6 +222,7 @@ class ModulesControler:
 		# Returns output in a json format for JS to process		
 		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", self.WELT_PATH+"\\Analysis.ps1" , file_path ]  
 		ec = subprocess.call(cmd)
+		# 
 
 	def triage_evaluate_exes_info(self):
 		pass
@@ -230,16 +234,26 @@ class ModulesControler:
 
 	def try_read_json(self):
 		import json
-		with open(self.FILE_WELT_JSON, 'r') as f:
-			data = json.load(f)
 
-		print(data)
-		
+		with open(self.FILE_WELT_JSON, 'r') as f:
+			buf = f.read()
+			
+			# data = [x for x in buf.rsplit(r"\{.*\}")]
+			for x in buf.rsplit(r"\{.*\}"):
+				print(x)
+			# print(data)
+
+			# data = json.load(f)
+
+		# print(data)
+	
+	def start_volatility_dump(self):
+		ioc.
 
 
 if __name__ == '__main__':
 	M = ModulesControler()
 
-	M.triage_analyze_security_log("C:\\Users\\Kevin\\Documents\\GitHub\\2202-WELTPEIOC-Suite\\WELT\\Tools\\Security.evtx")
+	# M.triage_analyze_security_log(os.getcwd()+"\\WELT\\Tools\\Security.evtx")
 
-	# M.try_read_json()
+	M.try_read_json()
