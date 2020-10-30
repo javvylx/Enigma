@@ -2,9 +2,10 @@ import os
 import re
 import csv
 from collections import defaultdict
-from pestaticanalyzer import staticanalysis
-from embermodel import predict
-from tsmodel import test,dataset
+import subprocess
+# from pestaticanalyzer import staticanalysis
+# from embermodel import predict
+# from tsmodel import test,dataset
 
 class ModulesControler:
 
@@ -38,10 +39,10 @@ class ModulesControler:
 	FLD_WHOIS = ["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
 
 	def __init__(self):
-		self.file_analyzer = staticanalysis.PEAnalyser()
-		self.ember = predict.EmberUtility()
+		# self.file_analyzer = staticanalysis.PEAnalyser()
+		# self.ember = predict.EmberUtility()
 		# self._ts = 
-		# 
+		pass
 		
 
 	def start_triage_analysis(self, folder_path):
@@ -152,10 +153,10 @@ class ModulesControler:
 	def triage_parse_csv_hash(self, a_folder, file_name):		
 		data = {}
 		with open(a_folder+file_name, 'r') as f:
-		    reader = csv.reader(f)
-		   	# {"File":[md5,sha1]}
-		    data = {x[1]:[x[2],x[3]] for x in reader if len(x) != 0}
-		    return data
+			reader = csv.reader(f)
+			# {"File":[md5,sha1]}
+			data = {x[1]:[x[2],x[3]] for x in reader if len(x) != 0}
+			return data
 	
 
 
@@ -208,8 +209,8 @@ class ModulesControler:
 	def triage_analyze_security_log(self, file_path):
 		# Call python module which feeds input to powershell
 		# Returns output in a json format for JS to process		
-		pass
-
+		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", ".\\WELT\\Tools\\Analysis.ps1" , file_path ]  
+		ec = subprocess.call(cmd)
 
 	def triage_evaluate_exes_info(self):
 		pass
@@ -220,8 +221,8 @@ class ModulesControler:
 
 
 
-# if __name__ == '__main__':
-# 	M = ModulesControler()
+if __name__ == '__main__':
+	M = ModulesControler()
 
-# 	M.start_triage_analysis("C:\\Users\\User\\Desktop\\2202-WELTPEIOC-Suite\\ram_output")
+	M.triage_analyze_security_log("C:\\Users\\Kevin\\Documents\\GitHub\\2202-WELTPEIOC-Suite\\WELT\\Tools\\Security.evtx")
 

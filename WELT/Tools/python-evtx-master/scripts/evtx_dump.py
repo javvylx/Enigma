@@ -27,7 +27,7 @@ def main():
         description="Dump a binary EVTX file into XML.")
     parser.add_argument("evtx", type=str,
                         help="Path to the Windows EVTX event log file")
-    #parser.add_argument("C:\\Windows\\sysnative\\winevt\\Logs\\Security.evtx")
+
     args = parser.parse_args()
 
     with evtx.Evtx(args.evtx) as log:

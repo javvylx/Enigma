@@ -21,7 +21,7 @@ foreach($node in $nodes)
 	"LastEventRecordID: "'+$evrid+'",
 	"Description: "'+$ruledesc+'",
 	}'
-		Add-content "$casefile\Analysis\Security_Analysis.json" $output
+		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
         $EventANDArray.clear()
     }
 }

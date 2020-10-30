@@ -1,40 +1,48 @@
-{ OR triggered
-	"RuleTriggered: "5",
-	"RuleName: "Detecting Protection Mechanism Failure",
-	"EventID: "7035",
-	"Timestamp: "2020-10-13 13:16:17.346581",
-	"EventRecordID: "182896",
-	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+{
+	"RuleTriggered: "3",
+	"RuleName: "Detecting Privilege Escalation",
+	"EventIDs: "4624 4672 4688",
+	"LastTimestamp: "2020-08-17 10:30:08.082762",
+	"LastEventRecordID: "1",
+	"Description: "This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.",
 	}
-{ OR triggered
-	"RuleTriggered: "5",
-	"RuleName: "Detecting Protection Mechanism Failure",
-	"EventID: "7040",
-	"Timestamp: "2020-10-13 13:16:17.346415",
-	"EventRecordID: "182895",
-	"Description: "This detection may reveal how the attacker managed to initiate an attack.",
+{
+	"RuleTriggered: "4",
+	"RuleName: "Detecting Privilege Escalation",
+	"EventIDs: "4648 4672 4688",
+	"LastTimestamp: "2020-08-17 10:30:08.082762",
+	"LastEventRecordID: "1",
+	"Description: "This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.",
 	}
-{ EQ triggered
-	"RuleTriggered: "6",
-	"RuleName: "Detecting Modification in Registry Key",
-	"EventID: "4657",
-	"Timestamp: "2020-10-13 13:16:17.344557",
-	"EventRecordID: "182888",
-	"Description: "This may indicate a possible Persistance attack, whereby the computer will still be vulnerable/infected after the user has logged off or computer has been rebooted.",
+{
+	"RuleTriggered: "12",
+	"RuleName: "Account Logon Brute Force",
+	"EventID: "4625",
+	"Timestamp: "2020-10-22 17:27:35.756195",
+	"EventRecordID: "10677",
+	"Description: "Repeated instances of this event may indicate a brute force logon attempt",
 	}
-{ OR triggered
-	"RuleTriggered: "10",
-	"RuleName: "Handle Manipulation",
-	"EventID: "4656",
-	"Timestamp: "2020-10-13 13:16:17.346769",
-	"EventRecordID: "182897",
-	"Description: "This may potentially indicate a DoS attack on the host machine, or allow the attacker to generate large numbers of events to overwrite tpart or all of their activity so evidence of intrusion is overwritten.",
+{
+	"RuleTriggered: "12",
+	"RuleName: "Account Logon Brute Force",
+	"EventID: "4625",
+	"Timestamp: "2020-10-22 17:27:55.132338",
+	"EventRecordID: "10679",
+	"Description: "Repeated instances of this event may indicate a brute force logon attempt",
 	}
-{ AND triggered
-	"RuleTriggered: "14",
-	"RuleName: "Detecting Potential Lateral Movement",
-	"EventIDs: "4657 4624 4704 4702",
-	"LastTimestamp: "2020-10-13 13:16:17.345469",
-	"LastEventRecordID: "182890",
-	"Description: "This may be an attack whereby the attacker moves deeper into the targetted network by stealing credentials, infiltrating other computers until reaching the desired target - potentially sensitive data",
+{
+	"RuleTriggered: "12",
+	"RuleName: "Account Logon Brute Force",
+	"EventID: "4625",
+	"Timestamp: "2020-10-24 20:41:59.100552",
+	"EventRecordID: "11592",
+	"Description: "Repeated instances of this event may indicate a brute force logon attempt",
+	}
+{
+	"RuleTriggered: "12",
+	"RuleName: "Account Logon Brute Force",
+	"EventID: "4625",
+	"Timestamp: "2020-10-24 21:03:50.856190",
+	"EventRecordID: "12229",
+	"Description: "Repeated instances of this event may indicate a brute force logon attempt",
 	}

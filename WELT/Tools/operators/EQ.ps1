@@ -20,7 +20,7 @@ foreach($node in $nodes){
 	"EventRecordID: "'+$evrid+'",
 	"Description: "'+$ruledesc+'",
 	}'
-		Add-content "$casefile\Analysis\Security_Analysis.json" $output
+		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
         }
     }
 
@@ -45,7 +45,7 @@ foreach($node in $nodes){
 	"Description: "'+$ruledesc+'",
 	"IPAddress: "'+$Ip+'",
 	}'
-			Add-content "$casefile\Analysis\Security_Analysis.json" $output
+			Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
         }
     }
 }

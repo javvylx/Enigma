@@ -24,22 +24,22 @@ $evtxdump = $args[0] # full path of the evtx file
 
 $casefile = "output"
 # if not created, create
-if (!(test-path ".\$casefile")){
-		new-item -type directory -Path ".\$casefile"
-        "Logs", "Analysis" | % {New-Item -Name ".\$casefile\$_" -type directory}
+if (!(test-path ".\WELT\Tools\$casefile")){
+		new-item -type directory -Path ".\WELT\Tools\$casefile"
+        "Logs", "Analysis" | % {New-Item -Name ".\WELT\Tools\$casefile\$_" -type directory}
 
 		write-host "Logs folder is created successfully!" -foregroundcolor "green"
 		write-host "Analysis folder is created successfully!" -foregroundcolor "green"
 		write-host "-------------------------------------------------------------------------"
 }
 
-python .\python-evtx-master\scripts\evtx_dump.py $evtxdump > .\$casefile\Logs\Security.xml
+python .\WELT\Tools\python-evtx-master\evtx_dump.py $evtxdump > .\WELT\Tools\$casefile\Logs\Security.xml
 write-host "Convertion of Security logs into .xml format for analaysis has completed!" -foregroundcolor "green"
 
-[xml]$rules = get-content "WELTrules.xml"
+[xml]$rules = get-content ".\WELT\Tools\WELTrules.xml"
 $ruleNodes = $rules.SelectNodes("/xml/ruleset/rules/rule")
 
-[xml]$evdump = get-content .\$casefile\Logs\Security.xml | % { $_.replace('version="1.1"','version="1.0"') }
+[xml]$evdump = get-content .\WELT\Tools\$casefile\Logs\Security.xml | % { $_.replace('version="1.1"','version="1.0"') }
 $nodes = $evdump.Events.Event
 
 
@@ -80,11 +80,11 @@ foreach ($ruleNode in $ruleNodes){ # for each rule
         $triggerEvSource = $triggerEv.source
                
 
-        if($triggerEvOperator -eq "EQ"){ Invoke-Expression .\operators\EQ.ps1 }
-        if($triggerEvOperator -eq "RP"){ Invoke-Expression .\operators\RP.ps1 }
-        if($triggerEvOperator -eq "OR"){ Invoke-Expression .\operators\OR.ps1 }
-        if($triggerEvOperator -eq "AND"){ Invoke-Expression .\operators\AND.ps1 }
-        if($triggerEvOperator -eq "SEQ"){ Invoke-Expression .\operators\SEQ.ps1 }
+        if($triggerEvOperator -eq "EQ"){ Invoke-Expression .\WELT\Tools\operators\EQ.ps1 }
+        if($triggerEvOperator -eq "RP"){ Invoke-Expression .\WELT\Tools\operators\RP.ps1 }
+        if($triggerEvOperator -eq "OR"){ Invoke-Expression .\WELT\Tools\operators\OR.ps1 }
+        if($triggerEvOperator -eq "AND"){ Invoke-Expression .\WELT\Tools\operators\AND.ps1 }
+        if($triggerEvOperator -eq "SEQ"){ Invoke-Expression .\WELT\Tools\operators\SEQ.ps1 }
     
     }
     
