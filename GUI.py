@@ -112,7 +112,6 @@ def print_exc():
 cout = OutStream()
 
 
-
 # Class to set 
 class Browser(object):
 
@@ -236,13 +235,6 @@ def launch():
 	# root.deiconify()
 	# root.lift()
 	
-
-
-
-		
-	
-		
-
 	
 
 	with Browser(headless=False) as browser:
