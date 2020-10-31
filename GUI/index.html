@@ -841,6 +841,7 @@ $(function () {
 		'WhoIsDomain Lookup for IP Addresses', 
 		["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"],
 		[
+			["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
 			// ["IP Address", "Org" "Security.evtx", "15", "Your mother v cute"],
 			// ["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
 		]);
@@ -851,10 +852,9 @@ $(function () {
 		"triage-evt-inner-div", 
 		"triage-evt-table", 
 		'Event Logs Analysis', 
-		["Timestamp", "Logfile", "RuleID", "Desc"],
+		['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress'],
 		[
-			["Sunday 2359", "Security.evtx", "15", "Your mother v cute"],
-			["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
+			['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress']
 		]);
 
 	var triageResultsExesTableCtx = genTableWithDivCtx("triage-exes-table-div", 
@@ -1170,7 +1170,7 @@ $(function () {
 		]
 	});
 
-	$("#triage-dlls-table ").DataTable({
+	$("#triage-dlls-table").DataTable({
 		'pageLength': 5,
 		'lengthMenu': [5,10,15,20],
 		'columns': [
@@ -1183,6 +1183,18 @@ $(function () {
 		]
 	});
 
+	$('#triage-evt-table').DataTable({
+		'pageLength':5,
+		'columns': [
+			{'data' : 'RuleTriggered'},
+			{'data' : 'RuleName'},
+			{'data' : 'EventID'},
+			{'data' : 'Timestamp'},
+			{'data' : 'EventRecordID'},
+			{'data' : 'Description'},
+			{'data' : 'IPAddress'}
+		]
+	});
 
 
 		
@@ -1274,11 +1286,13 @@ $(function () {
 
 	updateTableData = function(tblId, tblHeaders, tblData) {
 		console.log(tblData);
-		var tbl = $('#'+tblId).DataTable();
-		tbl.clear();
-		tbl.rows.add(tblData);
-		tbl.draw();
-
+		if (tblData != "None") {
+			var tbl = $('#'+tblId).DataTable();
+			tbl.clear();
+			tbl.rows.add(tblData);
+			tbl.draw();
+		}
+		
 
 	}
 
@@ -1307,6 +1321,10 @@ $(function () {
 
 		// $('#triage-exes-table').DataTable().clear().draw();
 
+		updateTableData("triage-whois-table", 
+			["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"],
+			modesResultsData['triage']['WhoIsDomainDetails']);
+
 		updateTableData("triage-exes-table", 
 			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
 			modesResultsData['triage']['FilesAnalysisDetails']);
@@ -1315,6 +1333,11 @@ $(function () {
 			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
 			modesResultsData['triage']['DLLAnalysisDetails']);
 		
+		updateTableData("triage-evt-table", 
+			['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress'],
+			modesResultsData['triage']['EventLogAnalysisDetails']);
+
+
 
 		$('#res-triage-panel').show(100);
 	};
@@ -1328,7 +1351,7 @@ $(function () {
 		$('.content-row').hide();
 		$('#row-home').show();
 
-		$('.results-container').hide();
+		// $('.results-container').hide();
 	}
 
 	startUp();

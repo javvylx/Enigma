@@ -61,9 +61,6 @@ class ModulesControler:
 		if folder_path[-1] != "\\":
 			folder_path += "\\"
 
-
-		
-		# sys.exit()
 		# with open("results.txt", 'r') as f:
 		# 	data = json.load(f)
 
@@ -82,11 +79,10 @@ class ModulesControler:
 
 		img_info_det = self.triage_parse_image_profiles(folder_path)
 		img_com_det = self.triage_parse_image_computer_info(folder_path)
-
 		img_dll_hashes = self.triage_parse_dlls_hashes(folder_path)
 		img_exe_hashes = self.triage_parse_exe_hashes(folder_path)
-
 		img_whois = self.triage_parse_whois(folder_path)
+
 		for x in img_whois:
 			for k in self.FLD_WHOIS:
 				if k not in x:
@@ -108,8 +104,11 @@ class ModulesControler:
 		mal_dlls = self.triage_evaluate_malware(folder_path+self.FLDR_DLL, img_dll_hashes)
 
 
-	
-		
+		os.remove(self.FILE_WELT_JSON)
+		self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
+		evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+		evt_data = json.dumps(evt_data)
+
 
 		triage_result = {
 					"ImgName": img_com_det['Name'],
@@ -126,7 +125,7 @@ class ModulesControler:
 					"WhoIsDomainDetails": img_whois,
 					"FilesAnalysisDetails": mal_exes,
 					"DLLAnalysisDetails":mal_dlls,
-					"EventLogAnalysisDetails": []
+					"EventLogAnalysisDetails": evt_data
 
 		}
 
