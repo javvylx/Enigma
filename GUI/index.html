@@ -782,6 +782,18 @@ $(function () {
 			"fa-3x fas fa-viruses");
 
 
+	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-pstree-table-div", 
+		"triage-pstree-inner-div", 
+		"triage-pstree-table", 
+		'Process Tree results', 
+		["Name", "PID", "PPID", "Threads", "Handles", "Time"],
+		[
+			["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
+			// ["IP Address", "Org" "Security.evtx", "15", "Your mother v cute"],
+			// ["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
+		]);
+
+
 
 	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-whois-table-div", 
 		"triage-whois-inner-div", 
