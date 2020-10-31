@@ -13,13 +13,13 @@ foreach($node in $nodes){
             $time = $node.System.TimeCreated.SystemTime
             write-host "$triggerEvEventID matched!" -foregroundcolor "red"
 		    $output = '{
-	"RuleTriggered": "'+$triggerRID+'",
-	"RuleName": "'+$rulename+'",
-	"EventID": "'+$evid+'",
-	"Timestamp": "'+$time+'",
-	"EventRecordID": "'+$evrid+'",
-	"Description": "'+$ruledesc+'"
-	"IPAddress": "NIL"
+	"RuleTriggered" : "'+$triggerRID+'",
+	"RuleName" : "'+$rulename+'",
+	"EventID" : "'+$evid+'",
+	"Timestamp" : "'+$time+'",
+	"EventRecordID" : "'+$evrid+'",
+	"Description" : "'+$ruledesc+'"
+	"IPAddress" : "NIL"
 	},'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
         }
@@ -38,12 +38,12 @@ foreach($node in $nodes){
 				
 				write-host "$triggerEvEventID matched!" -foregroundcolor "red"
 				$output = '{
-	"RuleTriggered": "'+$triggerRID+'",
-	"RuleName": "'+$rulename+'",
-	"EventID": "'+$evid+'",
-	"Timestamp": "'+$time+'",
-	"EventRecordID": "'+$evrid+'",
-	"Description": "'+$ruledesc+'",
+	"RuleTriggered" : "'+$triggerRID+'",
+	"RuleName" : "'+$rulename+'",
+	"EventID" : "'+$evid+'",
+	"Timestamp" : "'+$time+'",
+	"EventRecordID" : "'+$evrid+'",
+	"Description" : "'+$ruledesc+'",
 	"IPAddress": "'+$Ip+'"
 	},'
 			Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output

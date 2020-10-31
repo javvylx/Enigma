@@ -16,9 +16,9 @@ foreach($node in $nodes)
 		$output = '{
 	"RuleTriggered" : "'+$triggerRID+'",
 	"RuleName" : "'+$rulename+'",
-	"EventIDs" : "'+$EventANDArray+'",
+	"EventID" : "'+$EventANDArray+'",
 	"Timestamp" : "'+$time+'",
-	"LastEventRecordID" : "'+$evrid+'",
+	"EventRecordID" : "'+$evrid+'",
 	"Description" : "'+$ruledesc+'"
 	"IPAddress": "NIL"
 	}'
