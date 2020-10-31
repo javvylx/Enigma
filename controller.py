@@ -8,6 +8,8 @@ import subprocess
 from IOC import ioc
 
 # Comment the 3 below if u all havent pip install
+
+from virustotal import vtapi
 from pestaticanalyzer import staticanalysis
 from tsmodel import test,dataset
 
@@ -124,9 +126,9 @@ class ModulesControler:
 
 		mal_count = 0 	
 		if mal_exes != "None":
-			mal_count += sum(1 for x in mal_exes if x['Heuristics Indicators'] > self.HEURISTICS_SUS or x['Tensorflow Model'] > self.TS_SUS)
+			mal_count += sum(1 for x in mal_exes if int(x['Heuristics Indicators']) > self.HEURISTICS_SUS or float(x['Tensorflow Model']) > self.TS_SUS)
 		if mal_dll != "None": 
-			mal_count += sum(1 for x in mal_dlls if x['Heuristics Indicators'] > self.HEURISTICS_SUS or x['Tensorflow Model'] > self.TS_SUS)
+			mal_count += sum(1 for x in mal_dlls if int(x['Heuristics Indicators']) > self.HEURISTICS_SUS or float(x['Tensorflow Model']) > self.TS_SUS)
 
 
 		try:
@@ -159,11 +161,7 @@ class ModulesControler:
 					"EventLogAnalysisDetails": evt_data 
 
 		}
-
-
-		# with open("results.txt", 'w') as f:
-		# 	f.write(json.dumps(triage_result))
-
+		
 		print(triage_result)
 		return triage_result
 
@@ -272,15 +270,15 @@ class ModulesControler:
 			f_dict['File Name'] = f
 			f_dict['MD5'] = file_details[f][0]
 			f_dict['SHA1'] = file_details[f][1]
-			f_dict["VirusTotal"] = '0'
-			f_dict["Heuristics Indicators"] = str(heuristics_flag_count) + "/" + str(len(heuristics_details)) if heuristics_details is not None else "Error"
+			f_dict["VirusTotal"] = vtapi.get_scan_ratio_from_hash(str(file_details[f][0]))
+			f_dict["Heuristics Indicators"] = str(heuristics_flag_count) if heuristics_details is not None else "Error"
 			f_dict["Tensorflow Model"] = ts_score if ts_score is not None else "Error"
 			# f_dict["Ember Model"] = ember_score if ember_score is not None else "Error"
 
 			ret_data.append(f_dict)
 			i += 1
 
-			if i % 4 == 0:
+			if i % 2 == 0:
 				print(f_dict)
 
 		return ret_data
@@ -340,7 +338,9 @@ class ModulesControler:
 
 			# print(field_lengths)
 
-			
+	
+	# def test_vtp(self):
+	# 	print(vtapi.get_scan_ratio_from_hash("e2382a9cf3694eeadf8b3471c28593c8d3c03d5e"))
 
 
 
@@ -349,7 +349,8 @@ if __name__ == '__main__':
 
 
 	M = ModulesControler()
-	print(M.triage_parse_pstree("C:\\Users\\User\\Desktop\\testdump\\"))
+	# M.test_vtp()
+	# print(M.triage_parse_pstree("C:\\Users\\User\\Desktop\\testdump\\"))
 
 	# M.start_triage_analysis("C:\\Users\\User\\Desktop\\testdump")
 

@@ -1,4 +1,4 @@
-from virus_total_apis import PrivateApi as VirusTotalPrivateApi
+from .virus_total_apis import PrivateApi as VirusTotalPrivateApi
 import csv
 import json
 import time
@@ -89,5 +89,14 @@ def main():
     get_hash = _filter_resource_in_csv()
     get_vt_report(get_hash)
 
-if __name__ == "__main__":
-    main()
+def get_scan_ratio_from_hash(hash_string):
+    
+    try:
+        res = virus_total(hash_string)        
+        if "positives" in res and "total" in res:
+            return str(res['positives'])+'/'+str(res['total'])
+        else: 
+            return "Undetected"
+    except:
+        return "Error"
+
