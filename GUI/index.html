@@ -814,9 +814,9 @@ $(function () {
 
 
 
-	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-whoIs-table-div", 
-		"triage-WhoIs-inner-div", 
-		"triage-WhoIs-table", 
+	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-whois-table-div", 
+		"triage-whois-inner-div", 
+		"triage-whois-table", 
 		'WhoIsDomain Lookup for IP Addresses', 
 		["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"],
 		[
@@ -840,20 +840,20 @@ $(function () {
 		"triage-exes-inner-div", 
 		"triage-exes-table", 
 		'Executables', 
-		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
+		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
 		[
-			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "72.3%", "73.5%"],
-			["JeromeNoodes1", "SHA1", "HashYourDaddy2", "30/60", "1/20", "72.3%", "73.5%"]
+			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "73.5%"],
+			["JeromeNoodes1", "SHA1", "HashYourDaddy2", "30/60", "1/20", "73.5%"]
 		]);
 
 	var triageResultsDllTableCtx = genTableWithDivCtx("triage-dlls-table-div", 
 		"triage-dlls-inner-div", 
 		"triage-dlls-table", 
 		'Dynamic Linking Libraries (DLLs)', 
-		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Ember Model", "Tensorflow Model"],
+		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
 		[
-			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "72.3%", "73.5%"],
-			["JeromeNoodes1","SHA1", "hashYourDaddy2", "30/60", "1/20", "72.3%", "73.5%"]
+			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "73.5%"],
+			["JeromeNoodes1","SHA1", "hashYourDaddy2", "30/60", "1/20", "73.5%"]
 		]);
 
 
@@ -1115,9 +1115,56 @@ $(function () {
 	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
 
-	$('.results-table').DataTable({
-		// pageLength : 5
+	// $('.results-table').DataTable({
+	// 	"pageLength": 5
+	// 	// pageLength : 5
+	// });
+
+	
+	$("#triage-whois-table").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,10,15,20],
+		'columns' : [
+			{'data': 'IP'},
+			{'data': 'Organisation'},
+			{'data': 'HostName'},
+			{'data': 'ISP'},
+			{'data': 'Continent'},
+			{'data': 'Country'},
+			{'data': 'State/Region'},
+			{'data': 'City'}
+		]
 	});
+
+	$("#triage-exes-table").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,10,15,20],
+		'columns': [
+			{'data':'File Name'},
+			{'data':'MD5'},
+			{'data':'SHA1'},
+			{'data':"VirusTotal"},
+			{'data':"Heuristics Indicators"},
+			{'data':"Tensorflow Model"}
+		]
+	});
+
+	$("#triage-dlls-table ").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,10,15,20],
+		'columns': [
+			{'data':'File Name'},
+			{'data':'MD5'},
+			{'data':'SHA1'},
+			{'data':"VirusTotal"},
+			{'data':"Heuristics Indicators"},
+			{'data':"Tensorflow Model"}
+		]
+	});
+
+
+
+		
 
 	
 
@@ -1206,22 +1253,11 @@ $(function () {
 
 	updateTableData = function(tblId, tblHeaders, tblData) {
 		console.log(tblData);
+		var tbl = $('#'+tblId).DataTable();
+		tbl.clear();
+		tbl.rows.add(tblData);
+		tbl.draw();
 
-		var toAppend = [
-			['thead', 
-				['tr', tblHeaders, function(h) { return ['th', h] } ]
-			],
-			['tbody', tblData, function(a) {
-				return ['tr', Object.values(a), function(b) {
-						return ['td', b]
-					}]									
-				}
-			]
-		];
-
-		$("#"+tblId).html(HTML(toAppend));
-
-		
 
 	}
 
@@ -1240,16 +1276,16 @@ $(function () {
 		// triage-malign-files-info-label
 		// triage-malign-events-info-label
 		// 
-		// triage-WhoIs-table
+		// triage-whois-table
 		// triage-exes-table
-		// triage-dlls-table
-		
-		// 
-
-
+		// triage-dlls-table		
 	});
 
 	window.execTriageDumpRun = function () {
+
+
+		// $('#triage-exes-table').DataTable().clear().draw();
+
 		updateTableData("triage-exes-table", 
 			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
 			modesResultsData['triage']['FilesAnalysisDetails']);
@@ -1257,15 +1293,13 @@ $(function () {
 		updateTableData("triage-dlls-table", 
 			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
 			modesResultsData['triage']['DLLAnalysisDetails']);
+		
 
 		$('#res-triage-panel').show(100);
 	};
 
 
 	
-
-
-
 
 
 	var startUp = function() {

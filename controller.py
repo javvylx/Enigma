@@ -67,11 +67,20 @@ class ModulesControler:
 			folder_path += "\\"
 
 
-		with open("results.txt", 'r') as f:
-			data = json.load(f)
+		# with open("results.txt", 'r') as f:
+		# 	data = json.load(f)
 
-		return data
+		# return data
 
+		self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
+		evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+
+
+
+		with open("evtoutput.txt", 'w') as f:
+			f.write(json.dumps(evt_data))
+
+		sys.exit()
 
 		img_info_det = self.triage_parse_image_profiles(folder_path)
 		img_com_det = self.triage_parse_image_computer_info(folder_path)
@@ -81,7 +90,7 @@ class ModulesControler:
 
 		img_whois = self.triage_parse_whois(folder_path)
 
-
+		print(img_whois)
 		# print(img_exe_hashes)
 		# print("-------------")
 		# print(img_dll_hashes)
@@ -100,6 +109,8 @@ class ModulesControler:
 		# print(img_com_det)
 
 		# print(folder_path)
+		
+		
 
 		triage_result = {
 					"ImgName": img_com_det['Name'],
@@ -224,20 +235,14 @@ class ModulesControler:
 			except:
 				ts_score = None
 
-			# try:
-			# 	ember_score = str(self.ember.predict_malware(a_folder+f))
-			# except:
-			# 	ember_score = None
-
-
 			f_dict['File Name'] = f
 			f_dict['MD5'] = file_details[f][0]
 			f_dict['SHA1'] = file_details[f][1]
-			f_dict["VirusTotal"] = 0
+			f_dict["VirusTotal"] = '0'
 			f_dict["Heuristics Indicators"] = str(heuristics_flag_count) + "/" + str(len(heuristics_details)) if heuristics_details is not None else "Error"
 			f_dict["Tensorflow Model"] = ts_score if ts_score is not None else "Error"
 			# f_dict["Ember Model"] = ember_score if ember_score is not None else "Error"
-			
+
 			ret_data.append(f_dict)
 			i += 1
 
@@ -256,31 +261,19 @@ class ModulesControler:
 		# Returns output in a json format for JS to process		
 		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", self.WELT_PATH+"\\Analysis.ps1" , file_path ]  
 		ec = subprocess.call(cmd)
-		# 
-
-	def triage_evaluate_exes_info(self):
-		pass
 
 
 	def execute_ram_dump(self):
 		status = subprocess.run(self.RAM_DUMP_EXE_PATH, shell=True)
 
 
-	def try_read_json(self):
-		
-
-		with open(self.FILE_WELT_JSON, 'r') as f:
+	def get_welt_json_data(self, json_path):
+		with open(json_path, 'r') as f:
 			buf = f.read()
-			
-			# data = [x for x in buf.rsplit(r"\{.*\}")]
-			for x in buf.rsplit(r"\{.*\}"):
-				print(x)
-			# print(data)
-
-			# data = json.load(f)
-
-		# print(data)
-	
+			M  = re.findall(r"\{.*?\}", buf, re.MULTILINE | re.DOTALL)
+			ret_data = [json.loads(x) for x in M ]
+			return ret_data
+		
 	def start_volatility_dump(self, case ,ram_dump):
 		ioc.analysis(case,ram_dump)
 
@@ -288,12 +281,12 @@ class ModulesControler:
 if __name__ == '__main__':
 
 
-	M = ModulesControler()
-	M.start_triage_analysis("C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test")
+	# M = ModulesControler()
+	# M.start_triage_analysis("C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test")
 
 	# pass
-	# M = ModulesControler()
+	M = ModulesControler()
 
 	# M.triage_analyze_security_log(os.getcwd()+"\\WELT\\Tools\\Security.evtx")
 
-	# M.try_read_json()
+	M.get_welt_json_data()
