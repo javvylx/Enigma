@@ -321,10 +321,23 @@ class ModulesControler:
 
 		with open(a_folder+self.FILE_PSTREE, 'r') as f:
 			lines = f.readlines()
+			ret_data = []
 			field_lengths = [len(x) for x in lines[1].split(' ')]
+			for i, l in enumerate(lines[2:]):
+				f_dict = {}
+				f_dict['name'] = l[0:51].strip()
+				f_dict['pid'] = l[51:58].strip()
+				f_dict['ppid'] = l[58:65].strip()
+				f_dict['thds'] = l[65:72].strip()
+				f_dict['hnds'] = l[72:79].strip()
+				f_dict['time'] = l[79:].strip()
 
-			for l in lines[2:]:
-				print(l)
+				ret_data.append(f_dict)
+
+
+			return ret_data
+
+
 			# print(field_lengths)
 
 			
@@ -336,7 +349,7 @@ if __name__ == '__main__':
 
 
 	M = ModulesControler()
-	M.triage_parse_pstree("C:\\Users\\User\\Desktop\\testdump\\")
+	print(M.triage_parse_pstree("C:\\Users\\User\\Desktop\\testdump\\"))
 
 	# M.start_triage_analysis("C:\\Users\\User\\Desktop\\testdump")
 
