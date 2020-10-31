@@ -9,7 +9,6 @@ from IOC import ioc
 
 # Comment the 3 below if u all havent pip install
 from pestaticanalyzer import staticanalysis
-from embermodel import predict
 from tsmodel import test,dataset
 
 class ModulesControler:
@@ -53,10 +52,6 @@ class ModulesControler:
 
 	def __init__(self):
 		self.file_analyzer = staticanalysis.PEAnalyser()
-		self.ember = predict.EmberUtility()
-		# self._ts = 
-		# pass
-		
 
 
 
@@ -67,15 +62,18 @@ class ModulesControler:
 			folder_path += "\\"
 
 
+		
+		# sys.exit()
 		# with open("results.txt", 'r') as f:
 		# 	data = json.load(f)
 
 		# return data
 
+
 		self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
 		evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
 
-
+		print(evt_data)
 
 		with open("evtoutput.txt", 'w') as f:
 			f.write(json.dumps(evt_data))
@@ -89,6 +87,16 @@ class ModulesControler:
 		img_exe_hashes = self.triage_parse_exe_hashes(folder_path)
 
 		img_whois = self.triage_parse_whois(folder_path)
+		for x in img_whois:
+			for k in self.FLD_WHOIS:
+				if k not in x:
+					x[k] = "None"
+				else:
+					if x[k] == '':
+						x[k] = "None"
+
+		img_whois = json.dumps(img_whois)
+
 
 		print(img_whois)
 		# print(img_exe_hashes)
@@ -100,16 +108,7 @@ class ModulesControler:
 		mal_dlls = self.triage_evaluate_malware(folder_path+self.FLDR_DLL, img_dll_hashes)
 
 
-
-
-		# print(img_whois)
-		# print(img_dll_hash_det)
-		# print(img_info_det)
-		
-		# print(img_com_det)
-
-		# print(folder_path)
-		
+	
 		
 
 		triage_result = {
@@ -180,12 +179,12 @@ class ModulesControler:
 			cleaned = re.sub(r'\n{2,}', '\n\n', buf)
 			segments = cleaned.split("\n\n")
 			for segment in segments:
-				s_dict = defaultdict(None)
+				s_dict = {}
 				if len(segment) != 0:					
 					for line in segment.split('\n'):
 						x = line.split(':',1)
 						if x[0] in self.FLD_WHOIS:
-							s_dict[x[0].strip()] = x[1].strip() 
+							s_dict[str(x[0].strip())] = str(x[1].strip())
 					ret_data.append(s_dict)
 		return ret_data
 
@@ -281,12 +280,12 @@ class ModulesControler:
 if __name__ == '__main__':
 
 
-	# M = ModulesControler()
-	# M.start_triage_analysis("C:\\Users\\User\\Desktop\\27-10-2020_20-52-14_test")
+	M = ModulesControler()
+	M.start_triage_analysis("C:\\Users\\User\\Desktop\\testdump")
 
 	# pass
-	M = ModulesControler()
 
+# 
 	# M.triage_analyze_security_log(os.getcwd()+"\\WELT\\Tools\\Security.evtx")
 
-	M.get_welt_json_data()
+	# M.get_welt_json_data()

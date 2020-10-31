@@ -284,15 +284,11 @@ def launch():
 					browser.execute_script("showSuccess('Finished dumping case details!');")
 
 
-
-
 				if needs_update['triageCaseFolderInput']:
 					cout << "Update Triage Case Folder Path\n"
 
 					triage_case_path = tk_ask_input('folder')
 					# Get folder using tkinter
-
-
 
 
 					if triage_case_path != "":
