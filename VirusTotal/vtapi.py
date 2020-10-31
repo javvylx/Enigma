@@ -5,8 +5,7 @@ import time
 
 # Global list
 file_name = []
-md5_hash = []
-sha1_hash = []
+hash_list = []
 malicious_hash = []
 non_malicious_hash = []
 not_in_VT = []
@@ -44,7 +43,7 @@ def get_vt_report(resource):
         for hash in resource:
             results = virus_total(hash)
             response = int(results.get('response_code'))
-            # print(results)
+            print(results)
             if response == 0:
                 print(hash + ' cannot be found in VirusTotal Database\n')
                 not_in_VT.append(hash)
@@ -82,16 +81,13 @@ def _filter_resource_in_csv():
                 # file_path, file_name, md5_hash, sha1_hash = row
                 file_path = row[0]
                 file_name.append(row[1])
-                md5_hash.append(row[2])
-                md5_filtered = list(filter(lambda x: x != "", md5_hash))
-                sha1_hash.append(row[3])
-                sha1_filtered = list(filter(lambda x: x != "", sha1_hash))
-    return md5_filtered
+                hash_list.append(row[2])
+                hash_filtered = list(filter(lambda x: x != "", hash_list))
+    return hash_filtered
 
 def main():
     get_hash = _filter_resource_in_csv()
     get_vt_report(get_hash)
-
 
 if __name__ == "__main__":
     main()
