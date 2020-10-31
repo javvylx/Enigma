@@ -317,13 +317,28 @@ class ModulesControler:
 			return -1
 
 	def triage_parse_pstree(self, a_folder):
-		
+		G1 = 53
+
+		with open(a_folder+self.FILE_PSTREE, 'r') as f:
+			lines = f.readlines()
+			field_lengths = [len(x) for x in lines[1].split(' ')]
+
+			for l in lines[2:]:
+				print(l)
+			# print(field_lengths)
+
+			
+
+
+
 
 if __name__ == '__main__':
 
 
 	M = ModulesControler()
-	M.start_triage_analysis("C:\\Users\\User\\Desktop\\testdump")
+	M.triage_parse_pstree("C:\\Users\\User\\Desktop\\testdump\\")
+
+	# M.start_triage_analysis("C:\\Users\\User\\Desktop\\testdump")
 
 	# pass
 
