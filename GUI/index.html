@@ -518,6 +518,17 @@ $(function () {
 		)
 	);
 
+	var techInfoVolatilityCtx = genTechCardInfoCtx(
+		'Volatility', 
+		'img/volatility.png', 
+		genCardBodyCtx('img/volatility.png', 
+			genTechCardBodyParaCtx('Volatility', 
+				'https://www.volatilityfoundation.org/', 
+				' Framework is a completely open collection of tools, implemented in Python under the GNU General Public License, for the extraction of digital artifacts from volatile memory (RAM) samples.'
+			)
+		)
+	);
+
 	
 
 	var techInfoSeleniumCtx = genTechCardInfoCtx(
@@ -1110,7 +1121,7 @@ $(function () {
 
 	$('#row-review').html(HTML([reviewInstructionsCtx, reviewRequiredCaseFolderCtx]));
 
-	$("#row-technologies").html(HTML([techInfoBashBunnyCtx, techInfoPythonCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, ]));
+	$("#row-technologies").html(HTML([techInfoBashBunnyCtx, techInfoPythonCtx, techInfoVolatilityCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, ]));
 
 	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
