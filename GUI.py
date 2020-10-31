@@ -271,16 +271,20 @@ def launch():
 					# Uses controller to call volatility to dump case details
 					cout << "Volatlity Execute mode\n"
 					case_name = browser.execute_script("return volFields['caseName'];")					
-					
+					ram_dump_file = browser.execute_script("return volFields['ramFilePath'];")
 					
 					browser.execute_script("showLoader('Conducting Volatility Dump...');")
 					# check if already have case first
 					# if dont have then success can start dumping to a fixed name folder with dateetc..
 
 					# Put ur code within here kevin
-					# 
-					# 
-					# 
+					
+					res = control.start_volatility_dump(case_name, ram_dump_file)
+					if res == 1:
+						cout << "Ok Finished"
+					elif res == -1:
+						cout << "Error"
+					
 					browser.execute_script("showSuccess('Finished dumping case details!');")
 
 
@@ -299,11 +303,7 @@ def launch():
 
 
 				if needs_update['triageExecuteAnalysis']:
-					cout << "Triage Results Mode\n"
-
-
-
-					
+					cout << "Triage Results Mode\n"					
 					case_folder = browser.execute_script("return triageFields['caseFolderPath'];")
 
 					browser.execute_script("showLoader('Conducting Triage Analysis...');")

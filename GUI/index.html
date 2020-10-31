@@ -69,7 +69,7 @@ window.needsUpdate = {
 window.inputFilePaths = {ramImage: '', triageFolderPath: ''};
 
 
-volFields = {caseName: ''}
+volFields = {caseName: '', ramFilePath:''}
 
 triageFields = {caseFolderPath: ''};
 
@@ -401,44 +401,7 @@ $(function () {
 	}
 
 
-	// function genTableWithDivCtx(mainDivId, subDivId, tblId, divDesc, headersData, rowsData) {
- //         return ['div', {id: mainDivId, class: 'col-xl-12 col-md-12 mb-4'},
-	//          ['div', {class: 'card shadow mb-4'},
-	//             ['div', {class: 'card-header py-3'},
-	//                  ['h6',  {class: 'm-0 font-weight-bold text-primary'}, divDesc]
-	//             ],
-	//             ['div', {id: subDivId, class: 'card-body'},
-	//              ['div', {class: 'table-responsive'},
-	//                  ['table', {id: tblId, class: 'table table-bordered', id: 'dataTable',  width: '100%', cellspacing: '0'},
-	//                      ['thead', 
-	//                          ['tr',
-	//                              ['th', ,'TimeStamp'],
-	//                              ['th', 'EventID'],
-	//                              ['th', 'Classification Type'],
-	//                              ['th', 'Desc']
-	//                          ]
-	//                      ],
-	//                      ['tbody',
-	//                          ['tr',
-	//                              ['td', 'Passaway time'],
-	//                              ['td', 'Your daddy ID'],
-	//                              ['td', 'Dropout'],
-	//                              ['td', 'Im gona suicide']
-	//                          ],
-	//                          ['tr',
-	//                              ['td', 'Passaway time'],
-	//                              ['td', 'Your daddy ID'],
-	//                              ['td', 'Dropout'],
-	//                              ['td', 'Im gona suicide']
-	//                          ]
-	//                      ]
-	//                 ]
-	//                  ]
-	//             ]
-	//         ]
- //        ];   
-		
- //     }
+
 
 
 	// genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results')])
@@ -636,13 +599,6 @@ $(function () {
 
 
 
-// Network      netscan
-// Commands cmdscan
-// Process      ProcessDump
-// Files Processes  dlldump (doing now)
-// Process Tree
-// Domains      
-
 // gridClass, colorStyle, title, desc, iconClass
 
 	var homevolatilityDumpCtx = genHomeCardCtx("home-volatility-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-primary", "home-card", "Volatility", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
@@ -680,14 +636,6 @@ $(function () {
 	];
 
 
-	// volatilityRequiredInputCtx = ['div', {class: 'row no-gutters align-items-center'},
-	// 					['div', {class: 'col mr-2'},
-	// 						['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, cardTitle],
-	// 						genInputSelectorCtx(inputId, inputPlaceHolder, inputType), 
-	// 						genButtonCtx(btnId, btnLabel, btnIconClass, colorStyle)
-	// 					]                   
-						
-	// 				]
 
 	var volatiltiyInstructionsCtx = genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
 		genParaCtx("Fill in case name & choose folder location to dump analysis output", "", "")
@@ -902,15 +850,6 @@ $(function () {
 					triageResultsDllTableCtx,
 					triageResultEvtTableCtx
 				]	
-
-
-			// ['div', {class: 'card-header py-3'}]
-			// malwareResultHeuristicsScoreCtx,
-			// malwareResultEmberPredictionScoreCtx,
-			// malwareResultMLPredictionScoreCtx,
-			// malwareResultEntropyTableCtx
-
-
 
 		]
 
@@ -1196,11 +1135,6 @@ $(function () {
 		]
 	});
 
-
-		
-
-	
-
 	$('.nav-item').click(function() {
 
 		// Set Sidebar to active then toggle page
@@ -1245,8 +1179,15 @@ $(function () {
 		inputFilePaths.ramImage = "";
 	};
 
+
+	window.volFinishedDump = function() {
+		volFields.caseName = "";
+		volFields.ramFilePath = "";
+	}
+
 	$("#volatility-btn-dump").click(function() {
 		volFields.caseName = $('#volatility-card-input-case-name').val();
+		volFields.ramFilePath = $('#volatility-ram-dump-input-label').html();
 		if (volFields.caseName != "") {
 			needsUpdate.volExecuteDump = true;
 		} else {
@@ -1296,6 +1237,10 @@ $(function () {
 
 	}
 
+	updateResultLabels = function(labelId, text) {
+		$('#'+labelId).html(text);
+	}
+
 	$('#triage-dump-run').click(function() {
 		triageFields.caseFolderPath = $('#triage-dump-folder-label').html();
 
@@ -1304,7 +1249,7 @@ $(function () {
 		needsUpdate.triageExecuteAnalysis = true;
 
 
-		// #triage-result-meta-name
+		// triage-result-meta-name
 		// triage-result-meta-datetime-label
 		// triage-result-meta-model-label
 		// triage-domain-info-label
@@ -1318,6 +1263,15 @@ $(function () {
 
 	window.execTriageDumpRun = function () {
 
+
+		updateResultLabels("triage-result-meta-name", "ImgName");
+		updateResultLabels("triage-result-meta-datetime-label", "ImgDateTime");
+		updateResultLabels("triage-result-meta-model-label", "ImgModel");
+		updateResultLabels("triage-result-meta-manufacturer-label", "ImgManufacturer");
+		updateResultLabels("triage-process-info-label", "ProcessesCount");
+		updateResultLabels("triage-domain-info-label", "DomainsCount");
+		updateResultLabels("triage-malign-files-info-label", "MalignFileCount");
+		updateResultLabels("triage-malign-events-info-label", "FlaggedEvents");
 
 		// $('#triage-exes-table').DataTable().clear().draw();
 
@@ -1351,7 +1305,7 @@ $(function () {
 		$('.content-row').hide();
 		$('#row-home').show();
 
-		// $('.results-container').hide();
+		$('.results-container').hide();
 	}
 
 	startUp();

@@ -50,6 +50,11 @@ class ModulesControler:
 
 	FLD_WHOIS = ["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
 
+
+
+	HEURISTICS_SUS = 4
+	TS_SUS = 0.5
+
 	def __init__(self):
 		self.file_analyzer = staticanalysis.PEAnalyser()
 
@@ -66,32 +71,35 @@ class ModulesControler:
 
 		# return data
 
+		# os.remove(self.FILE_WELT_JSON)
+		# self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
+		# evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
 
-		self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
-		evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+		# print(evt_data)
 
-		print(evt_data)
+		# with open("evtoutput.txt", 'w') as f:
+		# 	f.write(json.dumps(evt_data))
 
-		with open("evtoutput.txt", 'w') as f:
-			f.write(json.dumps(evt_data))
-
-		sys.exit()
+		# sys.exit()
 
 		img_info_det = self.triage_parse_image_profiles(folder_path)
 		img_com_det = self.triage_parse_image_computer_info(folder_path)
 		img_dll_hashes = self.triage_parse_dlls_hashes(folder_path)
 		img_exe_hashes = self.triage_parse_exe_hashes(folder_path)
-		img_whois = self.triage_parse_whois(folder_path)
 
-		for x in img_whois:
-			for k in self.FLD_WHOIS:
-				if k not in x:
-					x[k] = "None"
-				else:
-					if x[k] == '':
+		try:
+			img_whois = self.triage_parse_whois(folder_path)
+			for x in img_whois:
+				for k in self.FLD_WHOIS:
+					if k not in x:
 						x[k] = "None"
+					else:
+						if x[k] == '':
+							x[k] = "None"
 
-		img_whois = json.dumps(img_whois)
+			img_whois = json.dumps(img_whois)
+		except:
+			img_whois = "None"
 
 
 		print(img_whois)
@@ -100,32 +108,55 @@ class ModulesControler:
 		# print(img_dll_hashes)
 
 		# sys.exit()
-		mal_exes = self.triage_evaluate_malware(folder_path+self.FLDR_EXE, img_exe_hashes)
-		mal_dlls = self.triage_evaluate_malware(folder_path+self.FLDR_DLL, img_dll_hashes)
+		 
+		 
+		
+		try:
+			mal_exes = self.triage_evaluate_malware(folder_path+self.FLDR_EXE, img_exe_hashes)
+		except:
+			mal_exes = "None"
+
+		try:
+			mal_dlls = self.triage_evaluate_malware(folder_path+self.FLDR_DLL, img_dll_hashes)
+		except:
+			mal_dll = "None"
 
 
-		os.remove(self.FILE_WELT_JSON)
-		self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
-		evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
-		evt_data = json.dumps(evt_data)
+		mal_count = 0 	
+		if mal_exes != "None":
+			mal_count += sum(1 for x in mal_exes if x['Heuristics Indicators'] > self.HEURISTICS_SUS or x['Tensorflow Model'] > self.TS_SUS)
+		if mal_dll != "None": 
+			mal_count += sum(1 for x in mal_dlls if x['Heuristics Indicators'] > self.HEURISTICS_SUS or x['Tensorflow Model'] > self.TS_SUS)
+
+
+		try:
+
+			os.remove(self.FILE_WELT_JSON)
+			self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
+			evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+			evt_data = json.dumps(evt_data)
+		except:
+			evt_data = "None"
+
+
 
 
 		triage_result = {
-					"ImgName": img_com_det['Name'],
-					"ImgDateTime": img_info_det['Image date and time'],
-					"ImgModel": img_com_det['Model'],
-					"ImgManufacturer":img_com_det['Manufacturer'],
+					"ImgName": str(img_com_det['Name']),
+					"ImgDateTime": str(img_info_det['Image date and time']),
+					"ImgModel": str(img_com_det['Model']),
+					"ImgManufacturer":str(img_com_det['Manufacturer']),
 
-					"ProcessesCount": 0,
-					"DomainsCount": 0,
-					"MalignFileCount": 0,
-					"FlaggedEvents":0,
+					"ProcessesCount": str(self.triage_get_processes_count(a_folder)),
+					"DomainsCount": str(len(img_whois)) if img_whois != "None" else img_whois,
+					"MalignFileCount": str(mal_count), # Count based on how many dll's heursitics > 4 or 5 , and ts > 50%
+					"FlaggedEvents": str(len(evt_data)),
 
 					# [defaultdict(None, {'IP': '56.139.105.26', 'ISP': '', 'Continent': 'North America', 'Country': 'United States'}), defaultdict(None, {'IP': '216.58.207.206', 'ISP': 'Google', 'Continent': 'North America', 'Country': 'United States', 'State/Region': 'California', 'City': 'Mountain View'}), defaultdict(None, {'IP': '56.27.91.26', 'ISP': '', 'Continent': 'North America', 'Country': 'United States'})]
 					"WhoIsDomainDetails": img_whois,
 					"FilesAnalysisDetails": mal_exes,
 					"DLLAnalysisDetails":mal_dlls,
-					"EventLogAnalysisDetails": evt_data
+					"EventLogAnalysisDetails": evt_data 
 
 		}
 
@@ -207,6 +238,11 @@ class ModulesControler:
 		return self.triage_parse_csv_hash(a_folder, self.FILE_EXE_HASH)
 
 
+	def triage_get_processes_count(self, a_folder):
+		try:
+			return sum(1 for line in open(self.FILE_PSTREE, 'r')) - 2
+		except:
+			return 0
 
 	def triage_evaluate_malware(self, a_folder, file_details):
 		# file details will contain the name with two hashes
@@ -271,10 +307,17 @@ class ModulesControler:
 			M  = re.findall(r"\{.*?\}", buf, re.MULTILINE | re.DOTALL)
 			ret_data = [json.loads(x) for x in M ]
 			return ret_data
-		
-	def start_volatility_dump(self, case ,ram_dump):
-		ioc.analysis(case,ram_dump)
+	
 
+	def start_volatility_dump(self, case ,ram_dump):
+		try:
+			ioc.analysis(case,ram_dump)
+			return 0
+		except:
+			return -1
+
+	def triage_parse_pstree(self, a_folder):
+		
 
 if __name__ == '__main__':
 
