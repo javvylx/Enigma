@@ -584,6 +584,16 @@ $(function () {
 		)
 	);
 
+	var techInfoTensorFlowCtx = genTechCardInfoCtx(
+		'Tensorflow', 
+		'img/tensor_flow.png', 
+		genCardBodyCtx('img/tensor_flow.png', 
+			genTechCardBodyParaCtx('Tensorflow', 
+				'https://www.tensorflow.org/',
+				' is a free and open-source software library for machine learning. It can be used across a range of tasks but has a particular focus on training and inference of deep neural networks.'
+			)
+		)
+	);
 
 	
 	// Display Side Bar
@@ -1121,7 +1131,7 @@ $(function () {
 
 	$('#row-review').html(HTML([reviewInstructionsCtx, reviewRequiredCaseFolderCtx]));
 
-	$("#row-technologies").html(HTML([techInfoBashBunnyCtx, techInfoPythonCtx, techInfoVolatilityCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, ]));
+	$("#row-technologies").html(HTML([techInfoBashBunnyCtx, techInfoPythonCtx, techInfoVolatilityCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, techInfoTensorFlowCtx, ]));
 
 	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
