@@ -14,8 +14,8 @@ from datetime import datetime
 mainDir = os.getcwd()+"\\IOC"
 vol = "volatility-2.6.standalone.exe"
 volatility = mainDir+ "\\volatility_2.6_win64_standalone.exe"
-#for testing purpose
-imagePath = mainDir + "\\WIN7_FDS-20201017-090925.raw"
+#Placeholder
+imagePath = mainDir + "\\test.raw"
 casefolder = " "
  
 user_agent_list = [
@@ -300,7 +300,7 @@ def ipWhoISLookUp(iplist):
 # 	print(x)
 #ipWhoISLookUp(ip)
 
-analysis("test",imagePath)
+#analysis("test",imagePath)
 
 #RAM_imageinfo(imagePath)
 
