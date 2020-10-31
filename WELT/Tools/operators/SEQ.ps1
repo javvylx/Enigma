@@ -30,9 +30,10 @@ foreach($node in $nodes)
 	"RuleTriggered" : "'+$triggerRID+'",
 	"RuleName" : "'+$rulename+'",
 	"EventIDs" : "'+$EventSEQArray+'",
-	"LastTimestamp" : "'+$time+'",
+	"Timestamp" : "'+$time+'",
 	"LastEventRecordID" : "'+$evrid+'",
 	"Description" : "'+$ruledesc+'"
+	"IPAddress": "NIL"
 	}'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
             $EventSEQArray.clear()

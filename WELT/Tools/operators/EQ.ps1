@@ -19,6 +19,7 @@ foreach($node in $nodes){
 	"Timestamp": "'+$time+'",
 	"EventRecordID": "'+$evrid+'",
 	"Description": "'+$ruledesc+'"
+	"IPAddress": "NIL"
 	},'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output
         }
