@@ -601,7 +601,7 @@ $(function () {
 	var sideMalwareCtx = genSideItemCtx("side-malware", "Malware Heuristics", "fas fa-biohazard");
 	var sideEventCtx = genSideItemCtx("side-event", "Event Logs Correlator", "fas fa-chart-area");
 	var sideTechnologiesCtx = genSideItemCtx("side-technologies", "Technologies Used", "fas fa-question-circle");
-	var sideAboutCtx = genSideItemCtx("side-about", "About", "fas fa-user-secret");
+	var sideAboutCtx = genSideItemCtx("side-about", "About Us", "fas fa-user-secret");
 	var sideReviewCtx = genSideItemCtx("side-review", "Review Results", "fas fa-scroll");
 
 	var sideMenuCtx = [
@@ -1275,7 +1275,7 @@ $(function () {
 			"triage": "Automated RAM Analysis",
 			"malware": "Malware Heuristics",
 			"event": "Windows Logs Correlator",
-			"about": "About",
+			"about": "About Us",
 			"technologies": "Technologies Used",
 			"review": "Review Triage Results"
 	};
@@ -1284,11 +1284,11 @@ $(function () {
 
 
 	var aboutIntroDetails = [
-		{"Name":"Kevin", "imagePath":"img/kevin.png"},		
-		{"Name":"Patrick", "imagePath":"img/patrick.png"},
-		{"Name":"Jerome", "imagePath":"img/jerome.png"},
-		{"Name":"Cleaven", "imagePath":"img/cleaven.png"},		
-		{"Name":"Longxian", "imagePath":"img/longxian.jpg"}		
+		{"Name":"Kevin Tan", "imagePath":"img/kevin.png"},		
+		{"Name":"Patrick Kang", "imagePath":"img/patrick.jpeg"},
+		{"Name":"Jerome Tan", "imagePath":"img/jerome.jpeg"},
+		{"Name":"Cleaven Goh", "imagePath":"img/cleaven.jpeg"},		
+		{"Name":"Lim Long Xian", "imagePath":"img/longxian.jpg"}		
 	];
 
 		
@@ -1309,7 +1309,7 @@ $(function () {
 					['h6', {class: 'm-0 font-weight-bold text-primary'}, d.Name]
 				],
 				['div', {class: 'card-body'},
-					['img', {class: 'img-fluid px-3 px-sm-4 mt-3 mb-4 about-info-img', src: d.imagePath}],					
+					['img', {class: 'img px-3 px-sm-4 mt-3 mb-4 about-info-img', src: d.imagePath}],					
 					['div',  {class: 'mb-1'}],
 					['p', {class: 'mb-0 small'}]
 				]
