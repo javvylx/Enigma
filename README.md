@@ -1,6 +1,11 @@
 # Enigma
 
 
+![](enigma.png)
+Pre-requisites:
+Python 3.x or newer
+
+
 ##Software Requirements
 * Python 3.8.6
 * Mozilla FireFox
@@ -30,6 +35,7 @@ https://portableapps.com/apps/internet/firefox_portable
 
 
 ###Usage
+
 
 Installation Guide
 
