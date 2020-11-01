@@ -14,7 +14,7 @@ import pefile
 # 	sys.exit()
 
 # try:
-from wincert import wintrust
+from .wincert import wintrust
 # import wincert.wintrust as wintrust
 # except ImportError:
 # 	# If fail try pip install pythonforwindows
@@ -371,11 +371,11 @@ class HeuristicsAnalyser:
 			"OPP": [0x110, 0x118]
 	}
 
-	# ENC_PATH = os.getcwd()+"\\pestaticanalyzer\\protector_section_names.txt"
-	# PKD_PATH = os.getcwd()+"\\pestaticanalyzer\\packer_section_names.txt"
+	ENC_PATH = os.getcwd()+"\\pestaticanalyzer\\protector_section_names.txt"
+	PKD_PATH = os.getcwd()+"\\pestaticanalyzer\\packer_section_names.txt"
 
-	ENC_PATH = os.getcwd()+"\\protector_section_names.txt"
-	PKD_PATH = os.getcwd()+"\\packer_section_names.txt"
+	# ENC_PATH = os.getcwd()+"\\protector_section_names.txt"
+	# PKD_PATH = os.getcwd()+"\\packer_section_names.txt"
 
 	def __init__(self, pe_object: PEDetails):
 		self.score = 0
@@ -587,8 +587,8 @@ class HeuristicsAnalyser:
 
 class ImportsAnalyser:
 	
-	# RULES_PATH = os.getcwd() + "\\pestaticanalyzer\\import_rules.csv"
-	RULES_PATH = os.getcwd() + "\\import_rules.csv"
+	RULES_PATH = os.getcwd() + "\\pestaticanalyzer\\import_rules.csv"
+	# RULES_PATH = os.getcwd() + "\\import_rules.csv"
 
 
 

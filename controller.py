@@ -255,7 +255,7 @@ class ModulesControler:
 
 	def triage_get_processes_count(self, a_folder):
 		try:
-			return sum(1 for line in open(self.FILE_PSTREE, 'r')) - 2
+			return sum(1 for line in open(a_folder+self.FILE_PSTREE, 'r')) - 2
 		except:
 			return 0
 
@@ -381,7 +381,7 @@ class ModulesControler:
 if __name__ == '__main__':
 	M = ModulesControler()
 
-	M.start_triage_analysis("C:\\Users\\User\\Desktop\\testdump")
+	print(M.triage_get_processes_count("C:\\Users\\User\\Desktop\\testdump\\"))
 	
 	# with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", "r") as f:
 	# 	data = json.loads(f.read())
