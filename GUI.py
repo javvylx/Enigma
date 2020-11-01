@@ -1,5 +1,5 @@
 import os, json, sys, time
-from controller import *
+#from controller import *
 sys.path.append(os.getcwd()+"\\python-3.8.2-embed-amd64")
 sys.path.append(os.getcwd())
 from selenium import webdriver

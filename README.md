@@ -1,4 +1,4 @@
-# 2202-WELTPEIOC-Suite
+# Enigma
 
 Pre-requisites:
 Python 3.x or newer
