@@ -276,19 +276,19 @@ def launch():
 					case_name = browser.execute_script("return volFields['caseName'];")					
 					ram_dump_file = browser.execute_script("return volFields['ramFilePath'];")
 					
-					browser.execute_script("showLoader('Conducting Volatility Dump...');")
+					browser.execute_script("showLoader('Conducting Volatility analysis...');")
 					# check if already have case first
 					# if dont have then success can start dumping to a fixed name folder with dateetc..
 
 					# Put ur code within here kevin
 					
-					res = control.start_volatility_dump(case_name, ram_dump_file)
-					if res == 1:
-						cout << "Ok Finished"
-					elif res == -1:
-						cout << "Error"
+					# res = control.start_volatility_dump(case_name, ram_dump_file)
+					# if res == 1:
+					# 	cout << "Ok Finished"
+					# elif res == -1:
+					# 	cout << "Error"
 					
-					browser.execute_script("showSuccess('Finished dumping case details!');")
+					browser.execute_script("hideLoader(); showSuccess('Finished dumping case details!');")
 
 
 				if needs_update['triageCaseFolderInput']:

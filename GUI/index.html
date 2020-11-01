@@ -577,7 +577,7 @@ $(function () {
 	
 	// Display Side Bar
 	var sideHomeCtx = genSideItemCtx("side-home", "Home", "fas fa-tachometer-alt active");
-	var sideVolatilityCtx = genSideItemCtx("side-volatility", "Volatility Dump", "fas fa-memory");
+	var sideVolatilityCtx = genSideItemCtx("side-volatility", "Volatility analysis", "fas fa-memory");
 	var sideTriageCtx = genSideItemCtx("side-triage", "Triage Analysis", "fab fa-searchengin");
 	var sideMalwareCtx = genSideItemCtx("side-malware", "Malware Heuristics", "fas fa-biohazard");
 	var sideEventCtx = genSideItemCtx("side-event", "Event Logs Correlator", "fas fa-chart-area");
@@ -704,7 +704,7 @@ $(function () {
 		'info');
 
 	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_dump_folder",
-		"Choose your volatility dump folder",
+		"Choose your volatility analysis folder",
 		"triage-dump-folder",
 		"Choose folder...",
 		"FILE",
@@ -1243,7 +1243,7 @@ $(function () {
 
 	var arrTitles = {
 			"home": "What do you want to do",
-			"volatility": "Volatility Dump",
+			"volatility": "Volatility analysis",
 			"triage": "Automated RAM Analysis",
 			"malware": "Malware Heuristics",
 			"event": "Windows Logs Correlator",
@@ -1517,7 +1517,7 @@ $(function () {
 	});
 	/* --- End of Toggle Pages --- */
 
-	// --- 1 Volatility dump events --- //
+	// --- 1 Volatility analysis events --- //
 	$('#volatility-ram-dump-input').click(function() {
 		needsUpdate.volRamDumpInput = true;
 		// console.log(needsUpdate.volRamDumpInput);
@@ -1545,7 +1545,7 @@ $(function () {
 
 	})
 
-	// --- End of Volatility dump events --- //
+	// --- End of Volatility analysis events --- //
 
 
 
