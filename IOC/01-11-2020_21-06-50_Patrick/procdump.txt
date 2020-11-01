@@ -1,0 +1,41 @@
+Process(V) ImageBase  Name                 Result
+---------- ---------- -------------------- ------
+0x84ecfbb0 ---------- System               Error: PEB at 0x0 is unavailable (possibly due to paging)
+0x8601d020 0x47a00000 smss.exe             OK: executable.304.exe
+0x85e97030 0x4a260000 csrss.exe            OK: executable.376.exe
+0x85f0f030 0x00c80000 wininit.exe          OK: executable.424.exe
+0x85f10778 0x4a260000 csrss.exe            OK: executable.432.exe
+0x85f1c060 0x00610000 winlogon.exe         OK: executable.472.exe
+0x85f92030 0x00750000 services.exe         OK: executable.516.exe
+0x86865448 0x00830000 lsass.exe            OK: executable.532.exe
+0x86868030 0x00980000 lsm.exe              OK: executable.540.exe
+0x86895680 0x001b0000 svchost.exe          OK: executable.640.exe
+0x868ba880 0x00400000 VBoxService.ex       OK: executable.708.exe
+0x868c2030 0x001b0000 svchost.exe          OK: executable.772.exe
+0x868dc9f8 0x001b0000 svchost.exe          OK: executable.868.exe
+0x868f6d40 0x001b0000 svchost.exe          OK: executable.912.exe
+0x8609a030 0x001b0000 svchost.exe          OK: executable.948.exe
+0x8690c438 0x003c0000 audiodg.exe          OK: executable.1028.exe
+0x86922030 0x001b0000 svchost.exe          OK: executable.1100.exe
+0x86940738 0x001b0000 svchost.exe          OK: executable.1220.exe
+0x86976408 0x00210000 spoolsv.exe          OK: executable.1400.exe
+0x85e54300 0x001b0000 svchost.exe          OK: executable.1428.exe
+0x869c6030 0x001b0000 svchost.exe          OK: executable.1540.exe
+0x8699e260 0x001b0000 svchost.exe          OK: executable.1980.exe
+0x86a77030 0x00f00000 taskhost.exe         OK: executable.1136.exe
+0x86ac1030 0x004d0000 sppsvc.exe           OK: executable.1300.exe
+0x86ab04d0 0x00140000 dwm.exe              OK: executable.944.exe
+0x86ad9030 0x00f20000 explorer.exe         OK: executable.656.exe
+0x86b4e4e0 0x00400000 VBoxTray.exe         OK: executable.396.exe
+0x86001810 0x002a0000 SearchIndexer.       OK: executable.2176.exe
+0x86a504f0 0x00400000 Pinpoint_Hash.       OK: executable.3948.exe
+0x85fab780 0x00400000 Pinpoint_Hash.       OK: executable.2164.exe
+0x86c3fd40 0x00400000 WinHex.exe           OK: executable.3268.exe
+0x85010d40 0x008c0000 HelpPane.exe         OK: executable.3228.exe
+0x86ba7030 0x001b0000 svchost.exe          OK: executable.3348.exe
+0x84ee5d40 0x00fb0000 wmpnetwk.exe         OK: executable.3388.exe
+0x84eecd40 ---------- dllhost.exe          Error: Cannot acquire process AS
+0x851c33e8 ---------- dllhost.exe          Error: Cannot acquire process AS
+0x85048250 ---------- dllhost.exe          Error: Cannot acquire process AS
+0x84ef4a60 0x00fa0000 DumpIt.exe           OK: executable.2804.exe
+0x86c34d40 0x00f40000 conhost.exe          OK: executable.2784.exe

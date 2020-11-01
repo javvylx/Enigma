@@ -1,0 +1,113 @@
+************************************************************************
+System pid:      4
+************************************************************************
+smss.exe pid:    304
+Command line : \SystemRoot\System32\smss.exe
+************************************************************************
+csrss.exe pid:    376
+Command line : %SystemRoot%\system32\csrss.exe ObjectDirectory=\Windows SharedSection=1024,12288,512 Windows=On SubSystemType=Windows ServerDll=basesrv,1 ServerDll=winsrv:UserServerDllInitialization,3 ServerDll=winsrv:ConServerDllInitialization,2 ServerDll=sxssrv,4 ProfileControl=Off MaxRequestThreads=16
+************************************************************************
+wininit.exe pid:    424
+Command line : wininit.exe
+************************************************************************
+csrss.exe pid:    432
+Command line : %SystemRoot%\system32\csrss.exe ObjectDirectory=\Windows SharedSection=1024,12288,512 Windows=On SubSystemType=Windows ServerDll=basesrv,1 ServerDll=winsrv:UserServerDllInitialization,3 ServerDll=winsrv:ConServerDllInitialization,2 ServerDll=sxssrv,4 ProfileControl=Off MaxRequestThreads=16
+************************************************************************
+winlogon.exe pid:    472
+Command line : winlogon.exe
+************************************************************************
+services.exe pid:    516
+Command line : C:\Windows\system32\services.exe
+************************************************************************
+lsass.exe pid:    532
+Command line : C:\Windows\system32\lsass.exe
+************************************************************************
+lsm.exe pid:    540
+Command line : C:\Windows\system32\lsm.exe
+************************************************************************
+svchost.exe pid:    640
+Command line : C:\Windows\system32\svchost.exe -k DcomLaunch
+************************************************************************
+VBoxService.ex pid:    708
+Command line : system32\VBoxService.exe
+************************************************************************
+svchost.exe pid:    772
+Command line : C:\Windows\system32\svchost.exe -k RPCSS
+************************************************************************
+svchost.exe pid:    868
+Command line : C:\Windows\System32\svchost.exe -k LocalServiceNetworkRestricted
+************************************************************************
+svchost.exe pid:    912
+Command line : C:\Windows\System32\svchost.exe -k LocalSystemNetworkRestricted
+************************************************************************
+svchost.exe pid:    948
+Command line : C:\Windows\system32\svchost.exe -k netsvcs
+************************************************************************
+audiodg.exe pid:   1028
+Command line : C:\Windows\system32\AUDIODG.EXE 0x2b4
+************************************************************************
+svchost.exe pid:   1100
+Command line : C:\Windows\system32\svchost.exe -k LocalService
+************************************************************************
+svchost.exe pid:   1220
+Command line : C:\Windows\system32\svchost.exe -k NetworkService
+************************************************************************
+spoolsv.exe pid:   1400
+Command line : C:\Windows\System32\spoolsv.exe
+************************************************************************
+svchost.exe pid:   1428
+Command line : C:\Windows\system32\svchost.exe -k LocalServiceNoNetwork
+************************************************************************
+svchost.exe pid:   1540
+Command line : C:\Windows\system32\svchost.exe -k LocalServiceAndNoImpersonation
+************************************************************************
+svchost.exe pid:   1980
+Command line : C:\Windows\system32\svchost.exe -k NetworkServiceNetworkRestricted
+************************************************************************
+taskhost.exe pid:   1136
+Command line : "taskhost.exe"
+************************************************************************
+sppsvc.exe pid:   1300
+Command line : C:\Windows\system32\sppsvc.exe
+************************************************************************
+dwm.exe pid:    944
+Command line : "C:\Windows\system32\Dwm.exe"
+************************************************************************
+explorer.exe pid:    656
+Command line : C:\Windows\Explorer.EXE
+************************************************************************
+VBoxTray.exe pid:    396
+Command line : "C:\Windows\System32\VBoxTray.exe" 
+************************************************************************
+SearchIndexer. pid:   2176
+Command line : C:\Windows\system32\SearchIndexer.exe /Embedding
+************************************************************************
+Pinpoint_Hash. pid:   3948
+Command line : "C:\Program Files\Pinpoint Labs\Hash\Pinpoint_Hash.exe" 
+************************************************************************
+Pinpoint_Hash. pid:   2164
+Command line : "C:\Program Files\Pinpoint Labs\Hash\Pinpoint_Hash.exe" 
+************************************************************************
+WinHex.exe pid:   3268
+Command line : "C:\Software\Labs\P2\WinHex\winhex\WinHex.exe" 
+************************************************************************
+HelpPane.exe pid:   3228
+Command line : C:\Windows\helppane.exe -Embedding
+************************************************************************
+svchost.exe pid:   3348
+Command line : C:\Windows\System32\svchost.exe -k secsvcs
+************************************************************************
+wmpnetwk.exe pid:   3388
+Command line : "C:\Program Files\Windows Media Player\wmpnetwk.exe"
+************************************************************************
+dllhost.exe pid:   3552
+************************************************************************
+dllhost.exe pid:   2288
+************************************************************************
+dllhost.exe pid:   3616
+************************************************************************
+DumpIt.exe pid:   2804
+Command line : "\\VBOXSVR\share\DumpIt.exe" 
+************************************************************************
+conhost.exe pid:   2784
+Command line : \??\C:\Windows\system32\conhost.exe

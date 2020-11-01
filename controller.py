@@ -410,6 +410,8 @@ class ModulesControler:
 		ret_data = { "EventLogAnalysisSolo" : [] }
 		try:
 			print("Start: ", log_path)
+			if os.path.exists(self.FILE_WELT_JSON):
+				os.remove(self.FILE_WELT_JSON)				
 			self.triage_analyze_security_log(log_path)
 			evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
 			print(evt_data)
