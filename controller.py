@@ -430,11 +430,11 @@ class ModulesControler:
 
 
 
-if __name__ == '__main__':
-	M = ModulesControler()
+# if __name__ == '__main__':
+# 	M = ModulesControler()
 
-	D = M.start_malware_analyze("c:\\users\\user\\desktop\\12345.exe")
-	D['SectionResults']['Rows']	
+# 	D = M.start_malware_analyze("c:\\users\\user\\desktop\\12345.exe")
+# 	D['SectionResults']['Rows']	
 
 	# print(M.triage_get_processes_count("C:\\Users\\User\\Desktop\\testdump\\"))
 	
