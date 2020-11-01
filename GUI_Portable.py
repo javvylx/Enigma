@@ -1,6 +1,6 @@
 import os, json, sys, time
-# sys.path.append(os.getcwd())
-# sys.path.append(os.getcwd()+"\\python-3.8.6-embed-amd64")
+sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()+"\\python-3.8.6-embed-amd64")
 from controller import *
 
 from selenium import webdriver
@@ -165,7 +165,8 @@ class Browser(object):
 		if self._headless:
 			os.environ[MH] = '1'
 
-		self._browser = webdriver.Firefox()
+		self._firefox_binary = FirefoxBinary(os.getcwd()+"\\FirefoxPortable\\App\\Firefox\\firefox.exe")
+		self._browser = webdriver.Firefox(firefox_binary=self._firefox_binary)
 		if h is None and MH in os.environ: 
 			del os.environ[MH]
 		elif h is not None: 

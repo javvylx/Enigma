@@ -1,3 +1,3 @@
 @ECHO OFF
-start "" "python-3.8.2-embed-amd64\\python.exe" "GUI.py"
+start "" "python-3.8.6-embed-amd64\\python.exe" "GUI_Portable.py"
 exit
