@@ -309,7 +309,8 @@ class ModulesControler:
 	def triage_analyze_security_log(self, file_path):
 		# Call python module which feeds input to powershell
 		# Returns output in a json format for JS to process		
-		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", self.WELT_PATH+"\\Analysis.ps1" , file_path ]  
+		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", self.WELT_PATH+"\\Analysis.ps1" , file_path]
+		
 		ec = subprocess.call(cmd)
 
 
