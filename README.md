@@ -1,7 +1,8 @@
 # Enigma
 ![](enigma.png)
-Pre-requisites:
-Python 3.x or newer
+
+##Introduction
+
 
 
 ##Software Requirements
@@ -10,12 +11,11 @@ Python 3.x or newer
 
 
 ##Installation
-###Local
+###Local Approach
 1. Ensure you have Mozila Firefox installed on your computer.
 2. Ensure all dependencies are installed `pip install -r requirements.txt`
 
-
-###Portable Method
+###Portable Approach
 1. Install Portable FireFox into the project folder where installer is downloadable at: <br>
 https://portableapps.com/apps/internet/firefox_portable
 2. Browse to `\FirefoxPortable\Other\Source` and copy `FirefoxPortable.ini` o the \FirefoxPortable folder. 
@@ -26,15 +26,15 @@ https://portableapps.com/apps/internet/firefox_portable
 | DisableSplashScreen | true |
 | AllowMultipleInstances | true |
 
-4. Copy your whole project into a USB drive. 
-5. Start the toolkit by launching `launch.bat` from your drive/disk
+4. Copy the whole project into a USB drive. 
+5. Launch through `launch.bat` from your drive/disk
 
 
 
 
 ###Usage
 
-
+<!-- 
 Installation Guide
 
 For VirusTotal: 
@@ -60,5 +60,5 @@ Per month: 600000
 These are the 3 possible results from VirusTotal <br>
 Hash not found in database - VirusTotal Database does not have a record of this hash.<br>
 Hash is not malicious - This hash is found in VirusTotal database and is not malicious. <br>
-Hash is malicious - This hash is found in VirusTotal database and is malicious. <br>
+Hash is malicious - This hash is found in VirusTotal database and is malicious. <br> -->
 
