@@ -1,11 +1,15 @@
 import os, json, sys, time
-#from controller import *
-sys.path.append(os.getcwd()+"\\python-3.8.2-embed-amd64")
+
 sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()+"\\python-3.8.6-embed-amd64")
+from controller import *
+
 from selenium import webdriver
 import subprocess
 import ast
-import tkinter as tk
+
+# import tkinter as tk
+from tkinter import *
 from tkinter import filedialog
 import controller
 
@@ -192,8 +196,8 @@ class Browser(object):
 		self._quit()
 
 def tk_ask_input(mode="file"):
-
-	root = tk.Tk()
+	root = Tk()
+	# root = tk.Tk()
 	root.withdraw()
 
 	# Make it almost invisible - no decorations, 0 size, top left corner.
@@ -205,6 +209,7 @@ def tk_ask_input(mode="file"):
 	root.focus_force()
 
 	if mode == "file":
+
 		ret = filedialog.askopenfilename(parent=root) # Or some other dialog
 	elif mode == "folder":
 		ret = str(filedialog.askdirectory(parent=root)) # Or some other dialog
