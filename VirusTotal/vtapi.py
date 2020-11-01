@@ -90,7 +90,6 @@ def main():
     get_vt_report(get_hash)
 
 def get_scan_ratio_from_hash(hash_string):
-    
     try:
         res = virus_total(hash_string)        
         if "positives" in res and "total" in res:

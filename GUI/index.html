@@ -63,19 +63,32 @@ var refreshB64 = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu
 
 window.needsUpdate = {
 	volRamDumpInput: false, volExecuteDump: false,
-	triageCaseFolderInput: false, triageExecuteAnalysis: false };
+	triageCaseFolderInput: false, triageExecuteAnalysis: false,
+	evtLogInput: false, evtExecuteAnalysis: false,
+	reviewResultInput: false, reviewExecuteReview: false};
 
 
-window.inputFilePaths = {ramImage: '', triageFolderPath: ''};
+window.inputFilePaths = {
+	ramImage: '',
+	triageFolderPath: '',
+	evtLogPath:'',
+	reviewCasePath: ''};
+
+
+
+	// "window.inputFilePaths['reviewCasePath'] = \"%s\"; window.evtLogInputted();" %case_file_path)
+
 
 
 volFields = {caseName: '', ramFilePath:''}
 
 triageFields = {caseFolderPath: ''};
 
+evtFields = {logPath: ''};
 
+reviewFields = {caseFilePath: ''};
 
-modesResultsData = {vol: '', triage: '' };
+modesResultsData = {vol: '', triage: '' , evt: '', review: ''};
 
 
 
@@ -244,15 +257,18 @@ $(function () {
 	function genHomeCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, desc, iconClass) {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genInfoBodyCtx(title, desc, iconClass, colorStyle));
 	}
-
+	// Make same incase need modify individually later
 	function genTriageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc, iconClass) {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
 	}
-
+	// Make same incase need modify individually later
 	function genMalwareCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc, iconClass) {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
 	}
-
+	// Make same incase need modify individually later
+	function genReviewCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc, iconClass) {
+		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyCtx(title, descId, desc, iconClass, colorStyle));
+	}
 
 	function genNoImageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc) {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genSmallBodyNoImgCtx(title, descId, desc, colorStyle));	
@@ -697,6 +713,7 @@ $(function () {
 		"fas fa-play",
 		"info"
 	);
+
 	var triageResultsMetaNameCtx = 
 			genNoImageCardCtx("triage-result-meta-name", // card ID
 					"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", //gridClass
@@ -766,7 +783,7 @@ $(function () {
 			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
 			"border-bottom-danger", 
 			"", 
-			"Number of Malign Files", 
+			"Number of Malign/suspicious Files", 
 			"triage-malign-files-info-label", 
 			"3 out of 200 are flagged", 
 			"fa-3x fas fa-viruses");
@@ -782,17 +799,16 @@ $(function () {
 			"fa-3x fas fa-viruses");
 
 
-	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-pstree-table-div", 
+	var triageResultPstreeResultsCtx = genTableWithDivCtx("triage-pstree-table-div", 
 		"triage-pstree-inner-div", 
-		"triage-pstree-table", 
-		'Process Tree results', 
+		"triage-pstree-table",
+		'Process Tree results',
 		["Name", "PID", "PPID", "Threads", "Handles", "Time"],
 		[
-			["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
-			// ["IP Address", "Org" "Security.evtx", "15", "Your mother v cute"],
-			// ["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
+			["Name", "PID", "PPID", "Threads", "Handles", "Time"]
 		]);
 
+	console.log(HTML(triageResultPstreeResultsCtx));
 
 
 	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-whois-table-div", 
@@ -852,12 +868,13 @@ $(function () {
 
 					triageResultProcessCountCtx,
 					triageResultDomainResultsCtx,
-
+					
 					triageResultMalignFilesCtx,
 					triageResultMalignEventsCtx,
 
-					triageResultWhoIsResultsCtx,
-					
+					//Tables
+					triageResultPstreeResultsCtx,			
+					triageResultWhoIsResultsCtx,					
 					triageResultsExesTableCtx,
 					triageResultsDllTableCtx,
 					triageResultEvtTableCtx
@@ -866,6 +883,8 @@ $(function () {
 		]
 
 	];
+
+
 
 
 	var malwareFunctionsCtx = genPageIntroCardCtx("Functions", "fas fa-atom", [
@@ -877,6 +896,9 @@ $(function () {
 		"row"
 	);
 
+
+
+
 	var malwareRequiredInputCtx = genFileSelectCtx("malware-card-select-file",
 		"Choose your PE file to analyse",
 		"malware-input-folder",
@@ -884,22 +906,6 @@ $(function () {
 		"FILE",
 		"malware-btn-run",
 		"Execute analysis",
-		"fas fa-play",
-		"info"
-	);
-
-
-	var evtInstructionsCtx = genPageIntroCardCtx("Information", "fas fa-info-circle", [
-		genParaCtx("Select desired windows log to analyse. Some examples of windows logs are Security.evtx, System.evtx, etc.", "", "")
-	]);
-
-	var evtRequiredInputCtx = genFileSelectCtx("evt-card-select-file",
-		"Choose your Windows Log to analyse",
-		"evt-input-folder",
-		"Choose file...",
-		"FILE",
-		"evt-btn-run",
-		"Execute correlation",
 		"fas fa-play",
 		"info"
 	);
@@ -922,9 +928,19 @@ $(function () {
 			
 		]);
 
+	var triageResultsMetaNameCtx = 
+			genNoImageCardCtx("triage-result-meta-name", // card ID
+					"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", //gridClass
+					"py-0", //colorStyle
+					"border-bottom-info", //hoverStyle
+					"Name", //title
+					"triage-result-meta-name-label", //descId
+					"ICTNYP-NB17");
+			
+
 	var malwareResultHeuristicsScoreCtx = 
 		genMalwareCardCtx("malware-single-heuristics-info", // card ID
-			"col-xl-12 col-lg-12 col-md-6 malware-results-card mt-3", 
+			"col-xl-6 col-lg-6 col-md-6 malware-results-card mt-3", 
 			"border-left-primary", 
 			"", 
 			"Heuristics Score", 
@@ -932,20 +948,9 @@ $(function () {
 			"2 / 23", 
 			"fa-3x fas fa-viruses");
 
-
-	var malwareResultEmberPredictionScoreCtx = 
-		genMalwareCardCtx("malware-single-ember-score", 
-			"col-xl-12 col-lg-12 col-md-6 malware-results-card", 
-			"border-left-primary", 
-			"", 
-			"Ember Prediction", 
-			"malware-single-ember-score-label", 
-			"0.154 / 1", 
-			"fa-3x fas fa-fire"); 
-
 	var malwareResultMLPredictionScoreCtx =
 		genMalwareCardCtx("malware-single-ml-score", 
-			"col-xl-12 col-lg-12 col-md-6 malware-results-card", 
+			"col-xl-6 col-lg-6 col-md-6 malware-results-card mt-3", 
 			"border-left-primary", 
 			"", 
 			"ML Prediction", 
@@ -953,14 +958,22 @@ $(function () {
 			"60 %", 
 			"fa-3x fas fa-robot"); 
 
+	var malwareResultImportsTableCtx = genTableWithDivCtx("malware-single-Imports-table-div", 
+		"malware-single-Imports-inner-div", 
+		"malware-single-Imports-table", 
+		'Imports Analysis', 
+		["API", "Functions"],
+		[
+			["API", "Functions"]
+		]);
+
 	var malwareResultEntropyTableCtx = genTableWithDivCtx("malware-single-entropy-table-div", 
 		"malware-single-entropy-inner-div", 
 		"malware-single-entropy-table", 
 		'PE Section Details', 
 		["Name", "Entropy", "VirtualAddress", "Misc_VirtualSize", "SizeOfRawData", "Characteristics"],
 		[
-			["Name1", "Entropy1", "VirtualAddress1", "Misc_VirtualSize1", "SizeOfRawData1", "Characteristics1"],
-			["Name2", "Entropy2", "VirtualAddress2", "Misc_VirtualSize2", "SizeOfRawData2", "Characteristics2"]
+			["Name", "Entropy", "VirtualAddress", "Misc_VirtualSize", "SizeOfRawData", "Characteristics"]
 		]);
 
 	var malwareResultEntropyDetailsCtx = genInfoCardCtx('malware-single-section-details', 
@@ -976,14 +989,15 @@ $(function () {
 			genCardHeaderCtx("Results",
 			"m-0 font-weight-bold text-secondary", 
 			"ml-2 fa-1x fas fas fa-chart-bar"),
-
+			['div', {class: 'card-body row'},
 			// ['div', {class: 'card-header py-3'}]
-			malwareResultHeuristicsScoreCtx,
-			malwareResultEmberPredictionScoreCtx,
-			malwareResultMLPredictionScoreCtx,
-			malwareResultEntropyTableCtx
+				malwareResultHeuristicsScoreCtx,
+				
+				malwareResultMLPredictionScoreCtx,
+				malwareResultImportsTableCtx,
+				malwareResultEntropyTableCtx
 
-
+			]
 
 		]
 
@@ -996,10 +1010,10 @@ $(function () {
 	]);
 
 
-	var reviewRequiredCaseFolderCtx = genFileSelectCtx("review-card-select-folder",
-		"Choose your case folder",
-		"review-input-folder",
-		"Choose folder...",
+	var reviewRequiredCaseFolderCtx = genFileSelectCtx("review-card-select-file",
+		"Choose your case file",
+		"review-input-file",
+		"Choose file...",
 		"FOLDER",
 		"review-btn-dump",
 		"Review case",
@@ -1013,7 +1027,216 @@ $(function () {
 	// genHomeCardCtx("home-volatility-card", "col-xl-6 col-md-6 col-sm-12 col-12", "primary", "home-card", "Volatility", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
 
 
-	var evtTempTableCtx = genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results', ['h1','h2','h3', 'h4'], [['R1','R2','R3', 'R4'], ['r5','r6','r7', 'r8']]);
+	var evtInstructionsCtx = genPageIntroCardCtx("Information", "fas fa-info-circle", [
+		genParaCtx("Browse to where your security.evtx file is and click execute.", "", "")
+	]);
+
+	var evtRequiredInputCtx = genFileSelectCtx("evt-card-select-file",
+		"Choose your Windows Log to analyse",
+		"evt-input-file",
+		"Choose file...",
+		"FILE",
+		"evt-btn-run",
+		"Execute correlation",
+		"fas fa-play",
+		"info"
+	);
+
+	var evtResultEvtTableCtx = genTableWithDivCtx("evt-evt-table-div", 
+		"evt-evt-inner-div", 
+		"evt-evt-table", 
+		'Event Logs Analysis', 
+		['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress'],
+		[
+			['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress']
+		]);
+
+	var evtResultsPanelCtx = ['div', {id:'res-evt-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
+		['div', {class: 'card'},
+			genCardHeaderCtx("Results",
+				"m-0 font-weight-bold text-secondary", 
+				"ml-2 fa-1x fas fas fa-chart-bar"),
+				['div', {class: 'card-body row'},
+					evtResultEvtTableCtx
+				]	
+
+		]
+
+	];
+
+	var reviewResultsMetaNameCtx = 
+			genNoImageCardCtx("review-result-meta-name", // card ID
+					"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", //gridClass
+					"py-0", //colorStyle
+					"border-bottom-info", //hoverStyle
+					"Name", //title
+					"review-result-meta-name-label", //descId
+					"ICTNYP-NB17");
+
+	// genNoImageCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, descId, desc) {
+	var reviewResultsMetaImageDateCtx = 
+		genNoImageCardCtx("review-result-meta-datetime", // card ID
+			"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", //gridClass
+			"py-0", //colorStyle
+			"border-bottom-info", //hoverStyle
+			"Image DateTime", //title
+			"review-result-meta-datetime-label", //descId
+			"2020-10-27 12:49:25 UTC+0000");
+
+	var reviewResultsMetaModelCtx = 
+		genNoImageCardCtx("review-result-meta-model", // card ID
+				"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", //gridClass
+				"py-0", //colorStyle
+				"border-bottom-info", //hoverStyle
+				"Model", //title
+				"review-result-meta-model-label", //descId
+				"Latitude 5590");
+
+	var reviewResultsMetaManufacturerCtx = 
+			genNoImageCardCtx("review-result-meta-manufacturer", // card ID
+					"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", //gridClass
+					"py-0", //colorStyle
+					"border-bottom-info", //hoverStyle
+					"Manufacturer", //title
+					"review-result-meta-manufacturer-label", //descId
+					"Dell Inc.");
+
+
+
+	// Name ImgDateTime Model Manufacturer 
+
+
+	// Rewview onwards from here
+	// 
+	// 
+	// 
+
+	var reviewResultProcessCountCtx = 
+		genReviewCardCtx("review-result-process-info", // card ID
+			"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", 
+			"border-bottom-primary", 
+			"", 
+			"Number of Processes", 
+			"review-process-info-label", 
+			"101 "+ "Processes running", 
+			"fa-3x fas fa-microchip");
+
+	var reviewResultDomainResultsCtx = 
+		genReviewCardCtx("review-result-domain-info", // card ID
+			"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", 
+			"border-bottom-primary", 
+			"", 
+			"Domains/IPS Found", 
+			"review-domain-info-label", 
+			"3 "+ "IP Addresses Found", 
+			"fa-3x fas fa-server");
+
+	var reviewResultMalignFilesCtx = 
+		genReviewCardCtx("review-result-malign-files-info", // card ID
+			"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", 
+			"border-bottom-danger", 
+			"", 
+			"Number of Malign Files", 
+			"review-malign-files-info-label", 
+			"3 out of 200 are flagged", 
+			"fa-3x fas fa-viruses");
+
+	var reviewResultMalignEventsCtx = 
+		genReviewCardCtx("review-result-malign-events-info", // card ID
+			"col-xl-6 col-lg-6 col-md-6 review-results-card mt-3", 
+			"border-bottom-danger", 
+			"", 
+			"Flagged Events", 
+			"review-malign-events-info-label", 
+			"2 suspicious events found", 
+			"fa-3x fas fa-viruses");
+
+
+	var reviewResultPstreeResultsCtx = genTableWithDivCtx("review-pstree-table-div", 
+		"review-pstree-inner-div", 
+		"review-pstree-table",
+		'Process Tree results',
+		["Name", "PID", "PPID", "Threads", "Handles", "Time"],
+		[
+			["Name", "PID", "PPID", "Threads", "Handles", "Time"]
+		]);
+
+	console.log(HTML(reviewResultPstreeResultsCtx));
+
+
+	var reviewResultWhoIsResultsCtx = genTableWithDivCtx("review-whois-table-div", 
+		"review-whois-inner-div", 
+		"review-whois-table", 
+		'WhoIsDomain Lookup for IP Addresses', 
+		["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"],
+		[
+			["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"]
+			// ["IP Address", "Org" "Security.evtx", "15", "Your mother v cute"],
+			// ["Sunday 2359", "Security.evtx", "15", "Jerome so cute wow hehe"],
+		]);
+
+
+
+	var reviewResultEvtTableCtx = genTableWithDivCtx("review-evt-table-div", 
+		"review-evt-inner-div", 
+		"review-evt-table", 
+		'Event Logs Analysis', 
+		['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress'],
+		[
+			['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress']
+		]);
+
+	var reviewResultsExesTableCtx = genTableWithDivCtx("review-exes-table-div", 
+		"review-exes-inner-div", 
+		"review-exes-table", 
+		'Executables', 
+		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
+		[
+			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "73.5%"],
+			["JeromeNoodes1", "SHA1", "HashYourDaddy2", "30/60", "1/20", "73.5%"]
+		]);
+
+	var reviewResultsDllTableCtx = genTableWithDivCtx("review-dlls-table-div", 
+		"review-dlls-inner-div", 
+		"review-dlls-table", 
+		'Dynamic Linking Libraries (DLLs)', 
+		["File Name", "MD5", "SHA1", "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
+		[
+			["JeromeNoodes", "SHA1", "HashYourDaddy", "30/60", "1/20", "73.5%"],
+			["JeromeNoodes1","SHA1", "hashYourDaddy2", "30/60", "1/20", "73.5%"]
+		]);
+
+	var reviewResultsPanelCtx = ['div', {id:'res-review-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
+		['div', {class: 'card'},
+			genCardHeaderCtx("Results",
+				"m-0 font-weight-bold text-secondary", 
+				"ml-2 fa-1x fas fas fa-chart-bar"),
+				['div', {class: 'card-body row'},
+					reviewResultsMetaNameCtx,
+					reviewResultsMetaImageDateCtx,
+					reviewResultsMetaModelCtx,
+					reviewResultsMetaManufacturerCtx,
+
+					reviewResultProcessCountCtx,
+					reviewResultDomainResultsCtx,
+					
+					reviewResultMalignFilesCtx,
+					reviewResultMalignEventsCtx,
+
+					//Tables
+					reviewResultPstreeResultsCtx,			
+					reviewResultWhoIsResultsCtx,					
+					reviewResultsExesTableCtx,
+					reviewResultsDllTableCtx,
+					reviewResultEvtTableCtx
+				]	
+
+		]
+
+	];
+
+
+	// var evtTempTableCtx = genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results', ['h1','h2','h3', 'h4'], [['R1','R2','R3', 'R4'], ['r5','r6','r7', 'r8']]);
 
 
 
@@ -1078,21 +1301,35 @@ $(function () {
 	// 3
 	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx, malwareResultsPanelCtx]));
 
-	$('#row-event').html(HTML([evtInstructionsCtx, evtRequiredInputCtx,evtTempTableCtx]));
+	$('#row-event').html(HTML([evtInstructionsCtx, evtRequiredInputCtx, evtResultsPanelCtx]));
 
-	$('#row-review').html(HTML([reviewInstructionsCtx, reviewRequiredCaseFolderCtx]));
+	$('#row-review').html(HTML([reviewInstructionsCtx, reviewRequiredCaseFolderCtx, reviewResultsPanelCtx]));
 
-	$("#row-technologies").html(HTML([techInfoBashBunnyCtx, techInfoPythonCtx, techInfoVolatilityCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx, techInfoTensorFlowCtx, ]));
+	$("#row-technologies").html(HTML([techInfoBashBunnyCtx, techInfoPythonCtx, techInfoTensorFlowCtx, techInfoVolatilityCtx, techInfoSeleniumCtx, techInfoJqueryCtx, techInfoBootstrapCtx, techInfoPowershellCtx]));
 
 	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
 
-	// $('.results-table').DataTable({
-	// 	"pageLength": 5
-	// 	// pageLength : 5
-	// });
 
-	
+
+	// All Reesults tables
+	// 
+	// 
+	// 
+	// 
+	$("#triage-pstree-table").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,-1],
+		'columns' : [
+			{"data" : "Name"},
+			{"data" : "PID"},
+			{"data" : "PPID"},
+			{"data" : "Threads"},
+			{"data" : "Handles"},
+			{"data" : "Time"}
+		]
+	});
+
 	$("#triage-whois-table").DataTable({
 		'pageLength': 5,
 		'lengthMenu': [5,10,15,20],
@@ -1146,6 +1383,106 @@ $(function () {
 			{'data' : 'IPAddress'}
 		]
 	});
+
+	// Malware datatables
+	// 
+	// 
+	// 
+
+	$('#malware-single-Imports-table').DataTable({
+		'pageLength':5,
+		'columns': [
+			{'data' : 'API'},
+			{'data' : 'Functions'}
+		]
+	});
+
+	$('#malware-single-entropy-table').DataTable({
+		'pageLength':5,
+		'columns': [
+			{'data': "Name"},
+			{'data': "Entropy"},
+			{'data': "VirtualAddress"},
+			{'data': "Misc_VirtualSize"},
+			{'data': "SizeOfRawData"},
+			{'data': "Characteristics"}
+
+		]
+	});
+
+
+	// Review datatables
+	// 
+	// 
+	// 
+	$("#review-pstree-table").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,-1],
+		'columns' : [
+			{"data" : "Name"},
+			{"data" : "PID"},
+			{"data" : "PPID"},
+			{"data" : "Threads"},
+			{"data" : "Handles"},
+			{"data" : "Time"}
+		]
+	});
+
+	$("#review-whois-table").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,10,15,20],
+		'columns' : [
+			{'data': 'IP'},
+			{'data': 'Organisation'},
+			{'data': 'HostName'},
+			{'data': 'ISP'},
+			{'data': 'Continent'},
+			{'data': 'Country'},
+			{'data': 'State/Region'},
+			{'data': 'City'}
+		]
+	});
+
+	$("#review-exes-table").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,10,15,20],
+		'columns': [
+			{'data':'File Name'},
+			{'data':'MD5'},
+			{'data':'SHA1'},
+			{'data':"VirusTotal"},
+			{'data':"Heuristics Indicators"},
+			{'data':"Tensorflow Model"}
+		]
+	});
+
+	$("#review-dlls-table").DataTable({
+		'pageLength': 5,
+		'lengthMenu': [5,10,15,20],
+		'columns': [
+			{'data':'File Name'},
+			{'data':'MD5'},
+			{'data':'SHA1'},
+			{'data':"VirusTotal"},
+			{'data':"Heuristics Indicators"},
+			{'data':"Tensorflow Model"}
+		]
+	});
+
+	$('#review-evt-table').DataTable({
+		'pageLength':5,
+		'columns': [
+			{'data' : 'RuleTriggered'},
+			{'data' : 'RuleName'},
+			{'data' : 'EventID'},
+			{'data' : 'Timestamp'},
+			{'data' : 'EventRecordID'},
+			{'data' : 'Description'},
+			{'data' : 'IPAddress'}
+		]
+	});
+
+
 
 	$('.nav-item').click(function() {
 
@@ -1224,9 +1561,6 @@ $(function () {
 
 	
 
-
-	
-
 	window.triageFinishedAnalysis = function() {
 		triageFields.caseFolderPath = ""; //Reset triageFields inputs
 
@@ -1246,70 +1580,121 @@ $(function () {
 			tbl.draw();
 		}
 		
-
 	}
 
 	updateResultLabels = function(labelId, text) {
 		$('#'+labelId).html(text);
 	}
 
+
 	$('#triage-dump-run').click(function() {
 		triageFields.caseFolderPath = $('#triage-dump-folder-label').html();
 
 		console.log(triageFields.caseFolderPath);
-		// triageFields = imageFilePath: 'c:\\users\\user\\desktop\\test.txt'}
 		needsUpdate.triageExecuteAnalysis = true;
-
-
-		// triage-result-meta-name
-		// triage-result-meta-datetime-label
-		// triage-result-meta-model-label
-		// triage-domain-info-label
-		// triage-malign-files-info-label
-		// triage-malign-events-info-label
-		// 
-		// triage-whois-table
-		// triage-exes-table
-		// triage-dlls-table		
+		
 	});
 
-	window.execTriageDumpRun = function () {
+	
+	window.exeResultsBatchUpdate = function (t) {
 
+		updateResultLabels(t+"-result-meta-name-label", modesResultsData[t]["ImgName"]);
+		updateResultLabels(t+"-result-meta-datetime-label", modesResultsData[t]["ImgDateTime"]);
+		updateResultLabels(t+"-result-meta-model-label", modesResultsData[t]["ImgModel"]);
+		updateResultLabels(t+"-result-meta-manufacturer-label", modesResultsData[t]["ImgManufacturer"]);
+		updateResultLabels(t+"-process-info-label", modesResultsData[t]["ProcessesCount"]);
+		updateResultLabels(t+"-domain-info-label", modesResultsData[t]["DomainsCount"]);
+		updateResultLabels(t+"-malign-files-info-label", modesResultsData[t]["MalignFileCount"]);
+		updateResultLabels(t+"-malign-events-info-label", modesResultsData[t]["FlaggedEvents"]);
 
-		updateResultLabels("triage-result-meta-name", "ImgName");
-		updateResultLabels("triage-result-meta-datetime-label", "ImgDateTime");
-		updateResultLabels("triage-result-meta-model-label", "ImgModel");
-		updateResultLabels("triage-result-meta-manufacturer-label", "ImgManufacturer");
-		updateResultLabels("triage-process-info-label", "ProcessesCount");
-		updateResultLabels("triage-domain-info-label", "DomainsCount");
-		updateResultLabels("triage-malign-files-info-label", "MalignFileCount");
-		updateResultLabels("triage-malign-events-info-label", "FlaggedEvents");
+		updateTableData(t+"-pstree-table", 
+			["Name", "PID", "PPID", "Threads", "Handles", "Time"],
+			modesResultsData[t]['PstreeResult']);
 
-		// $('#triage-exes-table').DataTable().clear().draw();
-
-		updateTableData("triage-whois-table", 
+		updateTableData(t+"-whois-table", 
 			["IP", "Organisation", "HostName", "ISP", "Continent", "Country", "State/Region", "City"],
-			modesResultsData['triage']['WhoIsDomainDetails']);
+			modesResultsData[t]['WhoIsDomainDetails']);
 
-		updateTableData("triage-exes-table", 
+		updateTableData(t+"-exes-table", 
 			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
-			modesResultsData['triage']['FilesAnalysisDetails']);
+			modesResultsData[t]['FilesAnalysisDetails']);
 
-		updateTableData("triage-dlls-table", 
+		updateTableData(t+"-dlls-table", 
 			['File Name', 'MD5', 'SHA1', "VirusTotal", "Heuristics Indicators", "Tensorflow Model"],
-			modesResultsData['triage']['DLLAnalysisDetails']);
+			modesResultsData[t]['DLLAnalysisDetails']);
 		
-		updateTableData("triage-evt-table", 
+		updateTableData(t+"-evt-table", 
 			['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress'],
-			modesResultsData['triage']['EventLogAnalysisDetails']);
+			modesResultsData[t]['EventLogAnalysisDetails']);
 
 
 
-		$('#res-triage-panel').show(100);
+		$('#res-'+t+'-panel').show(100);
 	};
 
 
-	
+	window.execTriageDumpRun = function() {
+		window.exeResultsBatchUpdate('triage');
+	}
+
+
+	window.evtLogInputted = function() {
+		$('#evt-input-file-label').html(inputFilePaths.evtLogPath);		
+		inputFilePaths.evtLogPath = '';
+	}
+
+	$('#evt-input-file').click(function(){
+		needsUpdate.evtLogInput = true;
+	});
+
+
+	window.evtFinishedAnalysis = function () {
+		evtFields.logPath = "";
+	}
+
+	window.execEvtAnalysisResults = function () {
+		updateTableData("evt-evt-table", 
+			['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress'],
+			modesResultsData['evt']['EventLogAnalysisSolo']);
+
+		$('#res-evt-panel').show(100);
+
+	}
+
+
+	$('#evt-btn-run').click(function(){
+		evtFields.logPath = $('#evt-input-file-label').html();
+
+		console.log(evtFields.logPath);
+		// triageFields = imageFilePath: 'c:\\users\\user\\desktop\\test.txt'}
+		needsUpdate.evtExecuteAnalysis = true;
+	});
+
+
+	window.reviewCaseInputted = function() {
+		$('#review-input-file-label').html(inputFilePaths.reviewCasePath);		
+		inputFilePaths.reviewCasePath = '';
+	}
+
+	$('#review-input-file').click(function() {
+		needsUpdate.reviewResultInput = true;
+	});
+
+
+	window.execReviewDumpRun = function() {
+		window.exeResultsBatchUpdate('review');
+	}
+
+	window.reviewFinishedAnalysis = function() {
+		reviewFields.caseFilePath = ""; //Reset triageFields inputs
+	}
+
+
+
+	$('#review-btn-dump').click(function() {
+		reviewFields.caseFilePath = $('#review-input-file-label').html();
+		needsUpdate.reviewExecuteReview = true;
+	});
 
 
 	var startUp = function() {
@@ -1317,7 +1702,7 @@ $(function () {
 		$('.content-row').hide();
 		$('#row-home').show();
 
-		$('.results-container').hide();
+		// $('.results-container').hide();
 	}
 
 	startUp();

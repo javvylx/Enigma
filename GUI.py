@@ -205,9 +205,11 @@ def tk_ask_input(mode="file"):
 	root.focus_force()
 
 	if mode == "file":
-		ret = filedialog.askopenfilenames(parent=root) # Or some other dialog
+		ret = filedialog.askopenfilename(parent=root) # Or some other dialog
 	elif mode == "folder":
 		ret = str(filedialog.askdirectory(parent=root)) # Or some other dialog
+	elif mode == 'files':
+		ret = filedialog.askopenfilenames(parent=root) # Or some other dialog
 
 	root.destroy()
 	return ret
@@ -251,18 +253,19 @@ def launch():
 				if needs_update is None:
 					break
 
-
-
-
-
 				if needs_update['volRamDumpInput']:
 					# Just to ask for ram dump file 
 					cout << "Ram Dump Mode\n"
-					ram_image_file_path = tk_ask_input("file")
+					try:
+						ram_image_file_path = tk_ask_input("file")
+					except:
+						ram_image_file_path = "Error"
+
+
 					browser.execute_script("")
 
 					cout << "Update Triage Case Folder Path\n"
-					if ram_image_file_path != "":
+					if ram_image_file_path != "" and ram_image_file_path != "Error":
 						browser.execute_script("window.inputFilePaths['ramImage'] = \"%s\"; window.volRamDumpInputed();" %ram_image_file_path)
 
 
@@ -308,90 +311,83 @@ def launch():
 
 					browser.execute_script("showLoader('Conducting Triage Analysis...');")
 					cout << "Case folder : " << case_folder
+
 					results = control.start_triage_analysis(case_folder)
 
 					cout << "Received controller results: " << results << "\n"
 
 
+					browser.execute_script("modesResultsData['triage'] = JSON.parse('%s'); window.execTriageDumpRun(); window.triageFinishedAnalysis(); hideLoader(); showSuccess('Finished Triage Analysis!');"  %json.dumps(results))
+					# browser.execute_script("window.execTriageDumpRun(); window.triageFinishedAnalysis(); hideLoader(); showSuccess('Finished Triage Analysis!');")
 
-					browser.execute_script("modesResultsData['triage'] = JSON.parse('%s'); window.execTriageDumpRun(); window.triageFinishedAnalysis(); hideLoader(); showSuccess('Finished Triage Analysis!');"  % json.dumps(results))
-					# browser.execute_async_script("")
+
+
 					cout << "Done\n"
 					
 					# M.start_triage_analysis("C:\\Users\\User\\Desktop\\2202-WELTPEIOC-Suite\\ram_output")
 
 
 
+				if needs_update['evtLogInput']:
+					cout << "EVT Single Get Log Path\n"
+					try:
+						log_path = tk_ask_input('file')
+					except:
+						log_path = "Error"
 
-				# Procedure for analyzing graphs
-				# if needs_update['graph']:
-				# 	cout << "graph Mode" << "\n"
-				# 	mode = browser.execute_script("return graphs['mode'];")
-				# 	csv_text = browser.execute_script("return updates['graph_csv'];")
-				# 	saveDataStringIntoPath(csv_text, 'tmp/tmp_graph_csv.csv')
+					cout << "log_path: " << log_path
+					if log_path != "" and log_path != "error":
+						browser.execute_script("window.inputFilePaths['evtLogPath'] = \"%s\"; window.evtLogInputted();" %log_path)
 
-				# 	browser.execute_script("resetGraphAnalysisImg();")
-				# 	browser.execute_script("showLoader('Generating graph...');")
+				if needs_update['evtExecuteAnalysis']:
+					cout << "EVT Single Execute Analysis\n"
+					log_path = browser.execute_script("return evtFields['logPath'];")
+					file_name = log_path.split("\\")[-1]
+					cout << file_name
+					if log_path != "" and log_path != "Choose file...":
+						browser.execute_script("showLoader('Analyzing %s log file...');" %file_name)
 
-				# 	res_d = {}
-				# 	# Call different file depending on mode
-				# 	if mode == 'timeseries':
-				# 		res_d = ast.literal_eval(subprocess.check_output(["python", "timeseries.py", 'tmp/tmp_graph_csv.csv']))
-				# 		if (int(res_d['no']) == 1):
-				# 			browser.execute_script("hideLoader('');")
-				# 			browser.execute_script("showSuccess('Successfully generated graph")
-				# 			browser.execute_script("setGraphAnalysisImg('%s');" %(res_d['file_path']))
-				# 	else: 
-				# 		cout << "not timeseries" << "\n"
+						results = control.start_evt_analyze_one_log(log_path)
 
 
-				# 	browser.execute_script("hideLoader('');")
+						browser.execute_script("modesResultsData['evt'] = JSON.parse('%s'); window.execEvtAnalysisResults(); window.evtFinishedAnalysis(); hideLoader(); showSuccess('Finished analysing %s');" %json.dumps(results) %file_name)
 
-				# if needs_update['plot_map']:	
-				# 	cout << "Plotting map" << "\n"
-
-				# 	start_location = browser.execute_script("return mapLocation['from'];")
-				# 	end_location = browser.execute_script("return mapLocation['to'];")
-				# 	travel_method = browser.execute_script("return method['type'];")
-				# 	algorithm_plot = browser.execute_script("return algorithm['algo'];")
-
-				# 	cout << start_location << " " << end_location << " " << travel_method <<  " " << algorithm_plot << "\n"
-					
-				# 	# Start loc and end loc can be in string
-				# 	if start_location != end_location:
-				# 		browser.execute_script("showLoader('Generating path...');")
-
-				# 		# Find path will return a list of each run time algorithm
-				# 		algoruntime = routeObj.find_path(int(start_location),int(end_location),travel_method)
-
-				# 		if(algoruntime == -1):
-				# 			print("Graph does not have this node")
-				# 		elif(algoruntime == -2):
-				# 			print("There is no Path from start point to end point.")
-				# 		else:
-
-				# 			if algorithm_plot == "Dijk": 
-				# 				browser.execute_script("document.getElementById('mainframe').src = 'tmp/Dijkstra.html';")
-				# 			elif algorithm_plot == "A":
-				# 				browser.execute_script("document.getElementById('mainframe').src = 'tmp/A_Star.html';")
-				# 			elif algorithm_plot == "Fast-Belman":
-				# 				browser.execute_script("document.getElementById('mainframe').src = 'tmp/Fast_Bellmon.html';")
 						
-				# 			browser.execute_script("hideLoader('');")
-				# 			# browser.execute_script("document.getElementById('content-displaygraph').style.display = 'block';")
-				# 			browser.execute_script("toastr.success('Shortest path shown', 'Graph Updated');")
-				# 			# browser.execute_script("")
-				# 			browser.execute_script("document.getElementById('dijk-frame').src = 'tmp/Dijkstra.html';")
-				# 			browser.execute_script("document.getElementById('a-star-frame').src = 'tmp/A_Star.html';")
-				# 			browser.execute_script("document.getElementById('fast-bellmon-frame').src = 'tmp/Fast_Bellmon.html';")
-							
-				# 			browser.execute_script("runtime['dijkstra'] = %s;" %algoruntime[0] )
-				# 			browser.execute_script("runtime['astar'] = %s;" %algoruntime[1])
-				# 			browser.execute_script("runtime['fastBellman'] = %s;" %algoruntime[2])
 
-				# 			cout << "Completed" << "\n"
-				# 	else:
-				# 		cout << "Same start and end" << "\n"
+					
+				if needs_update['reviewResultInput']:	
+					cout << "Review Past Triage Result ask for Output file (JSON)\n"
+					try:
+						case_file_path = tk_ask_input('file')
+					except:
+						case_file_path = "Error"
+					if case_file_path != "" and case_file_path != "Error":
+						browser.execute_script("window.inputFilePaths['reviewCasePath'] = \"%s\"; window.reviewCaseInputted();" %case_file_path)
+
+
+				if needs_update['reviewExecuteReview']:	
+					# pass
+
+					cout << "Review Results Mode\n"
+					case_file_path = browser.execute_script("return reviewFields['caseFilePath'];")
+
+					browser.execute_script("showLoader('Conducting Reviewing past triage case...');")
+					cout << "case_file_path : " << case_file_path
+
+					results = control.start_review_triage(case_file_path)
+
+					cout << "Received controller results: " << results << "\n"
+
+					browser.execute_script("modesResultsData['review'] = JSON.parse('%s'); window.execReviewDumpRun(); window.reviewFinishedAnalysis(); hideLoader(); showSuccess('Finished parsing past triage results!');"  %json.dumps(results))
+
+					# browser.execute_script("window.execTriageDumpRun(); window.triageFinishedAnalysis(); hideLoader(); showSuccess('Finished Triage Analysis!');")
+
+					cout << "Done\n"
+
+
+
+
+
 
 					# Launch pythons subprocess to generate new folium html element? 
 			except Exception as e:

@@ -14,7 +14,7 @@ import pefile
 # 	sys.exit()
 
 # try:
-from .wincert import wintrust
+from wincert import wintrust
 # import wincert.wintrust as wintrust
 # except ImportError:
 # 	# If fail try pip install pythonforwindows
@@ -371,9 +371,11 @@ class HeuristicsAnalyser:
 			"OPP": [0x110, 0x118]
 	}
 
-	ENC_PATH = os.getcwd()+"\\pestaticanalyzer\\protector_section_names.txt"
-	PKD_PATH = os.getcwd()+"\\pestaticanalyzer\\packer_section_names.txt"
+	# ENC_PATH = os.getcwd()+"\\pestaticanalyzer\\protector_section_names.txt"
+	# PKD_PATH = os.getcwd()+"\\pestaticanalyzer\\packer_section_names.txt"
 
+	ENC_PATH = os.getcwd()+"\\protector_section_names.txt"
+	PKD_PATH = os.getcwd()+"\\packer_section_names.txt"
 
 	def __init__(self, pe_object: PEDetails):
 		self.score = 0
@@ -585,7 +587,10 @@ class HeuristicsAnalyser:
 
 class ImportsAnalyser:
 	
-	RULES_PATH = os.getcwd() + "\\pestaticanalyzer\\import_rules.csv"
+	# RULES_PATH = os.getcwd() + "\\pestaticanalyzer\\import_rules.csv"
+	RULES_PATH = os.getcwd() + "\\import_rules.csv"
+
+
 
 	def __init__(self):
 
@@ -622,6 +627,32 @@ class ImportsAnalyser:
 				return None, None, None
 		return None, None, None
 
+	# def parse_imports_for_table(self, pe_object: PEDetails, min_severity=1):
+	# 	ret_data = []
+	# 	if pe_object:
+	# 		try:
+	# 			print(self.rules.items())
+
+	# 			pe_imports = pe_object.get_imported_details(decode=True)
+	# 			# found_apis = defaultdict(list)
+	# 			for dll_name, func_names in pe_imports.items():
+	# 				for api, details in self.rules.items():
+	# 					if int(details[0]) >= min_severity:
+	# 						f_dict = defaultdict(str)
+	# 						for func in func_names:
+	# 							if re.match(details[1], func):
+									
+	# 								f_dict['API'] = api
+	# 								f_dict['Severeness'] = details[0]
+	# 								f_dict['Functions'] += func
+	# 							ret_data.append(f_dict)
+
+									
+	# 			return ret_data
+	# 		except AttributeError:
+	# 			return None
+		
+
 	def get_flaged_functions(self, pe_object: PEDetails, min_severity=2):
 		if pe_object:
 			try:
@@ -637,10 +668,13 @@ class ImportsAnalyser:
 class ResultsRetriever:
 
 	SECTION_ATTRS =  ["Name", "VirtualAddress", "Misc_VirtualSize", "SizeOfRawData", "Characteristics"]
-	def __init__(self, pe_object):
-		self.pe_object = pe_object
-		self.ent = EntropyAnalysis(pe_object)
-		self.heu = HeuristicsAnalyser(pe_object)
+	def __init__(self, file_path):
+
+		self.pe_object = PEDetails(file_path)
+		self.ent = EntropyAnalysis(self.pe_object)
+		self.heu = HeuristicsAnalyser(self.pe_object)
+
+		self.imp = ImportsAnalyser()
 
 
 	def _format(self,item):
@@ -656,6 +690,8 @@ class ResultsRetriever:
 	def get_formated_section_details(self):
 		# For outputting to GUI table, 
 		# Name, Entropy, VirtAddr,VirtSize,RawSize, Characteristics
+		# 
+		
 		details = self.pe_object.get_sections_details()
 		entropies = self.ent.get_all_entropy_details()
 
@@ -666,11 +702,8 @@ class ResultsRetriever:
 			for e in entropies:
 				if item['Name'] == e[0]:
 					item['Entropy'] = e[1]
-					pass
+					break
 
-					
-		# print(ret_det)
-		# print(entropies)
 		return ret_det
 		
 		# for x,y in ret_det['Rows']:
@@ -679,7 +712,9 @@ class ResultsRetriever:
 		# print(ret_det)
 		# print(entropies)
 
-
+	def get_imported_results(self):
+		imp_apis, imp_score, sus_count = self.imp.parse_imports(self.pe_object, 1)
+		return [{'API': x, 'Functions': ', '.join(z for z in y) } for x,y in imp_apis.items()]
 
 class PEAnalyser:
 
@@ -691,15 +726,11 @@ class PEAnalyser:
 		# self.pe_object = pe_object
 		self.imp_analyzer = ImportsAnalyser()
 
-
-
 	def get_heuristics_dict(self, pe_file_path):
 
 		pe_obj = PEDetails(pe_file_path)
 		entropy_obj = EntropyAnalysis(pe_obj)
 		heuristics_obj = HeuristicsAnalyser(pe_obj)
-
-
 		imp_apis, imp_score, sus_count = self.imp_analyzer.parse_imports(pe_obj)
 
 		# Reles to run and return to Browser to display
@@ -712,7 +743,8 @@ class PEAnalyser:
 					"has_no_exec_sect": heuristics_obj.has_no_executable_sections(),
 					"has_duplicated_section_names": heuristics_obj.has_duplicated_section_names(),
 					"has_executable_section_without_code": heuristics_obj.has_section_executable_no_code(),
-					"has_no_import_directory": not heuristics_obj.has_import_directory(),
+					"has_section_with_no_raw_size": len(heuristics_obj.sections_with_no_raw_size()) > 0,
+					# "has_no_import_directory": not heuristics_obj.has_import_directory(),
 					"has_no_export_directory": not heuristics_obj.has_export_directory(),
 					"has_no_debug_directory": not heuristics_obj.has_debug_directory(),
 					"OEP_not_code": heuristics_obj.oep_not_code(),
@@ -840,6 +872,7 @@ class PEAnalyser:
 					"SizeOfInitializedData": pe_obj.get_opp_size_of_init_data(),
 					"SizeOfUninitializedData": pe_obj.get_opp_size_of_uninit_data()
 		}
+
 		return CSV_FILE_INFO
 
 
@@ -847,6 +880,11 @@ class PEAnalyser:
 		# Sets 'pretty_dict_str' to the formatted string value
 		# pretty_dict_str = pprint.pformat(dictionary)
 if __name__ == '__main__':
-	print("hi")
-	dat = PEAnalyser()
-	print(dat.get_heuristics_dict("C:\\users\\user\\Desktop\\123456.exe"))
+	# print("hi")
+	# dat = PEAnalyser()
+	# print(dat.get_heuristics_dict("C:\\users\\user\\Desktop\\123456.exe"))
+	A = ResultsRetriever("C:\\users\\user\\Desktop\\123456.exe")
+	print(A.get_imported_results())
+	# obj = PEDetails("C:\\users\\user\\Desktop\\123456.exe")
+	# 
+	

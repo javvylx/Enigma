@@ -68,10 +68,12 @@ class ModulesControler:
 		if folder_path[-1] != "\\":
 			folder_path += "\\"
 
-		# with open("results.txt", 'r') as f:
-		# 	data = json.load(f)
+		with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", 'r') as f:
+			data = json.load(f)
 
-		# return data
+		print(data)
+
+		return data
 
 		# os.remove(self.FILE_WELT_JSON)
 		# self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
@@ -90,6 +92,12 @@ class ModulesControler:
 		img_exe_hashes = self.triage_parse_exe_hashes(folder_path)
 
 		try:
+			pst_res = self.triage_parse_pstree(folder_path)
+		except:
+			pst_res = "None"
+
+
+		try:
 			img_whois = self.triage_parse_whois(folder_path)
 			for x in img_whois:
 				for k in self.FLD_WHOIS:
@@ -99,12 +107,12 @@ class ModulesControler:
 						if x[k] == '':
 							x[k] = "None"
 
-			img_whois = json.dumps(img_whois)
+			# img_whois = json.dumps(img_whois)
 		except:
 			img_whois = "None"
 
 
-		print(img_whois)
+		# print(img_whois)
 		# print(img_exe_hashes)
 		# print("-------------")
 		# print(img_dll_hashes)
@@ -121,25 +129,29 @@ class ModulesControler:
 		try:
 			mal_dlls = self.triage_evaluate_malware(folder_path+self.FLDR_DLL, img_dll_hashes)
 		except:
-			mal_dll = "None"
+			mal_dlls = "None"
 
-
+		
 		mal_count = 0 	
 		if mal_exes != "None":
 			mal_count += sum(1 for x in mal_exes if int(x['Heuristics Indicators']) > self.HEURISTICS_SUS or float(x['Tensorflow Model']) > self.TS_SUS)
-		if mal_dll != "None": 
+		if mal_dlls != "None": 
 			mal_count += sum(1 for x in mal_dlls if int(x['Heuristics Indicators']) > self.HEURISTICS_SUS or float(x['Tensorflow Model']) > self.TS_SUS)
 
 
-		try:
-
+		# try:
+		print(self.FILE_WELT_JSON)
+		
+		if os.path.exists(self.FILE_WELT_JSON):
 			os.remove(self.FILE_WELT_JSON)
-			self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
-			evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
-			evt_data = json.dumps(evt_data)
-		except:
-			evt_data = "None"
+		self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
+		evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+		# evt_data = json.dumps(evt_data)
+		# except:
+			# evt_data = "None"
 
+
+		
 
 
 
@@ -149,11 +161,11 @@ class ModulesControler:
 					"ImgModel": str(img_com_det['Model']),
 					"ImgManufacturer":str(img_com_det['Manufacturer']),
 
-					"ProcessesCount": str(self.triage_get_processes_count(a_folder)),
+					"ProcessesCount": str(self.triage_get_processes_count(folder_path)),
 					"DomainsCount": str(len(img_whois)) if img_whois != "None" else img_whois,
 					"MalignFileCount": str(mal_count), # Count based on how many dll's heursitics > 4 or 5 , and ts > 50%
 					"FlaggedEvents": str(len(evt_data)),
-
+					"PstreeResult": pst_res,
 					# [defaultdict(None, {'IP': '56.139.105.26', 'ISP': '', 'Continent': 'North America', 'Country': 'United States'}), defaultdict(None, {'IP': '216.58.207.206', 'ISP': 'Google', 'Continent': 'North America', 'Country': 'United States', 'State/Region': 'California', 'City': 'Mountain View'}), defaultdict(None, {'IP': '56.27.91.26', 'ISP': '', 'Continent': 'North America', 'Country': 'United States'})]
 					"WhoIsDomainDetails": img_whois,
 					"FilesAnalysisDetails": mal_exes,
@@ -161,6 +173,11 @@ class ModulesControler:
 					"EventLogAnalysisDetails": evt_data 
 
 		}
+
+
+
+		with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", 'w') as f:
+			f.write(json.dumps(triage_result))
 		
 		print(triage_result)
 		return triage_result
@@ -212,7 +229,7 @@ class ModulesControler:
 					for line in segment.split('\n'):
 						x = line.split(':',1)
 						if x[0] in self.FLD_WHOIS:
-							s_dict[str(x[0].strip())] = str(x[1].strip())
+							s_dict[x[0].strip()] = x[1].strip()
 					ret_data.append(s_dict)
 		return ret_data
 
@@ -315,7 +332,6 @@ class ModulesControler:
 			return -1
 
 	def triage_parse_pstree(self, a_folder):
-		G1 = 53
 
 		with open(a_folder+self.FILE_PSTREE, 'r') as f:
 			lines = f.readlines()
@@ -323,22 +339,39 @@ class ModulesControler:
 			field_lengths = [len(x) for x in lines[1].split(' ')]
 			for i, l in enumerate(lines[2:]):
 				f_dict = {}
-				f_dict['name'] = l[0:51].strip()
-				f_dict['pid'] = l[51:58].strip()
-				f_dict['ppid'] = l[58:65].strip()
-				f_dict['thds'] = l[65:72].strip()
-				f_dict['hnds'] = l[72:79].strip()
-				f_dict['time'] = l[79:].strip()
+				f_dict['Name'] = str(l[0:51].strip())
+				f_dict['PID'] = str(l[51:58].strip())
+				f_dict['PPID'] = str(l[58:65].strip())
+				f_dict['Threads'] = str(l[65:72].strip())
+				f_dict['Handles'] = str(l[72:79].strip())
+				f_dict['Time'] = str(l[79:].strip())
 
 				ret_data.append(f_dict)
-
 
 			return ret_data
 
 
-			# print(field_lengths)
+	def start_evt_analyze_one_log(self, log_path):
+		ret_data = { "EventLogAnalysisSolo" : [] }
+		try:
+			self.triage_analyze_security_log(log_path)
+			evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+			ret_data['EventLogAnalysisSolo'] = evt_data
+		except:
+			ret_data['EventLogAnalysisSolo'] = "Error"
+		finally:
+			return ret_data
 
-	
+
+			# print(field_lengths)
+	def start_review_triage(self, file_path):
+		
+		with open(file_path, 'r') as f:
+			data = json.load(f)
+
+		print(data)
+
+		return data
 	# def test_vtp(self):
 	# 	print(vtapi.get_scan_ratio_from_hash("e2382a9cf3694eeadf8b3471c28593c8d3c03d5e"))
 
@@ -346,9 +379,24 @@ class ModulesControler:
 
 
 if __name__ == '__main__':
-
-
 	M = ModulesControler()
+
+	M.start_triage_analysis("C:\\Users\\User\\Desktop\\testdump")
+	
+	# with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", "r") as f:
+	# 	data = json.loads(f.read())
+
+	# 	print(data)
+
+
+	# D = [{'name': '0x856076d0:csrss.exe', 'pid': '284', 'ppid': '276', 'thds': '9', 'hnds': '437', 'time': '2020-10-28 03:25:24 UTC+0000'}, {'name': '. 0x85031d28:conhost.exe', 'pid': '1828', 'ppid': '284', 'thds': '2', 'hnds': '33', 'time': '2020-10-27 11:25:41 UTC+0000'}, {'name': '0x85c95d28:wininit.exe', 'pid': '328', 'ppid': '276', 'thds': '3', 'hnds': '82', 'time': '2020-10-28 03:25:25 UTC+0000'}, {'name': '. 0x85cbf4e8:services.exe', 'pid': '416', 'ppid': '328', 'thds': '6', 'hnds': '210', 'time': '2020-10-28 03:25:26 UTC+0000'}, {'name': '.. 0x85eab0d8:taskhost.exe', 'pid': '1472', 'ppid': '416', 'thds': '9', 'hnds': '212', 'time': '2020-10-27 11:25:37 UTC+0000'}, {'name': '.. 0x85d3cd28:svchost.exe', 'pid': '648', 'ppid': '416', 'thds': '9', 'hnds': '252', 'time': '2020-10-27 11:25:32 UTC+0000'}, {'name': '.. 0x85d8cc70:svchost.exe', 'pid': '908', 'ppid': '416', 'thds': '5', 'hnds': '115', 'time': '2020-10-27 11:25:34 UTC+0000'}, {'name': '.. 0x85d67aa8:svchost.exe', 'pid': '776', 'ppid': '416', 'thds': '16', 'hnds': '398', 'time': '2020-10-27 11:25:33 UTC+0000'}, {'name': '... 0x85ec0c70:dwm.exe', 'pid': '1544', 'ppid': '776', 'thds': '3', 'hnds': '69', 'time': '2020-10-27 11:25:38 UTC+0000'}, {'name': '.. 0x85e414b0:cygrunsrv.exe', 'pid': '1556', 'ppid': '416', 'thds': '6', 'hnds': '101', 'time': '2020-10-27 11:25:38 UTC+0000'}, {'name': '... 0x84fb5398:cygrunsrv.exe', 'pid': '1808', 'ppid': '1556', 'thds': '0', 'hnds': '------', 'time': '2020-10-27 11:25:40 UTC+0000'}, {'name': '.... 0x85f4f1c0:sshd.exe', 'pid': '1868', 'ppid': '1808', 'thds': '4', 'hnds': '100', 'time': '2020-10-27 11:25:41 UTC+0000'}, {'name': '.. 0x85df0c18:spoolsv.exe', 'pid': '1176', 'ppid': '416', 'thds': '13', 'hnds': '276', 'time': '2020-10-27 11:25:36 UTC+0000'}, {'name': '.. 0x85fb1030:sppsvc.exe', 'pid': '796', 'ppid': '416', 'thds': '4', 'hnds': '166', 'time': '2020-10-27 11:25:43 UTC+0000'}, {'name': '.. 0x85d2a030:VBoxService.ex', 'pid': '584', 'ppid': '416', 'thds': '11', 'hnds': '118', 'time': '2020-10-28 03:25:31 UTC+0000'}, {'name': '.. 0x85fdf030:svchost.exe', 'pid': '1716', 'ppid': '416', 'thds': '5', 'hnds': '92', 'time': '2020-10-27 11:25:46 UTC+0000'}, {'name': '.. 0x85d7a6d8:svchost.exe', 'pid': '824', 'ppid': '416', 'thds': '30', 'hnds': '1067', 'time': '2020-10-27 11:25:33 UTC+0000'}, {'name': '... 0x85394030:wuauclt.exe', 'pid': '1196', 'ppid': '824', 'thds': '3', 'hnds': '88', 'time': '2020-10-27 11:30:58 UTC+0000'}, {'name': '.. 0x86048c38:SearchIndexer.', 'pid': '2292', 'ppid': '416', 'thds': '13', 'hnds': '638', 'time': '2020-10-27 11:25:59 UTC+0000'}, {'name': '... 0x88789418:SearchProtocol', 'pid': '1944', 'ppid': '2292', 'thds': '6', 'hnds': '316', 'time': '2020-10-27 12:48:38 UTC+0000'}, {'name': '... 0x8af09030:SearchFilterHo', 'pid': '1444', 'ppid': '2292', 'thds': '4', 'hnds': '104', 'time': '2020-10-27 12:48:39 UTC+0000'}, {'name': '.. 0x85d5f760:svchost.exe', 'pid': '736', 'ppid': '416', 'thds': '18', 'hnds': '458', 'time': '2020-10-27 11:25:33 UTC+0000'}, {'name': '.. 0x85e17970:svchost.exe', 'pid': '1220', 'ppid': '416', 'thds': '17', 'hnds': '314', 'time': '2020-10-27 11:25:36 UTC+0000'}, {'name': '.. 0x85db8338:svchost.exe', 'pid': '1036', 'ppid': '416', 'thds': '15', 'hnds': '483', 'time': '2020-10-27 11:25:34 UTC+0000'}, {'name': '.. 0x85e5e920:svchost.exe', 'pid': '1360', 'ppid': '416', 'thds': '11', 'hnds': '318', 'time': '2020-10-27 11:25:36 UTC+0000'}, {'name': '.. 0x85d6d030:svchost.exe', 'pid': '800', 'ppid': '416', 'thds': '29', 'hnds': '591', 'time': '2020-10-27 11:25:33 UTC+0000'}, {'name': '.. 0x85e61030:svchost.exe', 'pid': '1388', 'ppid': '416', 'thds': '23', 'hnds': '518', 'time': '2020-10-27 11:25:36 UTC+0000'}, {'name': '.. 0x8ae103c0:taskhost.exe', 'pid': '3936', 'ppid': '416', 'thds': '6', 'hnds': '290', 'time': '2020-10-27 11:40:40 UTC+0000'}, {'name': '.. 0x85f69d28:wlms.exe', 'pid': '1908', 'ppid': '416', 'thds': '4', 'hnds': '46', 'time': '2020-10-27 11:25:41 UTC+0000'}, {'name': '.. 0x860c8030:svchost.exe', 'pid': '3060', 'ppid': '416', 'thds': '14', 'hnds': '409', 'time': '2020-10-27 11:27:44 UTC+0000'}, {'name': '.. 0x85d1b9b8:svchost.exe', 'pid': '524', 'ppid': '416', 'thds': '9', 'hnds': '358', 'time': '2020-10-28 03:25:31 UTC+0000'}, {'name': '. 0x85cc5030:lsass.exe', 'pid': '424', 'ppid': '328', 'thds': '6', 'hnds': '594', 'time': '2020-10-28 03:25:26 UTC+0000'}, {'name': '. 0x85cc63c8:lsm.exe', 'pid': '432', 'ppid': '328', 'thds': '10', 'hnds': '147', 'time': '2020-10-28 03:25:26 UTC+0000'}, {'name': '0x84ed1b98:System', 'pid': '4', 'ppid': '0', 'thds': '87', 'hnds': '537', 'time': '2020-10-28 03:25:22 UTC+0000'}, {'name': '. 0x85041698:smss.exe', 'pid': '216', 'ppid': '4', 'thds': '2', 'hnds': '29', 'time': '2020-10-28 03:25:22 UTC+0000'}, {'name': '0x85ed2030:explorer.exe', 'pid': '1600', 'ppid': '1524', 'thds': '38', 'hnds': '1047', 'time': '2020-10-27 11:25:38 UTC+0000'}, {'name': '. 0x853dd8e0:DumpIt.exe', 'pid': '3360', 'ppid': '1600', 'thds': '1', 'hnds': '18', 'time': '2020-10-27 12:49:09 UTC+0000'}, {'name': '. 0x85fd9030:VBoxTray.exe', 'pid': '1804', 'ppid': '1600', 'thds': '12', 'hnds': '142', 'time': '2020-10-27 11:25:45 UTC+0000'}, {'name': '. 0x886bf758:BC14.exe', 'pid': '3676', 'ppid': '1600', 'thds': '1', 'hnds': '75', 'time': '2020-10-27 12:49:14 UTC+0000'}, {'name': '. 0x88697958:DumpIt.exe', 'pid': '1812', 'ppid': '1600', 'thds': '1', 'hnds': '19', 'time': '2020-10-27 12:49:23 UTC+0000'}, {'name': '0x85c8a500:csrss.exe', 'pid': '320', 'ppid': '312', 'thds': '8', 'hnds': '240', 'time': '2020-10-28 03:25:25 UTC+0000'}, {'name': '. 0x8640fa40:conhost.exe', 'pid': '2976', 'ppid': '320', 'thds': '2', 'hnds': '34', 'time': '2020-10-27 12:49:09 UTC+0000'}, {'name': '. 0x853b39b0:conhost.exe', 'pid': '540', 'ppid': '320', 'thds': '2', 'hnds': '34', 'time': '2020-10-27 12:49:23 UTC+0000'}, {'name': '0x85c8b8e8:winlogon.exe', 'pid': '352', 'ppid': '312', 'thds': '3', 'hnds': '110', 'time': '2020-10-28 03:25:25 UTC+0000'}]
+
+	# ans = {str(y):1 for y in  [x.keys() for x in D]}
+	# print(ans)
+		
+		
+
+	
 	# M.test_vtp()
 	# print(M.triage_parse_pstree("C:\\Users\\User\\Desktop\\testdump\\"))
 
