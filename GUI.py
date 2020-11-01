@@ -321,7 +321,6 @@ def launch():
 					cout << "Done\n"
 					
 
-
 				if needs_update['triageSaveResult']:
 					cout << "Save triage output to specified location\n"
 

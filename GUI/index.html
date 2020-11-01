@@ -1287,8 +1287,8 @@ $(function () {
 		{"Name":"Kevin Tan", "imagePath":"img/kevin.png"},		
 		{"Name":"Patrick Kang", "imagePath":"img/patrick.jpeg"},
 		{"Name":"Jerome Tan", "imagePath":"img/jerome.jpeg"},
-		{"Name":"Cleaven Goh", "imagePath":"img/cleaven.jpeg"},		
-		{"Name":"Lim Long Xian", "imagePath":"img/longxian.jpg"}		
+		{"Name":"Lim Long Xian", "imagePath":"img/longxian.jpg"},
+		{"Name":"Cleaven Goh", "imagePath":"img/cleaven.jpeg"}				
 	];
 
 		
@@ -1303,13 +1303,13 @@ $(function () {
 
 
 	var aboutPeopleCtx = [aboutIntroDetails, function (d) {
-		return ['div', {class: 'col-lg-6'},
+		return ['div', {class: 'col-lg-4'},
 			['div', {class: 'card position-relative'},
 				['div', {class: 'card-header py-3'},
 					['h6', {class: 'm-0 font-weight-bold text-primary'}, d.Name]
 				],
-				['div', {class: 'card-body'},
-					['img', {class: 'img px-3 px-sm-4 mt-3 mb-4 about-info-img', src: d.imagePath}],					
+				['div', {class: 'card-body text-center justify-content-center'},
+					['img', {class: 'img-fluid px-3 px-sm-4 mt-3 mb-4 about-info-img', src: d.imagePath}],					
 					['div',  {class: 'mb-1'}],
 					['p', {class: 'mb-0 small'}]
 				]
