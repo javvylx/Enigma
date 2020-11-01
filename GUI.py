@@ -385,13 +385,8 @@ def launch():
 					cout << "Done\n"
 
 
-
-
-
-
-					# Launch pythons subprocess to generate new folium html element? 
 			except Exception as e:
-				print("hehehe")
+
 				print(e)
 				# raise e
 				break
