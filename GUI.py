@@ -1,10 +1,10 @@
 import os, json, sys, time
-# sys.path.append(os.getcwd())
-# sys.path.append(os.getcwd()+"\\python-3.8.6-embed-amd64")
+sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()+"\\python-3.8.6-embed-amd64")
 from controller import *
 
 from selenium import webdriver
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+# from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 import subprocess
 import ast
 

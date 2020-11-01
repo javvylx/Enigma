@@ -69,12 +69,12 @@ class ModulesControler:
 		if folder_path[-1] != "\\":
 			folder_path += "\\"
 
-		with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", 'r') as f:
-			data = json.load(f)
+		# with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", 'r') as f:
+		# 	data = json.load(f)
 
-		print(data)
+		# print(data)
 
-		return data
+		# return data
 
 		# os.remove(self.FILE_WELT_JSON)
 		# self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what

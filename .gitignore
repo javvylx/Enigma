@@ -128,3 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 embermodel/ember_model_2018.txt
+
+
+
+# Folders
+/FirefoxPortable
