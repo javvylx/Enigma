@@ -28,15 +28,7 @@ user_agent_list = [
 
 
 def analysis(casename,ramImagePath):
-	"""Summary
-	
-	Args:
-	    casename (string): Casename to create case folder where all analysis results will be placed
-	
-	Returns:
-	    0: Folder created successfully and RAM dump found
-	    1: RAM dump not found
-	"""
+
 	global casefolder
 	global imagePath
 	currentDate = datetime.now()
@@ -56,7 +48,7 @@ def analysis(casename,ramImagePath):
 			get_processdump(ProfileList[0])
 			get_dlldump(ProfileList[0])
 			print("Done")
-		
+
 
 	except:
 		return -1
@@ -65,57 +57,29 @@ def analysis(casename,ramImagePath):
 
 
 def file_hash_hex(file_path, hash_func):
-	"""Summary
-	
-	Args:
-	    file_path (TYPE): Description
-	    hash_func (TYPE): Description
-	
-	Returns:
-	    TYPE: Description
-	"""
+
 	with open(file_path, 'rb') as f:
 		return hash_func(f.read()).hexdigest()
 
 def recursive_file_listing(base_dir):
-	"""Summary
-	
-	Args:
-	    base_dir (TYPE): Description
-	
-	"""
+
 	for directory, subdirs, files in os.walk(base_dir):
 		for filename in files:
 			yield directory, filename, os.path.join(directory, filename)
 
-# def cmdline(command):
-# 	process = subprocess.Popen(
-# 		args=command,
-# 		stdout=subprocess.PIPE,
-# 		stderr=subprocess.PIPE,
-# 		shell=True
-# 	)
-# 	return process.communicate()[0]
+
 
 
 def RAM_imageinfo(path):
-	"""Summary
-	
-	Args:
-	    path (TYPE): Description
-	"""
+
 	global casefolder
 	imageInfoCommand = volatility + " -f " + path + " imageinfo > " + casefolder +"\\ImageInfo.txt"
 	output = subprocess.run(imageInfoCommand, shell=True)
-	#print(output)
+
 
 
 def get_profile():
-	"""Summary
-	
-	Returns:
-	    list: List of profiles for RAM dump
-	"""
+
 	global casefolder
 	with open(casefolder +'\\ImageInfo.txt') as f:
 		suggested_profile = f.readline()
@@ -127,51 +91,28 @@ def get_profile():
 	return listOfProfiles
 	
 def get_process_tree(profile):
-	"""Summary
-	
-	Args:
-	    profile (TYPE): Description
-	"""
+
 	global casefolder
 	global imagePath
 	processTreeCommand = volatility + " -f " + imagePath + " --profile="+profile+" pstree > " + casefolder +"\\pstree.txt"
 	output = subprocess.run(processTreeCommand, shell=True)
 
-# def getFilescan(profile):
-# 	"""Summary
-	
-# 	Args:
-# 	    profile (TYPE): Description
-# 	"""
-# 	fileScanCommand = volatility + " -f " + imagePath + " --profile="+ profile +" filescan > " + currentDir +"\\filescan.txt"
-# 	output = subprocess.run(fileScanCommand, shell=True)
+
 
 def get_netscan(profile):
-	"""Summary
-	
-	Args:
-	    profile (TYPE): Description
-	"""
+
 	global casefolder
 	getNetscanCommand = volatility + " -f " + imagePath + " --profile="+ profile +" netscan > " + casefolder +"\\netscan.txt"
 	output = subprocess.run(getNetscanCommand, shell=True)
 
 def get_cmdscan(profile):
-	"""Summary
-	
-	Args:
-	    profile (TYPE): Description
-	"""
+
 	global casefolder
 	getCMDscanCommand = volatility + " -f " + imagePath + " --profile="+ profile +" cmdline > " + casefolder +"\\cmdline.txt"
 	output = subprocess.run(getCMDscanCommand, shell=True)
 
 def get_processdump(profile):
-	"""Summary
-	
-	Args:
-	    profile (TYPE): Description
-	"""
+
 	global casefolder
 	os.mkdir(casefolder+ "\\exesample")
 	getProcdumpCommand = volatility + " -f " + imagePath + " --profile="+ profile +" procdump -D "+ casefolder + "\\exesample > " + casefolder +"\\procdump.txt"
@@ -186,11 +127,7 @@ def get_processdump(profile):
 			writer.writerow((directory, filename,file_hash_hex(path, hashlib.md5),file_hash_hex(path, hashlib.sha1)))
 
 def get_dlldump(profile):
-	"""Summary
-	
-	Args:
-	    profile (TYPE): Description
-	"""
+
 	global casefolder
 	os.mkdir(casefolder+ "\\dlls")
 	getDllCommand = volatility + " -f " + imagePath + " --profile="+ profile +" dlldump -D " + casefolder + "\\dlls > " + casefolder +"\\dlldump.txt"
@@ -205,11 +142,6 @@ def get_dlldump(profile):
 			writer.writerow((directory, filename,file_hash_hex(path, hashlib.md5),file_hash_hex(path, hashlib.sha1)))
 
 def getPublicIp():
-	"""Summary
-	
-	Returns:
-	    TYPE: Description
-	"""
 	global casefolder
 	with open(casefolder + '\\netscan.txt') as fh:
 		fstring = fh.readlines() 
@@ -246,11 +178,7 @@ def getPrivateIp():
 	return lst
 
 def ipWhoISLookUp(iplist):
-	"""Summary
-	
-	Args:
-	    iplist (TYPE): Description
-	"""
+
 	global casefolder
 	f = open(casefolder + "\\whois.txt", "w")
 	f.close()
@@ -296,25 +224,3 @@ def ipWhoISLookUp(iplist):
 
 
 
-
-# ip = getPublicIp()
-# for x in ip:
-# 	print(x)
-#ipWhoISLookUp(ip)
-
-#analysis("test",imagePath)
-
-#RAM_imageinfo(imagePath)
-
-#print(ProfileList[0])
-#get_dlldump(ProfileList[0])
-#getProcessDump(ProfileList[0])
-#getCmdscan(ProfileList[0])
-
-
-#getProcessTree(ProfileList[0])
-#getNetscan(ProfileList[1])
-#out(vol,imagePath)
-#RAMimageInfo(imagePath)
-# test = cmdline("dir")
-# print(test)
