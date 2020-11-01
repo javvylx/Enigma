@@ -1,3 +1,4 @@
+bs4 == 0.0.1
 Cython == 0.29.13
 PySocks == 1.7.1
 aws-iot == 0.0.1
@@ -10,13 +11,17 @@ chardet == 3.0.4
 coconlp == 0.0.13
 cryptography == 2.7
 django-ember == 0.3.1
+evtx==0.6.11
 flatbuffers == 1.12
 future == 0.17.1
 genapi == 0.0.8
 gitlab-vars == 0.1
+hashlib == 20081119
+hexdump == 3.3
 html5lib == 1.0.1
 htmlparser == 0.0.2
 idna == 2.8
+ipaddress == 1.0.23
 jbcnfw == 0.1
 lightgbm == 3.0.0
 luma == 2.0.6
@@ -31,10 +36,12 @@ obniz-cli == 0.0.6
 opie == 0.0.8
 pactum == 0.2.0
 pathlib2 == 2.3.5
+pefile == 2019.4.18
 psutil == 5.6.3
 pyOpenSSL == 19.0.0
 pycommands == 0.1.0
 pytest == 5.2.1
+PythonForWindows == 0.6.0
 python-evtx == 0.6.1
 python-ntlm == 1.1.0
 python-ntlm-fixed == 1.0
@@ -56,4 +63,4 @@ terraenv == 0.11
 the-useful-tools == 0.4
 unittest2 == 1.1.0
 urllib3 == 1.24.2
-virustotal == 1.0.3
+virustotal-api == 1.1.11
