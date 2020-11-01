@@ -3,19 +3,13 @@
 
 ##Software Requirements
 * Python 3.8.6
-
-
-     
+* Mozilla FireFox
 
 
 ##Installation
 ###Local
 1. Ensure you have Mozila Firefox installed on your computer.
-
-2. Ensure all dependencies are installed
-`pip install -r requirements.txt`
-
-3. ``
+2. Ensure all dependencies are installed `pip install -r requirements.txt`
 
 
 ###Portable Method
@@ -35,7 +29,7 @@ https://portableapps.com/apps/internet/firefox_portable
 
 
 
-
+###Usage
 
 Installation Guide
 
