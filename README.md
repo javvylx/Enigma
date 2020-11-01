@@ -25,7 +25,7 @@ Per minute: 1000
 Per day: 20000
 Per month: 600000
 
-These are the 3 possible results from VirusTotal:
+These are the 3 possible results from VirusTotal <br>
 Hash not found in database - VirusTotal Database does not have a record of this hash.
 Hash is not malicious - This hash is found in VirusTotal database and is not malicious.
 Hash is malicious - This hash is found in VirusTotal database and is malicious.
