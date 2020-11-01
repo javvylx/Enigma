@@ -63,7 +63,8 @@ var refreshB64 = 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu
 
 window.needsUpdate = {
 	volRamDumpInput: false, volExecuteDump: false,
-	triageCaseFolderInput: false, triageExecuteAnalysis: false,
+	triageCaseFolderInput: false, triageExecuteAnalysis: false, triageSaveResult: false,
+	malwareFileInput: false, malwareExecuteAnalysis: false,
 	evtLogInput: false, evtExecuteAnalysis: false,
 	reviewResultInput: false, reviewExecuteReview: false};
 
@@ -71,6 +72,7 @@ window.needsUpdate = {
 window.inputFilePaths = {
 	ramImage: '',
 	triageFolderPath: '',
+	malwareFilePath: '',
 	evtLogPath:'',
 	reviewCasePath: ''};
 
@@ -84,11 +86,13 @@ volFields = {caseName: '', ramFilePath:''}
 
 triageFields = {caseFolderPath: ''};
 
+malwareFields = {pePath: ''};
+
 evtFields = {logPath: ''};
 
 reviewFields = {caseFilePath: ''};
 
-modesResultsData = {vol: '', triage: '' , evt: '', review: ''};
+modesResultsData = {vol: '', triage: '' , malware: '', evt: '', review: ''};
 
 
 
@@ -128,6 +132,11 @@ showLoader = function(t) {
   });
 }
 
+showError = function(e) {
+	if (e != '') {
+		toastr.error(e);
+	}
+}
 hideLoader = function(error) {
   if (error) toastr.error(error);
   $('#refresh').removeClass('disabled');
@@ -145,6 +154,16 @@ $(function () {
 		];
 
 	}
+
+	function genCardHeaderWithEleCtx(title, fontClass, faClass, ele) { 
+		return ['div', {class: 'card-header py-3'},
+			['a', {class: fontClass}, title],
+			['i', {class: faClass}],
+			ele
+		];
+
+	}
+
 
 	function genSideDividerCtx() {
 		return ['hr', {class: 'sidebar-divider'}];
@@ -714,6 +733,9 @@ $(function () {
 		"info"
 	);
 
+
+	var triageResultsSaveButtonCtx = []
+
 	var triageResultsMetaNameCtx = 
 			genNoImageCardCtx("triage-result-meta-name", // card ID
 					"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", //gridClass
@@ -857,9 +879,15 @@ $(function () {
 
 	var triageResultsPanelCtx = ['div', {id:'res-triage-panel', class: 'col-xl-12 col-md-12 mb-4 results-container'} ,
 		['div', {class: 'card'},
-			genCardHeaderCtx("Results",
+			genCardHeaderWithEleCtx("Results",
 				"m-0 font-weight-bold text-secondary", 
-				"ml-2 fa-1x fas fas fa-chart-bar"),
+				"ml-2 fa-1x fas fas fa-chart-bar",
+				['a', {id: 'res-triage-save-btn', class: 'float-right btn-sm btn-success btn-icon-split'},
+					['span', {class: 'icon text-white-50'},
+						['i', {class: 'fas fa-save'}]
+					],
+					['span', {class: 'text btn-white'}, 'Save triage results']
+				]),
 				['div', {class: 'card-body row'},
 					triageResultsMetaNameCtx,
 					triageResultsMetaImageDateCtx,
@@ -901,7 +929,7 @@ $(function () {
 
 	var malwareRequiredInputCtx = genFileSelectCtx("malware-card-select-file",
 		"Choose your PE file to analyse",
-		"malware-input-folder",
+		"malware-input-file",
 		"Choose file...",
 		"FILE",
 		"malware-btn-run",
@@ -967,9 +995,9 @@ $(function () {
 			["API", "Functions"]
 		]);
 
-	var malwareResultEntropyTableCtx = genTableWithDivCtx("malware-single-entropy-table-div", 
+	var malwareResultEntropyTableCtx = genTableWithDivCtx("malware-single-sections-table-div", 
 		"malware-single-entropy-inner-div", 
-		"malware-single-entropy-table", 
+		"malware-single-sections-table", 
 		'PE Section Details', 
 		["Name", "Entropy", "VirtualAddress", "Misc_VirtualSize", "SizeOfRawData", "Characteristics"],
 		[
@@ -1397,7 +1425,7 @@ $(function () {
 		]
 	});
 
-	$('#malware-single-entropy-table').DataTable({
+	$('#malware-single-sections-table').DataTable({
 		'pageLength':5,
 		'columns': [
 			{'data': "Name"},
@@ -1410,6 +1438,23 @@ $(function () {
 		]
 	});
 
+	// WinEvt Tables
+	// 
+	// 
+	// 
+	// 
+	$('#evt-evt-table').DataTable({
+		'pageLength':5,
+		'columns': [
+			{'data' : 'RuleTriggered'},
+			{'data' : 'RuleName'},
+			{'data' : 'EventID'},
+			{'data' : 'Timestamp'},
+			{'data' : 'EventRecordID'},
+			{'data' : 'Description'},
+			{'data' : 'IPAddress'}
+		]
+	});
 
 	// Review datatables
 	// 
@@ -1567,13 +1612,11 @@ $(function () {
 		console.log(modesResultsData.triage)
 
 		// Update all tables using the modesResultsData['triage']
-		
-
 	}	
 
 	updateTableData = function(tblId, tblHeaders, tblData) {
 		console.log(tblData);
-		if (tblData != "None") {
+		if (tblData != "None" && tblData != "Error") {
 			var tbl = $('#'+tblId).DataTable();
 			tbl.clear();
 			tbl.rows.add(tblData);
@@ -1586,6 +1629,17 @@ $(function () {
 		$('#'+labelId).html(text);
 	}
 
+	retrieveTriageJsonResults = function() {
+		if (modesResultsData.triage != '') {
+			return JSON.stringify(modesResultsData.triage);
+		} else {
+			return '';
+		}
+	}
+
+	$('#res-triage-save-btn').click(function() {
+		needsUpdate.triageSaveResult = true;
+	});
 
 	$('#triage-dump-run').click(function() {
 		triageFields.caseFolderPath = $('#triage-dump-folder-label').html();
@@ -1636,6 +1690,52 @@ $(function () {
 	window.execTriageDumpRun = function() {
 		window.exeResultsBatchUpdate('triage');
 	}
+
+
+
+	window.malwareFileInputed = function () {
+		$('#malware-input-file-label').html(inputFilePaths.malwareFilePath);
+		inputFilePaths.malwareFilePath = "";
+	}
+
+	$('#malware-input-file').click(function(){
+		needsUpdate.malwareFileInput = true;
+	});
+
+
+	window.execMalwareResults = function() {
+		updateResultLabels("malware-single-heuristics-info-label", modesResultsData['malware']['Heuristics']);
+		updateResultLabels("malware-single-ml-score-label", modesResultsData['malware']['TensorModel']);
+
+		updateTableData("malware-single-Imports-table", 
+					['API', 'Functions'],
+					modesResultsData['malware']['ImportsResult']);
+		updateTableData("malware-single-sections-table", 
+					["Name", "Entropy", "VirtualAddress", "Misc_VirtualSize", "SizeOfRawData", "Characteristic"],
+					modesResultsData['malware']['SectionResults']['Rows']);
+
+		$('#res-malware-single-panel').show(100);
+	}
+
+
+	window.malwareFinishedAnalysis = function() {
+		malwareFields.pePath = '';
+	}
+
+	// window.function
+	
+	$('#malware-btn-run').click(function(){
+		malwareFields.pePath = $('#malware-input-file-label').html();
+
+		needsUpdate.malwareExecuteAnalysis = true;
+	});
+
+
+
+	
+
+
+
 
 
 	window.evtLogInputted = function() {
@@ -1689,8 +1789,6 @@ $(function () {
 		reviewFields.caseFilePath = ""; //Reset triageFields inputs
 	}
 
-
-
 	$('#review-btn-dump').click(function() {
 		reviewFields.caseFilePath = $('#review-input-file-label').html();
 		needsUpdate.reviewExecuteReview = true;
@@ -1702,7 +1800,7 @@ $(function () {
 		$('.content-row').hide();
 		$('#row-home').show();
 
-		$('.results-container').hide();
+		// $('.results-container').hide();
 	}
 
 	startUp();

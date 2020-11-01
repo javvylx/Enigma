@@ -87,6 +87,8 @@ class ModulesControler:
 
 		# sys.exit()
 
+
+
 		img_info_det = self.triage_parse_image_profiles(folder_path)
 		img_com_det = self.triage_parse_image_computer_info(folder_path)
 		img_dll_hashes = self.triage_parse_dlls_hashes(folder_path)
@@ -140,21 +142,14 @@ class ModulesControler:
 			mal_count += sum(1 for x in mal_dlls if int(x['Heuristics Indicators']) > self.HEURISTICS_SUS or float(x['Tensorflow Model']) > self.TS_SUS)
 
 
-		# try:
-		print(self.FILE_WELT_JSON)
-		
-		if os.path.exists(self.FILE_WELT_JSON):
-			os.remove(self.FILE_WELT_JSON)
-		self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
-		evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
-		# evt_data = json.dumps(evt_data)
-		# except:
-			# evt_data = "None"
-
-
-		
-
-
+		try:
+			print(self.FILE_WELT_JSON)
+			if os.path.exists(self.FILE_WELT_JSON):
+				os.remove(self.FILE_WELT_JSON)
+			self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
+			evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+		except:
+			evt_data = "None"
 
 		triage_result = {
 					"ImgName": str(img_com_det['Name']),
@@ -235,8 +230,6 @@ class ModulesControler:
 		return ret_data
 
 
-			
-
 	def triage_parse_csv_hash(self, a_folder, file_name):		
 		data = {}
 		with open(a_folder+file_name, 'r') as f:
@@ -244,8 +237,6 @@ class ModulesControler:
 			# {"File":[md5,sha1]}
 			data = {x[1]:[x[2],x[3]] for x in reader if len(x) != 0}
 			return data
-	
-
 
 	def triage_parse_dlls_hashes(self, a_folder):
 		return self.triage_parse_csv_hash(a_folder, self.FILE_DLL_HASH)
@@ -304,13 +295,14 @@ class ModulesControler:
 		# print(file_details['executable.1036'])
 
 
-
-
 	def triage_analyze_security_log(self, file_path):
 		# Call python module which feeds input to powershell
 		# Returns output in a json format for JS to process		
 		cmd = ["PowerShell", "-ExecutionPolicy", "Unrestricted", "-File", self.WELT_PATH+"\\Analysis.ps1" , file_path]
-		
+		# cmd = "PowerShell -ExecutionPolicy Unrestricted -File \"{}\" \"{}\"".format(self.WELT_PATH+"\\Analysis.ps1", file_path)
+
+		print("CMD:", cmd)
+		# sys.exit()
 		ec = subprocess.call(cmd)
 
 
@@ -392,11 +384,21 @@ class ModulesControler:
 		}
 
 
-		for x in ret_data['SectionResults']['Rows']:
-			for a,b in x.items():
-				if int(b) != 0:
-					if str(b).isdigit():
-						b = str(hex(int(b,16)))
+		# for x in ret_data['SectionResults']['Rows']:
+		# 	for a,b in x.items():
+		# 		if isinstance(b, (str)):
+		# 			if b.isdigit():
+
+		# 				b = "{:08X}".format(int(b))
+		# 				# b = str(hex(int(b,16)))
+		# 				print(b)
+
+
+				# if type()
+				# print(type(b))
+				# if int(b) != 0:
+				# 	if str(b).isdigit():
+				# 		b = str(hex(int(b,16)))
 			
 
 		return ret_data
@@ -407,34 +409,41 @@ class ModulesControler:
 
 		ret_data = { "EventLogAnalysisSolo" : [] }
 		try:
+			print("Start: ", log_path)
 			self.triage_analyze_security_log(log_path)
 			evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
+			print(evt_data)
 			ret_data['EventLogAnalysisSolo'] = evt_data
 		except:
 			ret_data['EventLogAnalysisSolo'] = "Error"
-		finally:
-			return ret_data
+
+
+		print("Done")
+		return ret_data
 
 
 			# print(field_lengths)
 	def start_review_triage(self, file_path):
-		ts_score if ts_score is not None else "Error"
 		with open(file_path, 'r') as f:
 			data = json.load(f)
 
 		print(data)
-
 		return data
+
+
 	# def test_vtp(self):
 	# 	print(vtapi.get_scan_ratio_from_hash("e2382a9cf3694eeadf8b3471c28593c8d3c03d5e"))
 
 
 
 
-# if __name__ == '__main__':
-# 	M = ModulesControler()
+if __name__ == '__main__':
+	pass
+	# M = ModulesControler()
+	# M.triage_analyze_security_log("C:\\Users\\User\\Desktop\\testdump\\Security.evtx")
 
-# 	D = M.start_malware_analyze("c:\\users\\user\\desktop\\12345.exe")
+	# D = M.start_malware_analyze("c:\\users\\user\\desktop\\12345.exe")
+# 	print(D)
 # 	D['SectionResults']['Rows']	
 
 	# print(M.triage_get_processes_count("C:\\Users\\User\\Desktop\\testdump\\"))

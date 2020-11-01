@@ -210,6 +210,8 @@ def tk_ask_input(mode="file"):
 		ret = str(filedialog.askdirectory(parent=root)) # Or some other dialog
 	elif mode == 'files':
 		ret = filedialog.askopenfilenames(parent=root) # Or some other dialog
+	elif mode == 'saveas':
+		ret = filedialog.asksaveasfilename(parent=root)
 
 	root.destroy()
 	return ret
@@ -302,9 +304,6 @@ def launch():
 						browser.execute_script("window.inputFilePaths['triageFolderPath'] = \"%s\"; window.triageFolderInputed();" %triage_case_path)
 
 
-
-
-
 				if needs_update['triageExecuteAnalysis']:
 					cout << "Triage Results Mode\n"					
 					case_folder = browser.execute_script("return triageFields['caseFolderPath'];")
@@ -316,17 +315,54 @@ def launch():
 
 					cout << "Received controller results: " << results << "\n"
 
-
 					browser.execute_script("modesResultsData['triage'] = JSON.parse('%s'); window.execTriageDumpRun(); window.triageFinishedAnalysis(); hideLoader(); showSuccess('Finished Triage Analysis!');"  %json.dumps(results))
-					# browser.execute_script("window.execTriageDumpRun(); window.triageFinishedAnalysis(); hideLoader(); showSuccess('Finished Triage Analysis!');")
-
 
 
 					cout << "Done\n"
 					
-					# M.start_triage_analysis("C:\\Users\\User\\Desktop\\2202-WELTPEIOC-Suite\\ram_output")
 
 
+				if needs_update['triageSaveResult']:
+					cout << "Save triage output to specified location\n"
+
+					save_as_path = tk_ask_input('saveas')
+
+					cout << "SAVEAS: " << save_as_path << "\n"
+
+					if save_as_path != "":
+						triage_result = browser.execute_script("return retrieveTriageJsonResults();")
+						if triage_result != "":							
+							with open(save_as_path, 'w') as f:
+								f.write(triage_result)
+
+							browser.execute_script("showSuccess('Saved {}')".format(save_as_path))
+						else:
+							browser.execute_script("showError('Error occured, unable to save file')")
+
+				
+
+				if needs_update['malwareFileInput']:
+					cout << "Malware choose PE file mode\n"
+
+					pe_file  = tk_ask_input('file')
+
+					if pe_file != "":
+						browser.execute_script("window.inputFilePaths['malwareFilePath'] = \"%s\"; window.malwareFileInputed();" %pe_file)
+
+
+
+				if needs_update['malwareExecuteAnalysis']:
+					cout << "Malware Execute PE file analysis\n"
+
+					pe_file_path = browser.execute_script("return malwareFields.pePath;")
+					cout << "PE File Path: " << pe_file_path << "\n"
+					browser.execute_script("showLoader('Analyzing your PE file')")
+
+					if pe_file_path != "Choose file..." and pe_file_path != "Error":
+						results = control.start_malware_analyze(pe_file_path)
+
+						cout << "Received controller results: " << results << "\n"
+						browser.execute_script("modesResultsData['malware'] = JSON.parse('%s'); window.execMalwareResults(); window.malwareFinishedAnalysis(); hideLoader(); showSuccess('Finished single PE analysis!');"  %json.dumps(results))
 
 				if needs_update['evtLogInput']:
 					cout << "EVT Single Get Log Path\n"
@@ -348,9 +384,9 @@ def launch():
 						browser.execute_script("showLoader('Analyzing %s log file...');" %file_name)
 
 						results = control.start_evt_analyze_one_log(log_path)
+						cout << "Received results\n"
 
-
-						browser.execute_script("modesResultsData['evt'] = JSON.parse('%s'); window.execEvtAnalysisResults(); window.evtFinishedAnalysis(); hideLoader(); showSuccess('Finished analysing %s');" %json.dumps(results) %file_name)
+						browser.execute_script("modesResultsData['evt'] = JSON.parse('{}'); window.execEvtAnalysisResults(); window.evtFinishedAnalysis(); hideLoader(); showSuccess('Finished analysing {}');".format(json.dumps(results),file_name))
 
 						
 

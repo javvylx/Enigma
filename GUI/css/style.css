@@ -40,7 +40,7 @@ button.bg-dark:focus {
 }
 
 
-.btn .btn-white {
+.btn .btn-white, .btn-sm .btn-white {
 	color: white;
 }
 
