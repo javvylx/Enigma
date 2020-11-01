@@ -282,11 +282,11 @@ def launch():
 
 					# Put ur code within here kevin
 					
-					# res = control.start_volatility_dump(case_name, ram_dump_file)
-					# if res == 1:
-					# 	cout << "Ok Finished"
-					# elif res == -1:
-					# 	cout << "Error"
+					res = control.start_volatility_dump(case_name, ram_dump_file)
+					if res == 1:
+						cout << "Ok Finished"
+					elif res == -1:
+						cout << "Error"
 					
 					browser.execute_script("hideLoader(); showSuccess('Finished dumping case details!');")
 
