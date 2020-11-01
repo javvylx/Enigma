@@ -1,6 +1,4 @@
 # Enigma
-
-
 ![](enigma.png)
 Pre-requisites:
 Python 3.x or newer
