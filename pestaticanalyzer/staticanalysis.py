@@ -884,7 +884,7 @@ if __name__ == '__main__':
 	# dat = PEAnalyser()
 	# print(dat.get_heuristics_dict("C:\\users\\user\\Desktop\\123456.exe"))
 	A = ResultsRetriever("C:\\users\\user\\Desktop\\123456.exe")
-	print(A.get_imported_results())
+	
 	# obj = PEDetails("C:\\users\\user\\Desktop\\123456.exe")
 	# 
 	

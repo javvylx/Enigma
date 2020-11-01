@@ -62,6 +62,7 @@ class ModulesControler:
 
 
 
+
 	def start_triage_analysis(self, folder_path):
 		# Extract Info
 		
@@ -349,9 +350,60 @@ class ModulesControler:
 				ret_data.append(f_dict)
 
 			return ret_data
+	def start_malware_analyze(self, pe_path):
+
+		res = staticanalysis.ResultsRetriever(pe_path)		
+
+		try:
+			res_imp = res.get_imported_results()
+		except:
+			res_imp = None
+
+
+		try:
+			res_sect = res.get_formated_section_details()
+		except:
+			res_sect = None
+
+
+		try:
+			heuristics_details = self.file_analyzer.get_heuristics_dict(pe_path)
+			heuristics_flag_count = sum(1 for x in heuristics_details.values() if x == 1 or x == True)
+		except:
+			heuristics_details = None
+
+
+		try: 
+			ml_data = self.file_analyzer.get_ml_data(pe_path)
+			tp = [(x,y) for x,y in ml_data.items()]
+			inference_net = test.InferenceNet(self.CHECKPOINT_PATH)
+			inputs = inference_net.get_vectorized_row(tp)
+			ts_score = str(inference_net.run(inputs))
+		except:
+			ts_score = None
+
+
+		ret_data = {
+					"Heuristics":str(heuristics_flag_count) if heuristics_details is not None else "Error",
+					"TensorModel":ts_score if ts_score is not None else "Error",
+					"ImportsResult":res_imp if res_imp is not None  else "Error",
+					"SectionResults":res_sect if res_sect is not None else "Error"
+		}
+
+
+		for x in ret_data['SectionResults']['Rows']:
+			for a,b in x.items():
+				if int(b) != 0:
+					if str(b).isdigit():
+						b = str(hex(int(b,16)))
+			
+
+		return ret_data
 
 
 	def start_evt_analyze_one_log(self, log_path):
+
+
 		ret_data = { "EventLogAnalysisSolo" : [] }
 		try:
 			self.triage_analyze_security_log(log_path)
@@ -365,7 +417,7 @@ class ModulesControler:
 
 			# print(field_lengths)
 	def start_review_triage(self, file_path):
-		
+		ts_score if ts_score is not None else "Error"
 		with open(file_path, 'r') as f:
 			data = json.load(f)
 
@@ -381,7 +433,10 @@ class ModulesControler:
 if __name__ == '__main__':
 	M = ModulesControler()
 
-	print(M.triage_get_processes_count("C:\\Users\\User\\Desktop\\testdump\\"))
+	D = M.start_malware_analyze("c:\\users\\user\\desktop\\12345.exe")
+	D['SectionResults']['Rows']	
+
+	# print(M.triage_get_processes_count("C:\\Users\\User\\Desktop\\testdump\\"))
 	
 	# with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", "r") as f:
 	# 	data = json.loads(f.read())
