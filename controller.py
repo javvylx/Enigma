@@ -9,7 +9,7 @@ from IOC import ioc
 
 # Comment the 3 below if u all havent pip install
 
-from virustotal import vtapi
+from VirusTotal import vtapi
 from pestaticanalyzer import staticanalysis
 from tsmodel import test,dataset
 

@@ -38,6 +38,7 @@ def analysis(casename,ramImagePath):
 	    1: RAM dump not found
 	"""
 	global casefolder
+	global imagePath
 	currentDate = datetime.now()
 	dt_string = currentDate.strftime("%d-%m-%Y_%H-%M-%S")
 	casefolder = mainDir+ "\\"+ dt_string+"_"+casename
@@ -132,6 +133,7 @@ def get_process_tree(profile):
 	    profile (TYPE): Description
 	"""
 	global casefolder
+	global imagePath
 	processTreeCommand = volatility + " -f " + imagePath + " --profile="+profile+" pstree > " + casefolder +"\\pstree.txt"
 	output = subprocess.run(processTreeCommand, shell=True)
 
