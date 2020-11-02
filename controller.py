@@ -69,25 +69,7 @@ class ModulesControler:
 		if folder_path[-1] != "\\":
 			folder_path += "\\"
 
-		# with open(os.getcwd()+"\\GUI\\tmp\\triageResult.json", 'r') as f:
-		# 	data = json.load(f)
-
-		# print(data)
-
-		# return data
-
-		# os.remove(self.FILE_WELT_JSON)
-		# self.triage_analyze_security_log(folder_path+"Security.evtx") #This one idk u all want fixed or what
-		# evt_data = self.get_welt_json_data(self.FILE_WELT_JSON)
-
-		# print(evt_data)
-
-		# with open("evtoutput.txt", 'w') as f:
-		# 	f.write(json.dumps(evt_data))
-
-		# sys.exit()
-
-
+	
 
 		img_info_det = self.triage_parse_image_profiles(folder_path)
 		img_com_det = self.triage_parse_image_computer_info(folder_path)
@@ -115,14 +97,6 @@ class ModulesControler:
 			img_whois = "None"
 
 
-		# print(img_whois)
-		# print(img_exe_hashes)
-		# print("-------------")
-		# print(img_dll_hashes)
-
-		# sys.exit()
-		 
-		 
 		
 		try:
 			mal_exes = self.triage_evaluate_malware(folder_path+self.FLDR_EXE, img_exe_hashes)
@@ -162,7 +136,7 @@ class ModulesControler:
 					"MalignFileCount": str(mal_count), # Count based on how many dll's heursitics > 4 or 5 , and ts > 50%
 					"FlaggedEvents": str(len(evt_data)),
 					"PstreeResult": pst_res,
-					# [defaultdict(None, {'IP': '56.139.105.26', 'ISP': '', 'Continent': 'North America', 'Country': 'United States'}), defaultdict(None, {'IP': '216.58.207.206', 'ISP': 'Google', 'Continent': 'North America', 'Country': 'United States', 'State/Region': 'California', 'City': 'Mountain View'}), defaultdict(None, {'IP': '56.27.91.26', 'ISP': '', 'Continent': 'North America', 'Country': 'United States'})]
+			
 					"WhoIsDomainDetails": img_whois,
 					"FilesAnalysisDetails": mal_exes,
 					"DLLAnalysisDetails":mal_dlls,
