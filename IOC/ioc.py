@@ -11,7 +11,7 @@ import csv
 import hashlib
 from datetime import datetime
 
-mainDir = os.getcwd()+"\\IOC"
+mainDir = os.getcwd()+"\\Cases"
 vol = "volatility-2.6.standalone.exe"
 volatility = mainDir+ "\\volatility_2.6_win64_standalone.exe"
 #Placeholder
