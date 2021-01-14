@@ -596,7 +596,7 @@ $(function () {
 	
 	// Display Side Bar
 	var sideHomeCtx = genSideItemCtx("side-home", "Home", "fas fa-tachometer-alt active");
-	var sideVolatilityCtx = genSideItemCtx("side-volatility", "Volatility analysis", "fas fa-memory");
+	var sideVolatilityCtx = genSideItemCtx("side-volatility", "Case Generation", "fas fa-memory");
 	var sideTriageCtx = genSideItemCtx("side-triage", "Triage Analysis", "fab fa-searchengin");
 	var sideMalwareCtx = genSideItemCtx("side-malware", "Malware Heuristics", "fas fa-biohazard");
 	var sideEventCtx = genSideItemCtx("side-event", "Event Logs Correlator", "fas fa-chart-area");
@@ -636,7 +636,7 @@ $(function () {
 
 // gridClass, colorStyle, title, desc, iconClass
 
-	var homevolatilityDumpCtx = genHomeCardCtx("home-volatility-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-primary", "home-card", "Volatility", "Extract of host PC's RAM for Triage Analysis", "fa-6x fas fa-memory");
+	var homevolatilityDumpCtx = genHomeCardCtx("home-volatility-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-primary", "home-card", "Case Generation", "Parse all case artifacts for triage analysis", "fa-6x fas fa-memory");
 
 	var homeTriageCtx = genHomeCardCtx("home-triage-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-success", "home-card", "Triage Analyis", "Conducts full analysis of Volatility with analysis modules", "fa-6x fab fa-searchengin");
 
@@ -723,7 +723,7 @@ $(function () {
 		'info');
 
 	var triageRequiredInputCtx = genFileSelectCtx("triage-card-select_dump_folder",
-		"Choose your volatility analysis folder",
+		"Choose your case folder",
 		"triage-dump-folder",
 		"Choose folder...",
 		"FILE",
@@ -1271,7 +1271,7 @@ $(function () {
 
 	var arrTitles = {
 			"home": "What do you want to do",
-			"volatility": "Volatility analysis",
+			"volatility": "Case generation",
 			"triage": "Automated RAM Analysis",
 			"malware": "Malware Heuristics",
 			"event": "Windows Logs Correlator",
@@ -1815,11 +1815,11 @@ $(function () {
 
 </head>
 	<body id="page-top">
-		<!-- Page Wrapper -->
+
 		<div id="wrapper">
-			<!-- Sidebar -->
+
 			<ul id="accordionSidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion unselectable" >
-				<!-- Sidebar - Brand -->
+
 				<br><br>
 				<a id="side-logo" class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
 
@@ -1827,48 +1827,40 @@ $(function () {
 
 				</a>
 				<br> <br>
-				<!-- Divider -->
+
 				<hr id='first-boarder' class="sidebar-divider my-0">
 
 				<hr class="sidebar-divider d-none d-md-block">
-				<!-- Sidebar Toggler (Sidebar) -->
+
 				<div class="text-center d-none d-md-inline">
 					<button class="rounded-circle border-0" id="sidebarToggle"></button>
 				</div>
 			</ul>
-			<!-- End of Sidebar -->
 
 
 
-			<!-- Content Wrapper -->
+
+
 			<div id="content-wrapper" class="d-flex flex-column">
-				<!-- Main Content -->
+
 				<div id="content">
-					<!-- Topbar -->
+
 					<div class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-						<!-- Sidebar Toggle (Topbar) -->
+
 						
 					</div>
-					<!-- End of Topbar -->
 
 
 
-					<!-- Begin Page Content -->
+
+
 					<div id="page-content-area" class="container-fluid">
-						<!-- Page Heading -->
+
 						
 						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
 							<h1 id="content-header" class="h1 text-gray-800">What do you want to do?</h1>
 						</div>
-<!-- "row-home"
-"row-volatility"
-"row-triage"
-"row-malware"
-"row-event"
-"row-review"
-"row-about"
-"row-technologies"
- -->
+
 						
 						<div id='row-home' class='row content-row'>
 
@@ -1897,7 +1889,7 @@ $(function () {
 
 						<div id='row-technologies' class='row content-row'>
 
-							<!-- Section Heading -->
+
 						
 
 						</div>
@@ -1908,7 +1900,7 @@ $(function () {
 
 
 					</div>
-				<!-- Footer -->
+
 				<footer class="sticky-footer bg-white">
 				<div class="container my-auto">
 				  <div class="copyright text-center my-auto">
@@ -1918,10 +1910,10 @@ $(function () {
 			  </footer>
 
 			</div>
-			<!-- End of Content Wrapper -->
+
 		</div>
-		<!-- End of Page Wrapper -->
-		<!-- Scroll to Top Button-->
+
+
 		<a class="scroll-to-top rounded" href="#page-top">
 		<i class="fas fa-angle-up"></i>
 		</a>
@@ -1929,13 +1921,13 @@ $(function () {
 
 	
 		
-		<!-- Bootstrap core JavaScript-->
+
 		
-		<!-- Custom scripts for all pages-->
+
 		<script src="js/sb-admin-2.min.js"></script>
-		<!-- Page level plugins -->
+
 		<script src="vendor/chart.js/Chart.min.js"></script>
-		<!-- Page level custom scripts -->
+
 		<script src="js/demo/chart-area-demo.js"></script>
 		<script src="js/demo/chart-pie-demo.js"></script>
 	</body>

@@ -266,9 +266,6 @@ def launch():
 					except:
 						ram_image_file_path = "Error"
 
-
-					browser.execute_script("")
-
 					cout << "Update Triage Case Folder Path\n"
 					if ram_image_file_path != "" and ram_image_file_path != "Error":
 						browser.execute_script("window.inputFilePaths['ramImage'] = \"%s\"; window.volRamDumpInputed();" %ram_image_file_path)
@@ -287,12 +284,13 @@ def launch():
 
 					# Put ur code within here kevin
 					
-					res = control.start_volatility_dump(case_name, ram_dump_file)
-					if res == 1:
-						cout << "Ok Finished"
-					elif res == -1:
-						cout << "Error"
+					# res = control.start_volatility_dump(case_name, ram_dump_file)
+					# if res == 1:
+					# 	cout << "Ok Finished"
+					# elif res == -1:
+					# 	cout << "Error"
 					
+					time.sleep(10)
 					browser.execute_script("hideLoader(); showSuccess('Finished dumping case details!');")
 
 
@@ -301,7 +299,6 @@ def launch():
 
 					triage_case_path = tk_ask_input('folder')
 					# Get folder using tkinter
-
 
 					if triage_case_path != "":
 						browser.execute_script("window.inputFilePaths['triageFolderPath'] = \"%s\"; window.triageFolderInputed();" %triage_case_path)

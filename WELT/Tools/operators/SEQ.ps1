@@ -32,7 +32,7 @@ foreach($node in $nodes)
 	"EventID" : "'+$EventSEQArray+'",
 	"Timestamp" : "'+$time+'",
 	"EventRecordID" : "'+$evrid+'",
-	"Description" : "'+$ruledesc+'"
+	"Description" : "'+$ruledesc+'",
 	"IPAddress": "NIL"
 	}'
 		Add-content ".\WELT\Tools\$casefile\Analysis\Security_Analysis.json" $output

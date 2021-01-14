@@ -1,90 +1,54 @@
 {
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-09 16:35:27.865616",
-	"EventRecordID" : "4718",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.71"
-	},
+	"RuleTriggered" : "3",
+	"RuleName" : "Detecting Privilege Escalation",
+	"EventID" : "4624 4672 4688",
+	"Timestamp" : "2020-08-17 10:30:08.082762",
+	"EventRecordID" : "1",
+	"Description" : "This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.",
+	"IPAddress": "NIL"
+	}
 {
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-09 16:36:57.036455",
-	"EventRecordID" : "4728",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.71"
-	},
+	"RuleTriggered" : "4",
+	"RuleName" : "Detecting Privilege Escalation",
+	"EventID" : "4648 4672 4688",
+	"Timestamp" : "2020-08-17 10:30:08.082762",
+	"EventRecordID" : "1",
+	"Description" : "This may be a possible attack whereby an attacker grants himself special privileges and access that he/she may not previously have.",
+	"IPAddress": "NIL"
+	}
 {
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-09 16:55:13.417419",
-	"EventRecordID" : "4739",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.71"
-	},
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-22 17:27:35.756195",
+	"EventRecordID" : "10677",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt",
+	"IPAddress": "NIL"
+	}
 {
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-09 16:55:37.341822",
-	"EventRecordID" : "4746",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.71"
-	},
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-22 17:27:55.132338",
+	"EventRecordID" : "10679",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt",
+	"IPAddress": "NIL"
+	}
 {
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-09 17:30:10.293547",
-	"EventRecordID" : "4756",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.71"
-	},
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-24 20:41:59.100552",
+	"EventRecordID" : "11592",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt",
+	"IPAddress": "NIL"
+	}
 {
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-10 06:31:48.001804",
-	"EventRecordID" : "4766",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.76"
-	},
-{
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-10 06:45:09.208012",
-	"EventRecordID" : "4771",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.76"
-	},
-{
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-10 06:47:09.615332",
-	"EventRecordID" : "4785",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.76"
-	},
-{
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-03-10 12:23:43.479734",
-	"EventRecordID" : "5447",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.71"
-	},
-{
-	"RuleTriggered" : "22",
-	"RuleName" : "Potential Unauthorised RDP Access",
-	"EventID" : "4624",
-	"Timestamp" : "2019-04-20 08:35:49.544392",
-	"EventRecordID" : "5521",
-	"Description" : "This may indicate how the attacker gained access to the system",
-	"IPAddress": "192.168.1.71"
-	},
+	"RuleTriggered" : "12",
+	"RuleName" : "Account Logon Brute Force",
+	"EventID" : "4625",
+	"Timestamp" : "2020-10-24 21:03:50.856190",
+	"EventRecordID" : "12229",
+	"Description" : "Repeated instances of this event may indicate a brute force logon attempt",
+	"IPAddress": "NIL"
+	}

@@ -140,6 +140,7 @@ if __name__ == '__main__':
 				P['labels']: labels, 
 				P['learning_rate']: learning_rate
 			}
+			
 			session.run(P['train'], feed_dict=feed_dict)
 
 			if batch_index and batch_index % 512 == 0:
