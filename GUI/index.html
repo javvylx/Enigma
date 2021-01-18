@@ -9,13 +9,12 @@
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="css/google-fonts.css" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="ui_libs/toastr.min.css">
+
+<link href="ui_libs/toastr.min.css" rel="stylesheet" >
 
 <link href="css/style.css" rel="stylesheet">
 <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 <style type="text/css">
-
-
 
 #download .refresh {
     width: 30px; height: 30px;
@@ -40,19 +39,15 @@
   }
 </style>
 
+<script src="js/external/jquery/jquery.min.js"></script>
+<script src="js/external/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="js/external/jquery-easing/jquery.easing.min.js"></script>
 
+<script src="js/external/popper.min.js"></script>
+<script src="js/external/toastr.min.js"></script>
+<script src="js/external/loadingoverlay.min.js"></script>
+<script src="js/external/aris.js"></script>
 
-
-<script src="vendor/jquery/jquery.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- <link rel="stylesheet" type="text/css" href="ui_libs/bootstrap.css"> -->
-<script src="ui_libs/popper.min.js"></script>
-<script src="ui_libs/toastr.min.js"></script>
-
-<script src="ui_libs/loadingoverlay.min.js"></script>
-<script src="ui_libs/aris.js"></script>
 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
@@ -68,19 +63,16 @@ window.needsUpdate = {
 	evtLogInput: false, evtExecuteAnalysis: false,
 	reviewResultInput: false, reviewExecuteReview: false};
 
-
 window.inputFilePaths = {
 	ramImage: '',
 	triageFolderPath: '',
 	malwareFilePath: '',
 	evtLogPath:'',
-	reviewCasePath: ''};
-
+	reviewCasePath: ''
+};
 
 
 	// "window.inputFilePaths['reviewCasePath'] = \"%s\"; window.evtLogInputted();" %case_file_path)
-
-
 
 volFields = {caseName: '', ramFilePath:''}
 
@@ -93,7 +85,6 @@ evtFields = {logPath: ''};
 reviewFields = {caseFilePath: ''};
 
 modesResultsData = {vol: '', triage: '' , malware: '', evt: '', review: ''};
-
 
 
 
@@ -113,11 +104,11 @@ toastr.options = {
 	  "hideEasing": "linear",
 	  "showMethod": "fadeIn",
 	  "hideMethod": "fadeOut"
-	};
+};
 
 
 showSuccess = function(s) {
-  toastr.success(s);
+	toastr.success(s);
 }
 
 
@@ -137,6 +128,9 @@ showError = function(e) {
 		toastr.error(e);
 	}
 }
+
+
+
 hideLoader = function(error) {
   if (error) toastr.error(error);
   $('#refresh').removeClass('disabled');
@@ -152,7 +146,6 @@ $(function () {
 			['i', {class: faClass}]
 
 		];
-
 	}
 
 	function genCardHeaderWithEleCtx(title, fontClass, faClass, ele) { 
@@ -198,7 +191,6 @@ $(function () {
 				]
 			]
 		];
-
 	}
 
 	function genImageDescCardCtx(title, paragraphs) {
@@ -209,15 +201,11 @@ $(function () {
 				], paragraphs
 			]
 		];
-
 	}
-
 
 	function genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, bodyElements) {
 		return ['div', {class: 'unselectable mb-4 ' + gridClass},
 			['div', {id: cardId, class: 'card shadow h-100  ' + colorStyle + " " + hoverStyle}, 
-			// ['div', {id: cardId, class: 'card shadow h-100 py-2' + " border-bottom-" + colorStyle + " " + hoverStyle}, 
-
 				['div', {class: 'card-body'},
 					bodyElements
 				]
@@ -270,8 +258,6 @@ $(function () {
 
 		];
 	}
-
-	
 
 	function genHomeCardCtx(cardId, gridClass, colorStyle, hoverStyle, title, desc, iconClass) {
 		return genInfoCardCtx(cardId, gridClass, colorStyle, hoverStyle, genInfoBodyCtx(title, desc, iconClass, colorStyle));
@@ -623,14 +609,14 @@ $(function () {
 
 // End of Display Side menu
 
-"row-home"
-"row-volatility"
-"row-triage"
-"row-malware"
-"row-event"
-"row-about"
-"row-technologies"
-"row-review"
+// "row-home"
+// "row-volatility"
+// "row-triage"
+// "row-malware"
+// "row-event"
+// "row-about"
+// "row-technologies"
+// "row-review"
 
 
 
@@ -776,10 +762,6 @@ $(function () {
 
 
 	// Name ImgDateTime Model Manufacturer 
-
-
-
-
 	var triageResultProcessCountCtx = 
 		genTriageCardCtx("triage-result-process-info", // card ID
 			"col-xl-6 col-lg-6 col-md-6 triage-results-card mt-3", 
@@ -831,7 +813,6 @@ $(function () {
 		]);
 
 	console.log(HTML(triageResultPstreeResultsCtx));
-
 
 	var triageResultWhoIsResultsCtx = genTableWithDivCtx("triage-whois-table-div", 
 		"triage-whois-inner-div", 
@@ -1132,8 +1113,6 @@ $(function () {
 
 
 	// Name ImgDateTime Model Manufacturer 
-
-
 	// Rewview onwards from here
 	// 
 	// 
@@ -1204,7 +1183,6 @@ $(function () {
 		]);
 
 
-
 	var reviewResultEvtTableCtx = genTableWithDivCtx("review-evt-table-div", 
 		"review-evt-inner-div", 
 		"review-evt-table", 
@@ -1239,35 +1217,31 @@ $(function () {
 			genCardHeaderCtx("Results",
 				"m-0 font-weight-bold text-secondary", 
 				"ml-2 fa-1x fas fas fa-chart-bar"),
-				['div', {class: 'card-body row'},
-					reviewResultsMetaNameCtx,
-					reviewResultsMetaImageDateCtx,
-					reviewResultsMetaModelCtx,
-					reviewResultsMetaManufacturerCtx,
+			['div', {class: 'card-body row'},
+				reviewResultsMetaNameCtx,
+				reviewResultsMetaImageDateCtx,
+				reviewResultsMetaModelCtx,
+				reviewResultsMetaManufacturerCtx,
 
-					reviewResultProcessCountCtx,
-					reviewResultDomainResultsCtx,
-					
-					reviewResultMalignFilesCtx,
-					reviewResultMalignEventsCtx,
+				reviewResultProcessCountCtx,
+				reviewResultDomainResultsCtx,
+				
+				reviewResultMalignFilesCtx,
+				reviewResultMalignEventsCtx,
 
-					//Tables
-					reviewResultPstreeResultsCtx,			
-					reviewResultWhoIsResultsCtx,					
-					reviewResultsExesTableCtx,
-					reviewResultsDllTableCtx,
-					reviewResultEvtTableCtx
-				]	
-
+				//Tables
+				reviewResultPstreeResultsCtx,
+				reviewResultWhoIsResultsCtx,
+				reviewResultsExesTableCtx,
+				reviewResultsDllTableCtx,
+				reviewResultEvtTableCtx
+			]	
 		]
 
 	];
 
 
 	// var evtTempTableCtx = genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results', ['h1','h2','h3', 'h4'], [['R1','R2','R3', 'R4'], ['r5','r6','r7', 'r8']]);
-
-
-
 
 	var arrTitles = {
 			"home": "What do you want to do",
@@ -1280,9 +1254,6 @@ $(function () {
 			"review": "Review Triage Results"
 	};
 
-	
-
-
 	var aboutIntroDetails = [
 		{"Name":"Kevin Tan", "imagePath":"img/kevin.png"},		
 		{"Name":"Patrick Kang", "imagePath":"img/patrick.jpeg"},
@@ -1291,7 +1262,6 @@ $(function () {
 		{"Name":"Cleaven Goh", "imagePath":"img/cleaven.jpeg"}				
 	];
 
-		
 	var aboutIntroCtx = genAboutCardInfoCtx(
 			"Introduction",
 			'img/enigma.png',
@@ -1320,6 +1290,7 @@ $(function () {
 
 	$('#row-home').html(HTML(dashboardCtxs));
 	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
+
 	// 1
 	$('#row-volatility').html(HTML([volatiltiyInstructionsCtx, volatilityRequiredCaseNameCtx, volatilityRequiredRamDumpCtx]));
 
@@ -1545,8 +1516,6 @@ $(function () {
 		}		
 	});
 
-
-
 	$('.home-card').click(function() {
 		var cat = $(this).attr('id').split('-')[1];
 
@@ -1573,7 +1542,6 @@ $(function () {
 		inputFilePaths.ramImage = "";
 	};
 
-
 	window.volFinishedDump = function() {
 		volFields.caseName = "";
 		volFields.ramFilePath = "";
@@ -1587,12 +1555,9 @@ $(function () {
 		} else {
 			toastr.error("Please input valid case name");
 		}	
-
 	})
 
 	// --- End of Volatility analysis events --- //
-
-
 
 	$('#triage-dump-folder').click(function(){
 		needsUpdate.triageCaseFolderInput = true;
@@ -1604,13 +1569,9 @@ $(function () {
 		inputFilePaths.triageFolderPath = "";
 	}
 
-	
-
 	window.triageFinishedAnalysis = function() {
 		triageFields.caseFolderPath = ""; //Reset triageFields inputs
-
 		console.log(modesResultsData.triage)
-
 		// Update all tables using the modesResultsData['triage']
 	}	
 
@@ -1622,7 +1583,6 @@ $(function () {
 			tbl.rows.add(tblData);
 			tbl.draw();
 		}
-		
 	}
 
 	updateResultLabels = function(labelId, text) {
@@ -1681,8 +1641,6 @@ $(function () {
 			['RuleTriggered', 'RuleName', 'EventID', 'Timestamp', 'EventRecordID', 'Description', 'IPAddress'],
 			modesResultsData[t]['EventLogAnalysisDetails']);
 
-
-
 		$('#res-'+t+'-panel').show(100);
 	};
 
@@ -1690,7 +1648,6 @@ $(function () {
 	window.execTriageDumpRun = function() {
 		window.exeResultsBatchUpdate('triage');
 	}
-
 
 
 	window.malwareFileInputed = function () {
@@ -1729,13 +1686,6 @@ $(function () {
 
 		needsUpdate.malwareExecuteAnalysis = true;
 	});
-
-
-
-	
-
-
-
 
 
 	window.evtLogInputted = function() {
@@ -1809,8 +1759,6 @@ $(function () {
 });
 
 
-
-
 </script>
 
 </head>
@@ -1820,10 +1768,9 @@ $(function () {
 
 			<ul id="accordionSidebar" class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion unselectable" >
 
-				<br><br>
 				<a id="side-logo" class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
 
-					<center> <img src="img/enigma.png" alt="Enigma"  style="width:50%;height:100%;" >  </center>
+					<center> <img src="img/enigma.png" alt="Enigma" style="width:50%;height:100%;" >  </center>
 
 				</a>
 				<br> <br>
@@ -1837,33 +1784,26 @@ $(function () {
 				</div>
 			</ul>
 
-
-
-
-
 			<div id="content-wrapper" class="d-flex flex-column">
 
 				<div id="content">
 
 					<div class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
 						
 					</div>
 
 
-
-
-
 					<div id="page-content-area" class="container-fluid">
 
-						
 						<div class="content-header-container d-sm-flex align-items-center justify-content-center mb-4 unselectable">
 							<h1 id="content-header" class="h1 text-gray-800">What do you want to do?</h1>
 						</div>
 
+						<div id='root' class='row content-row'>
+
+						</div>
 						
 						<div id='row-home' class='row content-row'>
-
 
 						</div>
 
@@ -1889,8 +1829,6 @@ $(function () {
 
 						<div id='row-technologies' class='row content-row'>
 
-
-						
 
 						</div>
 
@@ -1918,18 +1856,6 @@ $(function () {
 		<i class="fas fa-angle-up"></i>
 		</a>
 
-
-	
-		
-
-		
-
-		<script src="js/sb-admin-2.min.js"></script>
-
-		<script src="vendor/chart.js/Chart.min.js"></script>
-
-		<script src="js/demo/chart-area-demo.js"></script>
-		<script src="js/demo/chart-pie-demo.js"></script>
 	</body>
 </html>
 
