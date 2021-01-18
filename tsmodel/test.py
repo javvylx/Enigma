@@ -53,10 +53,7 @@ class InferenceNet(object):
 		], dtype=np.float32)
 		X = np.reshape(X, [1, -1])
 		return X
-
-			
-
-		
+	
 
 		# for x,y in f_fields[1:]:
 		# 	if 

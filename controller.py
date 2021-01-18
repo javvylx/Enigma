@@ -77,7 +77,6 @@ class ModulesControler:
 		except:
 			pst_res = "None"
 
-
 		try:
 			img_whois = self.triage_parse_whois(folder_path)
 			for x in img_whois:
