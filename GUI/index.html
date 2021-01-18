@@ -7,13 +7,13 @@
 <title>Enigma 1.0</title>
 
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-<link href="css/google-fonts.css" rel="stylesheet">
-<link href="css/sb-admin-2.min.css" rel="stylesheet">
 
-<link href="ui_libs/toastr.min.css" rel="stylesheet" >
+<link href="css/external/google-fonts/google-fonts.css" rel="stylesheet">
+<link href="css/external/sb-admin-2/sb-admin-2.min.css" rel="stylesheet">
+<link href="css/external/toastr/toastr.min.css" rel="stylesheet" >
 
 <link href="css/style.css" rel="stylesheet">
-<link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
 <style type="text/css">
 
 #download .refresh {
@@ -47,6 +47,7 @@
 <script src="js/external/toastr.min.js"></script>
 <script src="js/external/loadingoverlay.min.js"></script>
 <script src="js/external/aris.js"></script>
+<script src="js/external/bootstrap/bootstrap.min.js"></script>
 
 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
@@ -71,8 +72,6 @@ window.inputFilePaths = {
 	reviewCasePath: ''
 };
 
-
-	// "window.inputFilePaths['reviewCasePath'] = \"%s\"; window.evtLogInputted();" %case_file_path)
 
 volFields = {caseName: '', ramFilePath:''}
 
@@ -1750,7 +1749,7 @@ $(function () {
 		$('.content-row').hide();
 		$('#row-home').show();
 
-		$('.results-container').hide();
+		// $('.results-container').hide();
 	}
 
 	startUp();
