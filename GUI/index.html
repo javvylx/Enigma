@@ -22,7 +22,23 @@
 
 <script src="js/init.js"></script>
 <script src="js/context/helper.js"></script>
-<script src="js/load-elements.js"></script>
+<script src="js/layout-elements.js"></script>
+<script src="js/layout-events.js"></script>
+
+<!-- All page layout elements -->
+<script src="js/layout/nav.js"></script>
+<script src="js/layout/page-info.js"></script>
+<script src="js/layout/home.js"></script>
+
+<script src="js/layout/case-generation.js"></script>
+<script src="js/layout/triage.js"></script>
+<script src="js/layout/single-file-static.js"></script>
+<script src="js/layout/single-evt.js"></script>
+
+<script src="js/layout/review-triage.js"></script>
+
+<script src="js/layout/info-tech.js"></script>
+<script src="js/layout/info-people.js"></script>
 
 
 
@@ -34,8 +50,11 @@ $(function () {
 
 	// var CTX = context.helper();
 	
-	
 
+	// All Reesults tables
+	// 
+	// 
+	// 
 	$('#row-home').html(HTML(dashboardCtxs));
 	$(HTML(sideMenuCtx)).insertAfter('#first-boarder');
 
@@ -44,7 +63,7 @@ $(function () {
 
 	// 2
 	$('#row-triage').html(HTML([triageInstructionsCtx, triageFunctionsDescCtx, triageRequiredInputCtx, triageResultsPanelCtx]));
-	
+
 	// 3
 	$('#row-malware').html(HTML([malwareFunctionsCtx, malwareRequiredInputCtx, malwareResultsPanelCtx]));
 
@@ -57,13 +76,6 @@ $(function () {
 	$("#row-about").html(HTML([aboutIntroCtx, aboutPeopleCtx]));
 
 
-
-
-	// All Reesults tables
-	// 
-	// 
-	// 
-	// 
 	$("#triage-pstree-table").DataTable({
 		'pageLength': 5,
 		'lengthMenu': [5,-1],
@@ -492,7 +504,6 @@ $(function () {
 		needsUpdate.reviewExecuteReview = true;
 	});
 
-
 	var startUp = function() {
 		$('#side-home').addClass("active");
 		$('.content-row').hide();
@@ -520,26 +531,26 @@ $(function () {
 <style type="text/css">
 
 #download .refresh {
-    width: 30px; height: 30px;
-    margin-top: -7px;
-    -animation: spin .9s infinite linear;
-    -webkit-animation: spin2 .9s infinite linear;
-  }
-  @-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg);}
-    to { -webkit-transform: rotate(360deg);}
-  }
-  @keyframes spin {
-    from { transform: rotate(0deg);}
-    to { transform: rotate(360deg);}
-  }
-  #download {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
-    user-select: none;    
-  }
+	width: 30px; height: 30px;
+	margin-top: -7px;
+	-animation: spin .9s infinite linear;
+	-webkit-animation: spin2 .9s infinite linear;
+}
+@-webkit-keyframes spin2 {
+	from { -webkit-transform: rotate(0deg);}
+	to { -webkit-transform: rotate(360deg);}
+}
+@keyframes spin {
+	from { transform: rotate(0deg);}
+	to { transform: rotate(360deg);}
+}
+#download {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;    
+}
 </style>
 
 </head>
