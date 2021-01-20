@@ -1,3 +1,4 @@
+
 var ctxHelper = context.helper();
 
 // Display Side Bar
@@ -8,7 +9,7 @@ var sideMalwareCtx = ctxHelper.genSideItemCtx("side-malware", "Malware Heuristic
 var sideEventCtx = ctxHelper.genSideItemCtx("side-event", "Event Logs Correlator", "fas fa-chart-area");
 var sideTechnologiesCtx = ctxHelper.genSideItemCtx("side-technologies", "Technologies Used", "fas fa-question-circle");
 var sideAboutCtx = ctxHelper.genSideItemCtx("side-about", "About Us", "fas fa-user-secret");
-var sideReviewCtx = ctxHelper.genSideItemCtx("side-review", "Review Results", "fas fa-scroll");
+var sideReviewCtx = ctxHelper.genSideItemCtx("side-review", "Review Triage", "fas fa-scroll");
 
 var sideMenuCtx = [
 	sideHomeCtx,
@@ -20,6 +21,8 @@ var sideMenuCtx = [
 	ctxHelper.genSideSubHeaderCtx("Analysis"),
 	sideMalwareCtx,
 	sideEventCtx,
+	ctxHelper.genSideDividerCtx(),
+	ctxHelper.genSideSubHeaderCtx("Review"),
 	sideReviewCtx,
 	ctxHelper.genSideDividerCtx(),
 	ctxHelper.genSideSubHeaderCtx("Misc"),

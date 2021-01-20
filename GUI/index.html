@@ -6,8 +6,6 @@
 
 <title>Enigma 1.0</title>
 
-
-
 <script src="js/external/jquery/jquery.min.js"></script>
 <script src="js/external/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="js/external/jquery-easing/jquery.easing.min.js"></script>
@@ -20,6 +18,8 @@
 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
+<!-- The order matters! -->
+
 <script src="js/init.js"></script>
 <script src="js/context/helper.js"></script>
 
@@ -30,19 +30,28 @@
 <script src="js/layout/page-info.js"></script>
 <script src="js/layout/home.js"></script>
 
-<script src="js/layout/case-generation.js"></script>
-<script src="js/layout/triage.js"></script>
-<script src="js/layout/single-file-static.js"></script>
-<script src="js/layout/single-evt.js"></script>
+<!-- Triage -->
+<script src="js/layout/triage/case-generation.js"></script>
+<script src="js/layout/triage/triage.js"></script>
 
-<script src="js/layout/review-triage.js"></script>
+<!-- Analysis Modules -->
+<script src="js/layout/analysis/single-pe-eval.js"></script>
+<script src="js/layout/analysis/single-evt-eval.js"></script>
 
-<script src="js/layout/info-tech.js"></script>
-<script src="js/layout/info-people.js"></script>
+<!-- Review Modules -->
+<script src="js/layout/review/review-triage.js"></script>
+
+<!-- Misc -->
+<script src="js/layout/misc/info-tech.js"></script>
+<script src="js/layout/misc/info-people.js"></script>
 
 <script src="js/layout-events.js"></script>
 
+<!-- Call everything needed -->
+<scirpt src="js/main.js"></scirpt>
 
+<!-- Css below
+ -->
 
 <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
