@@ -1,101 +1,4 @@
 var ctxHelper = context.helper();	
-	
-var cardTechBodyPythonEleCtx = [
-	ctxHelper.genTechCardBodyImgCtx('img/python.png'),
-	['p',
-		['a', {rel: 'nofollow', href: 'https://www.python.org/'},'Python'],
-		' is an interpreted, object-oriented, high-level programming language with dynamic semantics. Its high-level built in data structures, combined with dynamic typing and dynamic binding, make it very attractive for Rapid Application Development, as well as for use as a scripting or glue language to connect existing components together.'
-	]
-];
-
-
-// First Tech Card
-var techInfoPythonCtx = ctxHelper.genTechCardInfoCtx(
-	'Python', 
-	'img/python.png', 
-	ctxHelper.genCardBodyCtx('img/python.png', 
-		ctxHelper.genTechCardBodyParaCtx('Python', 
-			'https://www.python.org/', 
-			' is an interpreted, object-oriented, high-level programming language with dynamic semantics. Its high-level built in data structures, combined with dynamic typing and dynamic binding, make it very attractive for Rapid Application Development, as well as for use as a scripting or glue language to connect existing components together.'
-		)
-	)
-);
-
-var techInfoVolatilityCtx = ctxHelper.genTechCardInfoCtx(
-	'Volatility', 
-	'img/volatility.png', 
-	ctxHelper.genCardBodyCtx('img/volatility.png', 
-		ctxHelper.genTechCardBodyParaCtx('Volatility', 
-			'https://www.volatilityfoundation.org/', 
-			' Framework is a completely open collection of tools, implemented in Python under the GNU General Public License, for the extraction of digital artifacts from volatile memory (RAM) samples.'
-		)
-	)
-);
-
-var techInfoSeleniumCtx = ctxHelper.genTechCardInfoCtx(
-	'Selenium', 
-	'img/selenium.png', 
-	ctxHelper.genCardBodyCtx('img/selenium.png', 
-		ctxHelper.genTechCardBodyParaCtx('Selenium', 
-			'https://selenium-python.readthedocs.io/',
-			' bindings provides a simple API to write functional/acceptance tests using Selenium WebDriver. Through Selenium Python API you can access all functionalities of Selenium WebDriver in an intuitive way.'
-		)
-	)
-);
- 
-var techInfoJqueryCtx = ctxHelper.genTechCardInfoCtx(
-	'Jquery', 
-	'img/jquery.png', 
-	ctxHelper.genCardBodyCtx('img/jquery.png', 
-		ctxHelper.genTechCardBodyParaCtx('Jquery', 
-			'https://jquery.com/',
-			' is a fast, small, and feature-rich JavaScript library. It makes things like HTML document traversal and manipulation, event handling, animation, and Ajax much simpler with an easy-to-use API that works across a multitude of browsers.'
-		)
-	)
-); 
-
-var techInfoBootstrapCtx = ctxHelper.genTechCardInfoCtx(
-	'Bootstrap', 
-	'img/bootstrap.png', 
-	ctxHelper.genCardBodyCtx('img/bootstrap.png', 
-		ctxHelper.genTechCardBodyParaCtx('Bootstrap', 
-			'https://getbootstrap.com/',
-			' is a free and open-source CSS framework directed at responsive, mobile-first front-end web development. It contains CSS- and (optionally) JavaScript-based design templates for typography, forms, buttons, navigation, and other interface components.'
-		)
-	)
-); 
-var techInfoPowershellCtx = ctxHelper.genTechCardInfoCtx(
-	'Powershell', 
-	'img/powershell.png', 
-	ctxHelper.genCardBodyCtx('img/powershell.png', 
-		ctxHelper.genTechCardBodyParaCtx('Powershell', 
-			'https://docs.microsoft.com/en-us/powershell/',
-			' is a cross-platform task automation and configuration management framework, consisting of a command-line shell and scripting language. Unlike most shells, which accept and return text, PowerShell is built on top of the .NET Common Language Runtime (CLR), and accepts and returns .NET objects. This fundamental change brings entirely new tools and methods for automation.'
-		)
-	)
-); 
-
-var techInfoBashBunnyCtx = ctxHelper.genTechCardInfoCtx(
-	'Bashbunny', 
-	'img/bash_bunny.png', 
-	ctxHelper.genCardBodyCtx('img/bash_bunny.png', 
-		ctxHelper.genTechCardBodyParaCtx('Bashbunny', 
-			'https://shop.hak5.org/products/bash-bunny',
-			' by Hak5 is the world’s most advanced USB attack platform. It delivers penetration testing attacks and IT automation tasks in seconds by emulating combinations of trusted USB devices – like gigabit Ethernet, serial, flash storage and keyboards. With it, computers are tricked into divulging data, exfiltrating documents, installing backdoors and many more exploits.'
-		)
-	)
-);
-
-var techInfoTensorFlowCtx = ctxHelper.genTechCardInfoCtx(
-	'Tensorflow', 
-	'img/tensor_flow.png', 
-	ctxHelper.genCardBodyCtx('img/tensor_flow.png', 
-		ctxHelper.genTechCardBodyParaCtx('Tensorflow', 
-			'https://www.tensorflow.org/',
-			' is a free and open-source software library for machine learning. It can be used across a range of tasks but has a particular focus on training and inference of deep neural networks.'
-		)
-	)
-);
 
 
 
@@ -115,64 +18,12 @@ var techInfoTensorFlowCtx = ctxHelper.genTechCardInfoCtx(
 
 // gridClass, colorStyle, title, desc, iconClass
 
-var homevolatilityDumpCtx = ctxHelper.genHomeCardCtx("home-volatility-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-primary", "home-card", "Case Generation", "Parse all case artifacts for triage analysis", "fa-6x fas fa-memory");
-
-var homeTriageCtx = ctxHelper.genHomeCardCtx("home-triage-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-success", "home-card", "Triage Analyis", "Conducts full analysis of Volatility with analysis modules", "fa-6x fab fa-searchengin");
-
-var homeMalwareCtx = ctxHelper.genHomeCardCtx("home-malware-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-danger", "home-card", "Malware Heuristics", "Classify & identify IOCs of PE file using heuristics", "fa-6x fas fa-biohazard");
-
-var homeEventLogCtx = ctxHelper.genHomeCardCtx("home-event-card", "col-xl-6 col-md-6 col-sm-12 col-12", "border-bottom-danger", "home-card", "Event Logs Correlator", "Identify potential footprints of malwares with event logs", "fa-6x fas fa-chart-area");
-
-var homeReview = ctxHelper.genHomeCardCtx("home-review-card", "col-xl-12 col-md-12 col-sm-12 col-12 pb-3", "border-bottom-info", "home-card", "Triage Review", "Review past Triage analysis results", "fa-6x fas fa-scroll");
-
-
-var dashboardCtxs = [homevolatilityDumpCtx,homeTriageCtx,homeMalwareCtx,homeEventLogCtx, homeReview];
-
-
-var volatilityRequiredRamDumpCtx = ['div', {class: 'col-xl-12 col-md-12 mb-4'},
-	['div', {class: 'card border-left-success shadow h-100 py-3'},
-		['div', {class: 'card-body'},
-			['div', {class: 'row no-gutters align-items-center'},
-				['div', {class: 'col mr-2'},
-					['div',{class: 'text-xs font-weight-bold text-info text-uppercase mb-1'}, "Choose your RAM dump file"],
-					ctxHelper.genInputSelectorCtx("volatility-ram-dump-input", "Choose file...", "FILE"), 
-					ctxHelper.genButtonCtx("volatility-btn-dump", "Execute dump", "fas fa-play", "info")
-					// ['div',{class: 'text-xl font-weight-bold text-success text-uppercase mb-1'}, "Available RAM Size"],
-					// ['div', {class: 'h2 mb-0 font-weight-bold text-gray-800'}, "32 GB"]
-				]
-				// ['div', {class: 'col-auto'}, 
-				// 	['i' , {class: 'fas fa-memory fa-6x text-gray-300'}]
-				// ]
-				
-			]
-		]        
-	]
-];
 
 
 
-var volatiltiyInstructionsCtx = ctxHelper.genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
-	ctxHelper.genParaCtx("Fill in case name & choose folder location to dump analysis output", "", "")
-]);
 
 
-var volatilityRequiredCaseNameCtx = ctxHelper.genRequiredTextCtx('volatility-card-input-fields',
-	'Please fill in the required fields',
-	'volatility-card-input-case-name', //Try impv to put list and handle it
-	'Case name',
-	'info');
 
-
-var volatilityRequiredInputCtx = ctxHelper.genFileSelectCtx("volatility-card-select-file",
-	"Choose your dump RAM file",
-	"volatility-input-file",
-	"Choose file...",
-	"FILE",
-	"volatility-btn-dump",
-	"Execute Dump",
-	"fas fa-play",
-	"info"
-);
 
 var triageInstructionsCtx = ctxHelper.genPageIntroCardCtx("Instructions", "fas fa-info-circle", [
 	ctxHelper.genParaCtx("Fill in case name & choose folder location to dump analysis output", "", "")
@@ -731,14 +582,14 @@ var reviewResultsPanelCtx = ['div', {id:'res-review-panel', class: 'col-xl-12 co
 // var evtTempTableCtx = genTableWithDivCtx('evt-results-cont', 'evt-results-sub-cont', 'evt-results-tbl', 'Log Analysis Results', ['h1','h2','h3', 'h4'], [['R1','R2','R3', 'R4'], ['r5','r6','r7', 'r8']]);
 
 var arrTitles = {
-		"home": "What do you want to do",
-		"volatility": "Case generation",
-		"triage": "Automated RAM Analysis",
-		"malware": "Malware Heuristics",
-		"event": "Windows Logs Correlator",
-		"about": "About Us",
-		"technologies": "Technologies Used",
-		"review": "Review Triage Results"
+	"home": "What do you want to do",
+	"case": "Case generation",
+	"triage": "Automated RAM Analysis",
+	"malware": "Malware Heuristics",
+	"event": "Windows Logs Correlator",
+	"about": "About Us",
+	"technologies": "Technologies Used",
+	"review": "Review Triage Results"
 };
 
 var aboutIntroDetails = [
