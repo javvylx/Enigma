@@ -1,12 +1,9 @@
+# Enigma
+<img src="https://raw.githubusercontent.com/vangeance666/Enigma/master/images/enigma.png" width="246" height="168">
 
 
-# Introduction
+## Introduction
 The solution is aimed at providing as much information within the forensic bailiwick of an investigation. Our solution consists of 2 main categories, hardware and software. Under hardware, we will be utilizing the already pre-existing BashBunny to dump out the host machine’s RAM data and Event Logs, which will then be analyzed by our software solutions. <br>
-
-<p align="center">
-    <img src="https://raw.githubusercontent.com/vangeance666/Enigma/master/images/enigma.png" width=30% height=30%>
-</p>
-
 The software category consists of a trilogy of modules - a Windows Security Event Log analyzer, a PE static analyzer, and automated RAM analysis. The solution will also contain a Graphical User Interface (GUI) to not only ease navigation and interaction between modules, but also to display the results in a concise manner for investigators to follow up. This GUI is designed for user-friendliness to ease the job of newer/less experienced investigators, while allowing the user to have a clear overview of their task-at-hand.<br>
 
 
@@ -36,3 +33,5 @@ https://portableapps.com/apps/internet/firefox_portable
 
 ### Usage
 User guide can be found [here](https://drive.google.com/file/d/1iqx-MvMHKhQXPNEukykN67jp3e6sqKKc/view?usp=sharing)
+
+© 2021 Patrick Kang Wei Sheng & Kevin Tan All Rights Reserved
