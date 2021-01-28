@@ -1,7 +1,6 @@
-# Enigma
 
 
-## Introduction
+# Introduction
 The solution is aimed at providing as much information within the forensic bailiwick of an investigation. Our solution consists of 2 main categories, hardware and software. Under hardware, we will be utilizing the already pre-existing BashBunny to dump out the host machine’s RAM data and Event Logs, which will then be analyzed by our software solutions. <br>
 
 <p align="center">

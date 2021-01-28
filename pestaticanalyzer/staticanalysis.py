@@ -70,11 +70,6 @@ class PEDetails:
 
 
 	def _get_dos_header_attrs(self):
-		"""Summary
-		
-		Returns:
-			TYPE: Description
-		"""
 		# Returns important fields like e_magic and e_lfanew
 		return {attr:getattr(self.pe.DOS_HEADER, attr) for attr in self.ATTRS_DOS_HDR.split(", ")}
 
@@ -95,19 +90,9 @@ class PEDetails:
 		return {attr:getattr(self.pe.OPTIONAL_HEADER, attr) for attr in self.ATTRS_OPP_HDR.split(", ")}
 		
 	def get_opptional_header_checksum(self):
-		"""Summary
-		
-		Returns:
-			TYPE: Description
-		"""
 		return self.pe.OPTIONAL_HEADER.CheckSum
 	
 	def recalculate_checksum(self):
-		"""Summary
-		
-		Returns:
-			TYPE: Description
-		"""
 		return self.pe.generate_checksum()
 	
 	def get_compile_time(self):
@@ -225,36 +210,6 @@ class PEDetails:
 
 
 
-
-	def run(self):
-		# print(self.pe.OPTIONAL_HEADER)
-		# [for x in self.pe.OPTIONAL_HEADER.DATA_DIRECTORY if x.name == "IMAGE_DIRECTORY_ENTRY_IMPORT"]
-		# print(dir(self.pe))
-		res = self.pe.dump_dict()
-		# print(res.keys())
-
-		print(res['DOS_HEADER'])
-
-		print(self.pe.is_dll())
-		print(self.pe.is_driver())
-
-		print(self.pe.is_exe())
-
-		print(self.pe.OPTIONAL_HEADER.Magic)
-		print(len(self.pe.__data__))
-
-		# for x in self.pe.OPTIONAL_HEADER.DATA_DIRECTORY:
-		# 	if x.name == "IMAGE_DIRECTORY_ENTRY_IMPORT":
-		# 		print(x.VirtualAddress)
-
-			# break
-		
-		# for x in self.pe.DIRECTORY_ENTRY_RESOURCE:
-		# 	print(x)
-		
-		# print(dir(self.pe.DIRECTORY_ENTRY_IMPORT))
-
-
 class EntropyAnalysis:
 	
 	ENTP_CLASSIFICATION = { 
@@ -363,7 +318,6 @@ class HeuristicsAnalyser:
 			"MZ" : b"\x4D\x5A", # will be at 0x0000
 			"PE" : b"\x50\x45\x00\x00",  #will be at 0x00F8 & 0x100
 			"OPP": [b"\x0B\x01", b"\x0B\x02", b"\x07\x01"] #will be at offset 0x110 & 0x118
-
 	}
 
 	SIG_OFFSETS = {
@@ -371,8 +325,8 @@ class HeuristicsAnalyser:
 			"OPP": [0x110, 0x118]
 	}
 
-	ENC_PATH = os.getcwd()+"\\pestaticanalyzer\\protector_section_names.txt"
-	PKD_PATH = os.getcwd()+"\\pestaticanalyzer\\packer_section_names.txt"
+	ENC_PATH = os.getcwd()+"\\pestaticanalyzer\\rules\\protector_section_names.txt"
+	PKD_PATH = os.getcwd()+"\\pestaticanalyzer\\rules\\packer_section_names.txt"
 
 	# ENC_PATH = os.getcwd()+"\\protector_section_names.txt"
 	# PKD_PATH = os.getcwd()+"\\packer_section_names.txt"
@@ -400,13 +354,11 @@ class HeuristicsAnalyser:
 				p_e_lfanew = i+int.from_bytes(buf[lfa_off:lfa_off+4], byteorder='little')
 				
 
-
 				pe_off1 = i+self.SIG_OFFSETS["PE"][0]
 				pe_off2 = i+self.SIG_OFFSETS["PE"][1]
 				opp_off1 = i+self.SIG_OFFSETS["OPP"][0]
 				opp_off2 = i+self.SIG_OFFSETS["OPP"][1]
 
-				# print (p_e_lfanew, pe_off1, pe_off2)
 				if p_e_lfanew != pe_off1 and p_e_lfanew != pe_off2:
 					pass
 
@@ -415,6 +367,7 @@ class HeuristicsAnalyser:
 					found_coordinates.append({"MZ":i, "PE":pe_off1, "OPP":opp_off1})
 				elif (buf[pe_off2:pe_off2+4] == self.SIGNATURES["PE"] and buf[opp_off2:opp_off2+2] in self.SIGNATURES["OPP"]):
 					found_coordinates.append({"MZ":i, "PE":pe_off2, "OPP":opp_off2})
+
 		return found_coordinates
 
 	def get_num_of_pe_headers(self):
@@ -552,16 +505,6 @@ class HeuristicsAnalyser:
 			return None
 
 	def has_debug_directory(self):
-		""" Malware usually do not have debug
-			directory as it contains valueable
-			information like time and date
-		
-		Args:
-			pe_object (PEDetails): Description
-		
-		Returns:
-			TYPE: Description
-		"""
 		return hasattr(self.pe_object.pe, "DIRECTORY_ENTRY_DEBUG")
 
 	def has_import_directory(self):
@@ -587,10 +530,8 @@ class HeuristicsAnalyser:
 
 class ImportsAnalyser:
 	
-	RULES_PATH = os.getcwd() + "\\pestaticanalyzer\\import_rules.csv"
+	RULES_PATH = os.getcwd() + "\\pestaticanalyzer\\rules\\import_rules.csv"
 	# RULES_PATH = os.getcwd() + "\\import_rules.csv"
-
-
 
 	def __init__(self):
 
@@ -705,12 +646,7 @@ class ResultsRetriever:
 					break
 
 		return ret_det
-		
-		# for x,y in ret_det['Rows']:
 
-		# ret_det = {x for x,y in details.items()}
-		# print(ret_det)
-		# print(entropies)
 
 	def get_imported_results(self):
 		imp_apis, imp_score, sus_count = self.imp.parse_imports(self.pe_object, 1)
