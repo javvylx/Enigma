@@ -1,5 +1,5 @@
 # Enigma
-<img src="https://raw.githubusercontent.com/vangeance666/Enimga/master/images/enigma.png" width="246" height="128">
+<img src="https://raw.githubusercontent.com/vangeance666/Enigma/master/images/enigma.png" width="246" height="128">
 <!-- ![](images/enigma.png) -->
 
 ## Introduction
